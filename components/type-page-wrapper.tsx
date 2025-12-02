@@ -29,3 +29,4 @@ export function TypePageWrapper({ properties, type, summary }: TypePageWrapperPr
   );
 }
 
+

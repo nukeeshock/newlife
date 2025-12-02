@@ -25,10 +25,12 @@ export function formatPriceVND(value: number | bigint): string {
  * Legacy: Formatiert einen Preis in EUR oder USD
  * @deprecated Use formatPriceEUR or formatPriceVND instead
  */
-export function formatPrice(value: number, currency: "EUR" | "USD" = "EUR"): string {
+export function formatPrice(value: number, currency?: string): string {
+  // Default to EUR, validate currency string
+  const validCurrency = currency === "USD" ? "USD" : "EUR";
   return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency,
+    currency: validCurrency,
     maximumFractionDigits: 0,
   }).format(value);
 }

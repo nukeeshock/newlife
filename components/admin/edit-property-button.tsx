@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { buttonClasses } from "@/components/ui/button";
 import { ImageUpload } from "./image-upload";
 import { eurToVnd, vndToEur } from "@/lib/format";
-import type { Property, PropertyType } from "@/lib/types";
+import type { Property, PropertyType, PropertyStatus, ListingType } from "@/lib/types";
 
 interface City {
   id: string;
@@ -234,7 +234,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
               <div className="relative">
                 <select
                   value={formData.listingType}
-                  onChange={(e) => setFormData({ ...formData, listingType: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, listingType: e.target.value as ListingType })}
                   required
                   className={selectClasses}
                 >
@@ -310,7 +310,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
               <div className="relative">
                 <select
                   value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as PropertyStatus })}
                   required
                   className={selectClasses}
                 >

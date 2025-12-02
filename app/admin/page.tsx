@@ -244,7 +244,7 @@ export default function AdminPage() {
                       {property.city} • {formatPrice(property.price, property.currency)}
                     </p>
                     <p className="mt-1 text-xs text-[--muted]/60">
-                      Archiviert am {new Date(property.updatedAt).toLocaleDateString("de-DE")}
+                      Archiviert am {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString("de-DE") : "Unbekannt"}
                     </p>
                   </div>
 

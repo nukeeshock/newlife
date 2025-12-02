@@ -50,9 +50,8 @@ interface RateLimitResult {
 
 // Vertrauenswürdige Proxies (Vercel, Cloudflare, etc.)
 // In Produktion: Nur echte Proxy-IPs hier eintragen!
-const TRUSTED_PROXIES = new Set([
-  // Vercel Edge Network (Beispiel-Ranges)
-  // Cloudflare IPs müssten hier auch rein
+const TRUSTED_PROXIES = new Set<string>([
+  // Vercel Edge Network und Cloudflare IPs können hier hinzugefügt werden
 ]);
 
 /**

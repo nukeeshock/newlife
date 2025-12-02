@@ -41,6 +41,8 @@ export default withSentryConfig(nextConfig, {
   // Tree-shaking für kleinere Bundles (in Produktion aktivieren)
   disableLogger: process.env.NODE_ENV === "production",
 
-  // Source Maps nur in Produktion hochladen
-  hideSourceMaps: true,
+  // Source Maps Konfiguration
+  sourcemaps: {
+    disable: false,
+  },
 });

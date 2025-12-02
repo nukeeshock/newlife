@@ -85,7 +85,9 @@ export function TypePageShell({ properties, type, summary }: TypePageShellProps)
           return b.price - a.price;
         }
         if (sort === "newest") {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
         }
         return a.city.localeCompare(b.city);
       });
