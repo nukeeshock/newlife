@@ -2,7 +2,11 @@
 
 import { buttonClasses } from "./ui/button";
 
-export function Hero() {
+interface HeroProps {
+  propertyCount: number;
+}
+
+export function Hero({ propertyCount }: HeroProps) {
   return (
     <section className="relative flex min-h-[85vh] flex-col items-center justify-center px-6 py-20 md:min-h-[90vh] md:px-8">
       {/* Decorative Elements */}
@@ -60,7 +64,7 @@ export function Hero() {
             <span className="flex h-2 w-2 items-center justify-center">
               <span className="h-1.5 w-1.5 rounded-full bg-[--primary]" />
             </span>
-            <span>12 Exklusive Objekte</span>
+            <span>{propertyCount} Exklusive Objekte</span>
           </div>
           <div className="hidden h-4 w-px bg-[--border] sm:block" />
           <div className="flex items-center gap-3 text-sm text-[--muted]">

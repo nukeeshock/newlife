@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String         // bcrypt gehashed
+  name          String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+}
+
+// Refresh Token Tracking für Revocation
+model RefreshToken {
+  id        String    @id @default(cuid())
+  token     String    @unique // Hash des Tokens (nicht das Token selbst!)
+  adminId   String
+  admin     Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime? // Wenn gesetzt: Token ist ungültig
+  createdAt DateTime  @default(now())
+
+  @@index([adminId])
+  @@index([token])
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  
+  // Location
+  city        String
+  country     String   @default("Vietnam")
+  address     String?  // Optional
+  
+  // Listing Type
+  listingType ListingType @default(rent) // Mieten oder Kaufen
+  
+  // Pricing - immer beide Währungen speichern
+  priceEUR    Int      @default(0) // Preis in Euro (Monatsmiete oder Kaufpreis)
+  priceVND    Int      @default(0) // Preis in VND (in Millionen, z.B. 500 = 500.000.000 VND)
+  
+  // Legacy fields (für Rückwärtskompatibilität)
+  price       Int      @default(0) // @deprecated - use priceEUR
+  currency    String   @default("EUR")
+  
+  // Status
+  status      PropertyStatus @default(available)
+  type        PropertyType
+  
+  // Features
+  recommended Boolean  @default(false) // Stern-Markierung für Startseite
+  area        Int?     // m²
+  bedrooms    Int?
+  bathrooms   Int?
+  amenities   String[] // Array von Ausstattungsmerkmalen
+  
+  // Images
+  images      String[] // Array von Bild-URLs
+  
+  // Metadata
+  popularity  Int      @default(0) // Für Sortierung
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  analyticsEvents AnalyticsEvent[]
+}
+
+enum ListingType {
+  rent  // Mieten (Preis = Monatsmiete)
+  buy   // Kaufen (Preis = Kaufpreis)
+}
+
+enum PropertyStatus {
+  available   // Verfügbar
+  reserved    // Reserviert
+  rented      // Vermietet
+  sold        // Verkauft
+  archived    // Archiviert / Nicht mehr verfügbar
+}
+
+enum PropertyType {
+  private_residence
+  apartment
+  house
+  commercial
+}
+
+// Städte für Dropdown-Menüs (Filter & Property-Erstellung)
+model City {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  country   String   @default("Vietnam")
+  createdAt DateTime @default(now())
+}
+
+// ============================================
+// ANALYTICS SYSTEM
+// ============================================
+
+// Besuchersitzungen (anonymisiert, DSGVO-freundlich)
+model AnalyticsSession {
+  id        String    @id @default(cuid())
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+  userAgent String?
+  ipHash    String?   // Gehashte IP für Anonymisierung
+  referrer  String?
+  createdAt DateTime  @default(now())
+
+  // Relations
+  pageviews AnalyticsPageview[]
+  events    AnalyticsEvent[]
+}
+
+// Seitenaufrufe
+model AnalyticsPageview {
+  id         String   @id @default(cuid())
+  sessionId  String
+  path       String
+  occurredAt DateTime @default(now())
+
+  // Relations
+  session AnalyticsSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([path])
+  @@index([occurredAt])
+}
+
+// Events (WhatsApp-Clicks, etc.)
+model AnalyticsEvent {
+  id         String   @id @default(cuid())
+  sessionId  String?
+  eventType  String   // z.B. "whatsapp_click", "contact_form"
+  propertyId String?
+  occurredAt DateTime @default(now())
+
+  // Relations
+  session  AnalyticsSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  property Property?         @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId])
+  @@index([eventType])
+  @@index([propertyId])
+  @@index([occurredAt])
+}

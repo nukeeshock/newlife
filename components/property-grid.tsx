@@ -1,4 +1,4 @@
-import type { Property } from "@/lib/properties";
+import type { Property } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 
 interface PropertyGridProps {
@@ -27,7 +27,7 @@ export function PropertyGrid({
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
       {properties.map((property) => (
         <PropertyCard
-          key={property.slug}
+          key={property.id}
           property={property}
           showRecommendedFlag={showRecommendedFlag}
         />

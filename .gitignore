@@ -19,6 +19,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -30,12 +31,58 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# ============================================
+# SENSITIVE FILES - NIEMALS COMMITTEN!
+# ============================================
 
-# vercel
+# Environment variables (KRITISCH!)
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# ============================================
+# PRISMA
+# ============================================
+/lib/generated/prisma
+/prisma/migrations/
+
+# ============================================
+# VERCEL & DEPLOYMENT
+# ============================================
 .vercel
 
-# typescript
+# ============================================
+# TYPESCRIPT
+# ============================================
 *.tsbuildinfo
 next-env.d.ts
+
+# ============================================
+# OS FILES
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================
+# SECRETS & KEYS (falls versehentlich erstellt)
+# ============================================
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.secrets/

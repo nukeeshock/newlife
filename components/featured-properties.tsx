@@ -1,4 +1,4 @@
-import type { Property } from "@/lib/properties";
+import type { Property } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 
 interface FeaturedPropertiesProps {
@@ -6,6 +6,10 @@ interface FeaturedPropertiesProps {
 }
 
 export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
+  if (properties.length === 0) {
+    return null;
+  }
+
   return (
     <section className="relative py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
@@ -26,7 +30,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
           {properties.map((property) => (
             <PropertyCard
-              key={property.slug}
+              key={property.id}
               property={property}
               showRecommendedFlag={false}
               variant="featured"
@@ -50,4 +54,3 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
     </section>
   );
 }
-

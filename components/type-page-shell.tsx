@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { Property } from "@/lib/properties";
+import { useEffect, useMemo, useState } from "react";
+import type { Property, PropertyType } from "@/lib/types";
 import { FilterBar } from "./filter-bar";
 import { PropertyGrid } from "./property-grid";
 import { SortDropdown } from "./sort-dropdown";
-import { formatType, formatTypePlural } from "@/lib/format";
+import { formatTypePlural } from "@/lib/format";
 
 export type SortOption = "popular" | "price_asc" | "price_desc" | "city_asc" | "newest";
 
@@ -16,9 +16,15 @@ export interface Filters {
   listingType: string;
 }
 
+interface City {
+  id: string;
+  name: string;
+  country: string;
+}
+
 interface TypePageShellProps {
   properties: Property[];
-  type: Property["type"];
+  type: PropertyType;
   summary?: string;
 }
 
@@ -30,11 +36,29 @@ export function TypePageShell({ properties, type, summary }: TypePageShellProps)
     listingType: "",
   });
   const [sort, setSort] = useState<SortOption>("popular");
+  const [dbCities, setDbCities] = useState<City[]>([]);
 
-  const availableCities = useMemo(
-    () => Array.from(new Set(properties.map((p) => p.city))).sort(),
-    [properties],
-  );
+  // Städte aus der Datenbank laden
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const res = await fetch("/api/cities");
+        const data = await res.json();
+        setDbCities(data);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+    fetchCities();
+  }, []);
+
+  // Kombiniere Städte aus Properties UND Datenbank
+  const availableCities = useMemo(() => {
+    const propertyCities = properties.map((p) => p.city);
+    const allDbCityNames = dbCities.map((c) => c.name);
+    const combined = new Set([...propertyCities, ...allDbCityNames]);
+    return Array.from(combined).sort();
+  }, [properties, dbCities]);
 
   const filtered = useMemo(() => {
     return properties
@@ -48,11 +72,7 @@ export function TypePageShell({ properties, type, summary }: TypePageShellProps)
         const minOk = min ? property.price >= min : true;
         const maxOk = max ? property.price <= max : true;
 
-        // Listing type filter (for future: rent vs buy)
-        // Currently all are rentals, so this is a placeholder
-        const listingTypeOk = true;
-
-        return cityMatch && minOk && maxOk && listingTypeOk;
+        return cityMatch && minOk && maxOk;
       })
       .sort((a, b) => {
         if (sort === "popular") {
@@ -65,7 +85,7 @@ export function TypePageShell({ properties, type, summary }: TypePageShellProps)
           return b.price - a.price;
         }
         if (sort === "newest") {
-          return 0; // Placeholder for date sorting
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         }
         return a.city.localeCompare(b.city);
       });

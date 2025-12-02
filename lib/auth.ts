@@ -1,0 +1,241 @@
+import * as jose from "jose";
+import bcrypt from "bcrypt";
+import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
+
+// ============================================
+// KONFIGURATION
+// ============================================
+
+// JWT Secret MUSS gesetzt sein - App crasht sonst beim Start
+const jwtSecretRaw = process.env.JWT_SECRET;
+if (!jwtSecretRaw) {
+  throw new Error(
+    "❌ FATAL: JWT_SECRET ist nicht gesetzt!\n" +
+    "Füge JWT_SECRET zu deiner .env Datei hinzu (min. 32 Zeichen)."
+  );
+}
+if (jwtSecretRaw.length < 32) {
+  throw new Error(
+    "❌ FATAL: JWT_SECRET muss mindestens 32 Zeichen lang sein!\n" +
+    `Aktuell: ${jwtSecretRaw.length} Zeichen.`
+  );
+}
+const JWT_SECRET = new TextEncoder().encode(jwtSecretRaw);
+
+const ACCESS_TOKEN_EXPIRY = "15m"; // 15 Minuten
+const REFRESH_TOKEN_EXPIRY = "7d"; // 7 Tage
+
+export const BCRYPT_ROUNDS = 12;
+
+// Cookie-Namen
+export const ACCESS_TOKEN_COOKIE = "nlv_access";
+export const REFRESH_TOKEN_COOKIE = "nlv_refresh";
+
+// ============================================
+// JWT FUNKTIONEN
+// ============================================
+
+export interface JWTPayload {
+  sub: string; // Admin ID
+  email: string;
+  name?: string;
+  type: "access" | "refresh";
+}
+
+/**
+ * Access Token erstellen (kurze Lebensdauer)
+ */
+export async function createAccessToken(admin: {
+  id: string;
+  email: string;
+  name?: string | null;
+}): Promise<string> {
+  return new jose.SignJWT({
+    sub: admin.id,
+    email: admin.email,
+    name: admin.name || undefined,
+    type: "access",
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(ACCESS_TOKEN_EXPIRY)
+    .sign(JWT_SECRET);
+}
+
+/**
+ * Refresh Token erstellen (lange Lebensdauer)
+ */
+export async function createRefreshToken(admin: {
+  id: string;
+  email: string;
+  name?: string | null;
+}): Promise<string> {
+  return new jose.SignJWT({
+    sub: admin.id,
+    email: admin.email,
+    name: admin.name || undefined,
+    type: "refresh",
+  })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(REFRESH_TOKEN_EXPIRY)
+    .sign(JWT_SECRET);
+}
+
+/**
+ * JWT verifizieren
+ */
+export async function verifyToken(token: string): Promise<JWTPayload | null> {
+  try {
+    const { payload } = await jose.jwtVerify(token, JWT_SECRET);
+    return payload as unknown as JWTPayload;
+  } catch {
+    return null;
+  }
+}
+
+// ============================================
+// PASSWORT FUNKTIONEN
+// ============================================
+
+/**
+ * Passwort hashen
+ */
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS);
+}
+
+/**
+ * Passwort verifizieren
+ */
+export async function verifyPassword(
+  password: string,
+  hash: string
+): Promise<boolean> {
+  return bcrypt.compare(password, hash);
+}
+
+// ============================================
+// COOKIE FUNKTIONEN
+// ============================================
+
+/**
+ * Auth-Cookies setzen
+ * SameSite=Strict für CSRF-Protection
+ */
+export function setAuthCookies(
+  response: Response,
+  accessToken: string,
+  refreshToken: string
+): void {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  // Access Token Cookie (15 min) - SameSite=Strict für CSRF-Schutz
+  response.headers.append(
+    "Set-Cookie",
+    `${ACCESS_TOKEN_COOKIE}=${accessToken}; HttpOnly; ${
+      isProduction ? "Secure; " : ""
+    }SameSite=Strict; Path=/; Max-Age=${15 * 60}`
+  );
+
+  // Refresh Token Cookie (7 Tage) - SameSite=Strict für CSRF-Schutz
+  response.headers.append(
+    "Set-Cookie",
+    `${REFRESH_TOKEN_COOKIE}=${refreshToken}; HttpOnly; ${
+      isProduction ? "Secure; " : ""
+    }SameSite=Strict; Path=/; Max-Age=${7 * 24 * 60 * 60}`
+  );
+}
+
+/**
+ * Auth-Cookies löschen
+ */
+export function clearAuthCookies(response: Response): void {
+  const isProduction = process.env.NODE_ENV === "production";
+  
+  response.headers.append(
+    "Set-Cookie",
+    `${ACCESS_TOKEN_COOKIE}=; HttpOnly; ${
+      isProduction ? "Secure; " : ""
+    }SameSite=Strict; Path=/; Max-Age=0`
+  );
+  
+  response.headers.append(
+    "Set-Cookie",
+    `${REFRESH_TOKEN_COOKIE}=; HttpOnly; ${
+      isProduction ? "Secure; " : ""
+    }SameSite=Strict; Path=/; Max-Age=0`
+  );
+}
+
+// ============================================
+// TOKEN HASHING (für DB-Speicherung)
+// ============================================
+
+import crypto from "crypto";
+
+/**
+ * Token hashen für sichere DB-Speicherung
+ */
+export function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+// ============================================
+// REQUEST HELPERS
+// ============================================
+
+/**
+ * Token aus Request-Cookies extrahieren
+ */
+export function getTokensFromRequest(request: NextRequest): {
+  accessToken?: string;
+  refreshToken?: string;
+} {
+  return {
+    accessToken: request.cookies.get(ACCESS_TOKEN_COOKIE)?.value,
+    refreshToken: request.cookies.get(REFRESH_TOKEN_COOKIE)?.value,
+  };
+}
+
+/**
+ * Admin aus Request validieren (für API-Routes)
+ */
+export async function validateAdmin(request: NextRequest): Promise<JWTPayload | null> {
+  const { accessToken, refreshToken } = getTokensFromRequest(request);
+
+  // Zuerst Access Token prüfen
+  if (accessToken) {
+    const payload = await verifyToken(accessToken);
+    if (payload && payload.type === "access") {
+      return payload;
+    }
+  }
+
+  // Falls Access Token abgelaufen, Refresh Token prüfen
+  // (Token-Refresh passiert im /api/auth/refresh Endpoint)
+  if (refreshToken) {
+    const payload = await verifyToken(refreshToken);
+    if (payload && payload.type === "refresh") {
+      // Refresh Token noch gültig - Access Token muss erneuert werden
+      // Wir geben hier null zurück, der Client muss /api/auth/refresh aufrufen
+      return null;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Tokens aus Server Components cookies() lesen
+ */
+export async function getServerSideAuth(): Promise<JWTPayload | null> {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+
+  if (!accessToken) return null;
+
+  return verifyToken(accessToken);
+}
+

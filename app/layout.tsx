@@ -4,6 +4,10 @@ import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AdminBar } from "@/components/admin/admin-bar";
+import { AdminProvider } from "@/lib/context/admin-context";
+import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
+import { SentryInit } from "@/components/sentry-init";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,15 +37,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
+    <html lang="de" data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}
       >
-        <div className="relative flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <AdminProvider>
+          <SentryInit />
+          <AnalyticsTracker />
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1 pb-16">{children}</main>
+            <Footer />
+            <AdminBar />
+          </div>
+        </AdminProvider>
       </body>
     </html>
   );

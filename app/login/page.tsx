@@ -5,12 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buttonClasses } from "@/components/ui/button";
 
-// Temporäre Admin-Credentials (später durch echte Auth ersetzen)
-const ADMIN_CREDENTIALS = {
-  email: "mauricebeaujean@web.de",
-  password: "Passwort123123",
-};
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -23,21 +17,28 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    // Simulierte Verzögerung
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (
-      email === ADMIN_CREDENTIALS.email &&
-      password === ADMIN_CREDENTIALS.password
-    ) {
-      // Login erfolgreich - später durch echte Session ersetzen
-      localStorage.setItem("nlv_admin_logged_in", "true");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Login fehlgeschlagen");
+        setLoading(false);
+        return;
+      }
+
+      // Login erfolgreich
       router.push("/");
-    } else {
-      setError("E-Mail oder Passwort falsch.");
+      router.refresh();
+    } catch {
+      setError("Ein Fehler ist aufgetreten");
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const inputClasses =

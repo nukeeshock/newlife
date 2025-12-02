@@ -52,7 +52,8 @@
   box-sizing: border-box;
 }
 
-html {
+/* scroll-behavior via data-attribute für Next.js Kompatibilität */
+html[data-scroll-behavior="smooth"] {
   scroll-behavior: smooth;
 }
 
@@ -148,6 +149,19 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
+}
+
+/* Native Select Options - sichtbare Textfarbe für hellen Dropdown-Hintergrund */
+select option {
+  background-color: #1a1a1a;
+  color: #f5f3ef;
+  padding: 8px 12px;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #2a2a2a;
 }
 
 /* Elegante Trennlinie */
