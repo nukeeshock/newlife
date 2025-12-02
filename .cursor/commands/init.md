@@ -1,0 +1,1 @@
+Mach dich vertraut mit den ganzen gegebenheiten und strukturen das projekts und erstelle dann eine claude.md Datei wo du immer drauf zugreifst um deinen context aufzufrischen
