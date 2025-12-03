@@ -194,5 +194,11 @@ export const RATE_LIMITS = {
     windowSeconds: 60,
     prefix: "upload",
   },
+  /** Kontaktformular: 5 pro Stunde (gegen Spam) */
+  contact: {
+    limit: 5,
+    windowSeconds: 3600,
+    prefix: "contact",
+  },
 } as const;
 

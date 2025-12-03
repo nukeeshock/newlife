@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function Footer() {
   return (
     <footer className="border-t border-[--glass-border] bg-[--bg]">
@@ -62,12 +64,18 @@ export function Footer() {
             © {new Date().getFullYear()} New Life Vietnam. Alle Rechte vorbehalten.
           </p>
           <div className="flex items-center gap-6 text-xs text-[--muted]">
-            <a href="#" className="transition-colors hover:text-[--primary]">
+            <Link
+              href="/impressum"
+              className="transition-colors hover:text-[--primary]"
+            >
               Impressum
-            </a>
-            <a href="#" className="transition-colors hover:text-[--primary]">
+            </Link>
+            <Link
+              href="/datenschutz"
+              className="transition-colors hover:text-[--primary]"
+            >
               Datenschutz
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { updateCitySchema, validate, formatZodErrors } from "@/lib/validations";
@@ -97,6 +98,17 @@ async function updateCityHandler(
 
     return NextResponse.json(city);
   } catch (error) {
+    // Duplikat-Name abfangen (Unique Constraint)
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { error: "Eine Stadt mit diesem Namen existiert bereits", code: "DUPLICATE_NAME" },
+        { status: 409 }
+      );
+    }
+
     console.error("[CITY_PATCH_ERROR]", error);
     return NextResponse.json(
       { error: "Fehler beim Aktualisieren der Stadt", code: "INTERNAL_ERROR" },

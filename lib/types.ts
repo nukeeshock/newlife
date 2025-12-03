@@ -1,4 +1,4 @@
-import type { Property as PrismaProperty, PropertyStatus, PropertyType, ListingType } from "@prisma/client";
+import type { PropertyStatus, PropertyType, ListingType } from "@prisma/client";
 
 // Re-export Prisma types
 export type { PropertyStatus, PropertyType, ListingType };
@@ -29,9 +29,6 @@ export interface Property {
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
-
-// Raw Prisma type (with BigInt)
-export type PrismaPropertyRaw = PrismaProperty;
 
 // Property type copy for UI labels
 export const propertyTypeCopy: Record<

@@ -67,6 +67,16 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
     setMounted(true);
   }, []);
 
+  const fetchCities = async () => {
+    try {
+      const res = await fetch("/api/cities");
+      const data = await res.json();
+      setCities(data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchCities();
@@ -99,16 +109,6 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
       priceVND: value,
       priceEUR: eur.toString(),
     });
-  };
-
-  const fetchCities = async () => {
-    try {
-      const res = await fetch("/api/cities");
-      const data = await res.json();
-      setCities(data);
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

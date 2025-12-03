@@ -2,15 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { hasAnalyticsConsent } from "@/components/cookie-banner";
 
 const STORAGE_KEY = "nlv_session_id";
 
-// Analytics komplett still - keine Fehler werfen
-const ANALYTICS_ENABLED = true;
+// Check if analytics is enabled (consent given)
+function isAnalyticsEnabled(): boolean {
+  return hasAnalyticsConsent();
+}
 
 // Session ID aus localStorage holen oder neue erstellen
 async function getOrCreateSessionId(): Promise<string | null> {
-  if (!ANALYTICS_ENABLED) return null;
+  if (!isAnalyticsEnabled()) return null;
   
   try {
     // Prüfen ob localStorage verfügbar ist
@@ -74,7 +77,7 @@ async function getOrCreateSessionId(): Promise<string | null> {
 
 // Pageview tracken - komplett still
 async function trackPageview(sessionId: string, path: string): Promise<boolean> {
-  if (!ANALYTICS_ENABLED) return true;
+  if (!isAnalyticsEnabled()) return true;
   
   try {
     const controller = new AbortController();
@@ -107,7 +110,7 @@ export async function trackEvent(
   eventType: string,
   propertyId?: string
 ): Promise<void> {
-  if (!ANALYTICS_ENABLED) return;
+  if (!isAnalyticsEnabled()) return;
   
   try {
     const sessionId = localStorage.getItem(STORAGE_KEY);
@@ -133,7 +136,7 @@ export async function trackEvent(
 
 // Session beenden (beim Tab schließen)
 function endSession(): void {
-  if (!ANALYTICS_ENABLED) return;
+  if (!isAnalyticsEnabled()) return;
   
   try {
     const sessionId = localStorage.getItem(STORAGE_KEY);
@@ -156,17 +159,19 @@ export function AnalyticsTracker() {
 
   // Session initialisieren
   useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
     const init = async () => {
+      // Only initialize if consent given - jetzt sicher nach Mount
+      if (!isAnalyticsEnabled()) return;
+      if (initializedRef.current) return;
+      initializedRef.current = true;
+
       let sessionId = await getOrCreateSessionId();
       sessionIdRef.current = sessionId;
 
       // Erste Pageview tracken
       if (sessionId && pathname) {
         const success = await trackPageview(sessionId, pathname);
-        
+
         // Falls Session nicht mehr existiert, neue erstellen
         if (!success && !localStorage.getItem(STORAGE_KEY)) {
           sessionId = await getOrCreateSessionId();
@@ -178,16 +183,29 @@ export function AnalyticsTracker() {
       }
     };
 
-    init();
+    // Kleines Delay um sicherzustellen dass Cookie-Banner geladen ist
+    const initTimeout = setTimeout(() => {
+      init();
+    }, 100);
+
+    // Listen for consent changes
+    const handleConsentChange = () => {
+      if (isAnalyticsEnabled() && !initializedRef.current) {
+        init();
+      }
+    };
+    window.addEventListener("cookie-consent-changed", handleConsentChange);
 
     // Session beenden beim Verlassen
     const handleBeforeUnload = () => endSession();
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      clearTimeout(initTimeout);
+      window.removeEventListener("cookie-consent-changed", handleConsentChange);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [pathname]);
 
   // Bei Route-Wechsel neue Pageview tracken
   useEffect(() => {

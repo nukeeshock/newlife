@@ -15,8 +15,6 @@ export const loginSchema = z.object({
     .min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
 });
 
-export type LoginInput = z.infer<typeof loginSchema>;
-
 // ============================================
 // PROPERTY VALIDATIONS
 // ============================================
@@ -93,13 +91,9 @@ export const createPropertySchema = z.object({
   popularity: z.number().int().min(0).default(0),
 });
 
-export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
-
 export const updatePropertySchema = createPropertySchema.partial().extend({
   // Alle Felder optional für Updates
 });
-
-export type UpdatePropertyInput = z.infer<typeof updatePropertySchema>;
 
 // ============================================
 // CITY VALIDATIONS
@@ -114,25 +108,75 @@ export const createCitySchema = z.object({
   country: z.string().max(100).default("Vietnam"),
 });
 
-export type CreateCityInput = z.infer<typeof createCitySchema>;
-
 export const updateCitySchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  country: z.string().max(100).optional(),
+  name: z
+    .string()
+    .min(1)
+    .max(100)
+    .transform((val) => val.trim())
+    .optional(),
+  country: z
+    .string()
+    .max(100)
+    .transform((val) => val.trim())
+    .optional(),
 });
 
-export type UpdateCityInput = z.infer<typeof updateCitySchema>;
+// ============================================
+// CONTACT FORM VALIDATIONS
+// ============================================
+
+export const contactFormSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name ist erforderlich")
+    .max(100, "Name darf maximal 100 Zeichen lang sein")
+    .transform((val) => val.trim()),
+  email: z
+    .string()
+    .min(1, "E-Mail ist erforderlich")
+    .email("Ungültige E-Mail-Adresse")
+    .max(200, "E-Mail darf maximal 200 Zeichen lang sein")
+    .transform((val) => val.trim()),
+  phone: z
+    .string()
+    .max(30, "Telefonnummer darf maximal 30 Zeichen lang sein")
+    .regex(
+      /^$|^[+]?[\d\s\-().]{7,30}$/,
+      "Ungültige Telefonnummer"
+    )
+    .optional()
+    .nullable()
+    .transform((val) => val?.trim() || null),
+  message: z
+    .string()
+    .min(10, "Nachricht muss mindestens 10 Zeichen lang sein")
+    .max(5000, "Nachricht darf maximal 5000 Zeichen lang sein")
+    .transform((val) => val.trim()),
+  propertyId: z.string().optional().nullable(),
+  privacy: z.literal(true, {
+    message: "Bitte akzeptieren Sie die Datenschutzerklärung",
+  }),
+  // Honeypot-Feld: Wird im API-Handler geprüft (nicht hier, damit Bot Fake-Success bekommt)
+  website: z.string().optional(),
+});
 
 // ============================================
 // ANALYTICS VALIDATIONS
 // ============================================
+
+// CUID Regex Pattern (Prisma default IDs)
+const cuidRegex = /^c[a-z0-9]{24,}$/i;
 
 export const createSessionSchema = z.object({
   referrer: z.string().url().optional().nullable(),
 });
 
 export const createPageviewSchema = z.object({
-  sessionId: z.string().min(1, "Session ID ist erforderlich"),
+  sessionId: z
+    .string()
+    .min(1, "Session ID ist erforderlich")
+    .regex(cuidRegex, "Ungültige Session ID"),
   path: z
     .string()
     .min(1, "Pfad ist erforderlich")
@@ -141,7 +185,11 @@ export const createPageviewSchema = z.object({
 });
 
 export const createEventSchema = z.object({
-  sessionId: z.string().optional().nullable(),
+  sessionId: z
+    .string()
+    .regex(cuidRegex, "Ungültige Session ID")
+    .optional()
+    .nullable(),
   eventType: z
     .string()
     .min(1, "Event-Typ ist erforderlich")
@@ -150,7 +198,10 @@ export const createEventSchema = z.object({
 });
 
 export const endSessionSchema = z.object({
-  sessionId: z.string().min(1, "Session ID ist erforderlich"),
+  sessionId: z
+    .string()
+    .min(1, "Session ID ist erforderlich")
+    .regex(cuidRegex, "Ungültige Session ID"),
 });
 
 // ============================================

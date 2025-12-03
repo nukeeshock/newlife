@@ -1,5 +1,5 @@
 import { put, del } from "@vercel/blob";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { checkRateLimit, RATE_LIMITS, rateLimitExceededResponse } from "@/lib/rate-limit";

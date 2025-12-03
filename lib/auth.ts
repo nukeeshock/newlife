@@ -1,6 +1,5 @@
 import * as jose from "jose";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 // ============================================
@@ -100,13 +99,6 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
 // ============================================
 
 /**
- * Passwort hashen
- */
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, BCRYPT_ROUNDS);
-}
-
-/**
  * Passwort verifizieren
  */
 export async function verifyPassword(
@@ -197,45 +189,5 @@ export function getTokensFromRequest(request: NextRequest): {
     accessToken: request.cookies.get(ACCESS_TOKEN_COOKIE)?.value,
     refreshToken: request.cookies.get(REFRESH_TOKEN_COOKIE)?.value,
   };
-}
-
-/**
- * Admin aus Request validieren (für API-Routes)
- */
-export async function validateAdmin(request: NextRequest): Promise<JWTPayload | null> {
-  const { accessToken, refreshToken } = getTokensFromRequest(request);
-
-  // Zuerst Access Token prüfen
-  if (accessToken) {
-    const payload = await verifyToken(accessToken);
-    if (payload && payload.type === "access") {
-      return payload;
-    }
-  }
-
-  // Falls Access Token abgelaufen, Refresh Token prüfen
-  // (Token-Refresh passiert im /api/auth/refresh Endpoint)
-  if (refreshToken) {
-    const payload = await verifyToken(refreshToken);
-    if (payload && payload.type === "refresh") {
-      // Refresh Token noch gültig - Access Token muss erneuert werden
-      // Wir geben hier null zurück, der Client muss /api/auth/refresh aufrufen
-      return null;
-    }
-  }
-
-  return null;
-}
-
-/**
- * Tokens aus Server Components cookies() lesen
- */
-export async function getServerSideAuth(): Promise<JWTPayload | null> {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
-
-  if (!accessToken) return null;
-
-  return verifyToken(accessToken);
 }
 

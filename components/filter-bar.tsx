@@ -2,7 +2,6 @@
 
 import type { ChangeEvent } from "react";
 import type { Filters } from "./type-page-shell";
-import { Button } from "./ui/button";
 
 interface FilterBarProps {
   filters: Filters;
@@ -27,7 +26,7 @@ export function FilterBar({
 
   const labelClasses = "text-xs font-medium uppercase tracking-[0.2em] text-[--muted]";
 
-  const hasActiveFilters = filters.minPrice || filters.maxPrice || filters.city || filters.listingType;
+  const hasActiveFilters = filters.minPrice || filters.maxPrice || filters.city || filters.listingType || filters.minBedrooms || filters.minBathrooms || filters.minArea || filters.maxArea;
 
   return (
     <div className="space-y-6">
@@ -54,8 +53,8 @@ export function FilterBar({
           )}
         </div>
 
-        {/* Filter Fields */}
-        <div className="grid grid-cols-1 gap-6 p-6 md:grid-cols-2 lg:grid-cols-4">
+        {/* Filter Fields - Row 1 */}
+        <div className="grid grid-cols-1 gap-6 p-6 pb-0 md:grid-cols-2 lg:grid-cols-4">
           {/* Listing Type */}
           <div className="space-y-2">
             <label className={labelClasses}>Art</label>
@@ -92,7 +91,8 @@ export function FilterBar({
             <label className={labelClasses}>Preis von</label>
             <input
               type="number"
-              placeholder="Min. Preis"
+              min="0"
+              placeholder="Min. EUR"
               value={filters.minPrice}
               onChange={handleInput("minPrice")}
               className={inputClasses}
@@ -104,9 +104,72 @@ export function FilterBar({
             <label className={labelClasses}>Preis bis</label>
             <input
               type="number"
-              placeholder="Max. Preis"
+              min="0"
+              placeholder="Max. EUR"
               value={filters.maxPrice}
               onChange={handleInput("maxPrice")}
+              className={inputClasses}
+            />
+          </div>
+        </div>
+
+        {/* Filter Fields - Row 2 */}
+        <div className="grid grid-cols-1 gap-6 p-6 pt-4 md:grid-cols-2 lg:grid-cols-4">
+          {/* Min Bedrooms */}
+          <div className="space-y-2">
+            <label className={labelClasses}>Schlafzimmer</label>
+            <select
+              value={filters.minBedrooms}
+              onChange={handleInput("minBedrooms")}
+              className={inputClasses}
+            >
+              <option value="">Beliebig</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+
+          {/* Min Bathrooms */}
+          <div className="space-y-2">
+            <label className={labelClasses}>Badezimmer</label>
+            <select
+              value={filters.minBathrooms}
+              onChange={handleInput("minBathrooms")}
+              className={inputClasses}
+            >
+              <option value="">Beliebig</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+
+          {/* Min Area */}
+          <div className="space-y-2">
+            <label className={labelClasses}>Fläche von</label>
+            <input
+              type="number"
+              min="0"
+              placeholder="Min. m²"
+              value={filters.minArea}
+              onChange={handleInput("minArea")}
+              className={inputClasses}
+            />
+          </div>
+
+          {/* Max Area */}
+          <div className="space-y-2">
+            <label className={labelClasses}>Fläche bis</label>
+            <input
+              type="number"
+              min="0"
+              placeholder="Max. m²"
+              value={filters.maxArea}
+              onChange={handleInput("maxArea")}
               className={inputClasses}
             />
           </div>

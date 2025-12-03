@@ -1,3 +1,9 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
 # NEW LIFE VIETNAM – NLV Real Estate
 
 ## Projektübersicht
@@ -380,71 +386,3 @@ turbopack: {
 - UI: Deutsch
 - Code: Englisch
 - Kommunikation: Deutsch
-
----
-
-## Changelog
-
-### 2024-12-02
-
-**Backend Security Roadmap implementiert:**
-- ✅ JWT Auth mit Access + Refresh Tokens (jose)
-- ✅ bcrypt Passwort-Hashing (12 Rounds)
-- ✅ Rate Limiting auf Login, Upload, Analytics
-- ✅ Admin-Middleware für geschützte Routes
-- ✅ Zod Input-Validierung für alle API-Routes
-- ✅ Strukturierte Error-Responses mit Codes
-
-**Bild-Upload verbessert:**
-- ✅ Magic Bytes Validierung (nicht nur MIME)
-- ✅ Sharp Resize (max 2000px)
-- ✅ WebP-Konvertierung (Quality 85)
-- ✅ DELETE Endpoint für alte Bilder
-
-**Analytics gehärtet:**
-- ✅ Session-Deduplication (30 Min Window)
-- ✅ Bot-Filtering (30+ Patterns)
-- ✅ Routes umbenannt zu `/api/t/*` wegen Ad-Blocker
-- ✅ Silent Error Handling (keine UI-Blockierung)
-
-**Admin-Features:**
-- ✅ Exposé bearbeiten Button auf Property-Detailseite (Modal mit allen Feldern)
-- ✅ Add/Edit Formulare mit Portal (z-index 99999, über allem)
-
-**Preis-System erweitert:**
-- ✅ Neuer Listing-Typ: Mieten vs Kaufen
-- ✅ Preise in EUR und VND (automatische Umrechnung ~26.500 VND/EUR)
-- ✅ Monatsmiete vs Kaufpreis Label
-- ✅ VND-Preis auf Property-Detailseite angezeigt
-
-**Fixes:**
-- ✅ Städte im Filter werden jetzt aus DB + Properties kombiniert
-- ✅ Dropdown-Optionen sind jetzt im Dark Theme sichtbar
-- ✅ Analytics-Tracker validiert Session bei jedem Laden
-- ✅ Turbopack root Config für Next.js 16
-
-### Security Audit & Fixes (Session 2)
-
-**🔴 KRITISCHE Sicherheitslücken behoben:**
-- ✅ JWT Secret: App crasht jetzt wenn `JWT_SECRET` fehlt oder <32 Zeichen
-- ✅ Klartext-Passwörter: Support komplett entfernt (nur bcrypt erlaubt)
-- ✅ Schema-Mismatch: `priceEUR`/`priceVND`/`listingType` werden jetzt korrekt gespeichert
-- ✅ `sold` Status zu Prisma Schema hinzugefügt
-- ✅ BigInt → Int für `priceVND` (JSON-Serialisierung funktioniert jetzt)
-
-**🟡 Security Session 2 - Token Revocation & CSRF:**
-- ✅ Refresh-Token Blacklist: Tokens werden in DB gespeichert (`RefreshToken` Model)
-- ✅ Token-Revocation bei Logout: Token wird als `revokedAt` markiert
-- ✅ Token-Rotation: Bei Refresh wird altes Token revoked, neues erstellt
-- ✅ CSRF-Protection: Alle Cookies auf `SameSite=Strict` umgestellt
-- ✅ Gestohlene Tokens können jetzt sofort invalidiert werden
-
-**⚠️ Serverless-Warnungen hinzugefügt:**
-- Rate Limiting loggt Warnung in Production wenn kein Redis
-- Session-Cache loggt Warnung in Production wenn kein Redis
-- Analytics Salt loggt Warnung wenn nicht gesetzt
-
-**Datenbank Migration:**
-- `priceVND` von `BigInt` zu `Int` geändert (speichert jetzt in Millionen VND)
-- `PropertyStatus` Enum um `sold` erweitert
-- `RefreshToken` Model für Token-Revocation hinzugefügt

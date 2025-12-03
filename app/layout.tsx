@@ -8,6 +8,7 @@ import { AdminBar } from "@/components/admin/admin-bar";
 import { AdminProvider } from "@/lib/context/admin-context";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { SentryInit } from "@/components/sentry-init";
+import { CookieBanner } from "@/components/cookie-banner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({
             <Footer />
             <AdminBar />
           </div>
+          <CookieBanner />
         </AdminProvider>
       </body>
     </html>

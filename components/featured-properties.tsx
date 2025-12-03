@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Property } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 
@@ -40,7 +41,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
 
         {/* View All Link */}
         <div className="mt-16 flex justify-center">
-          <a
+          <Link
             href="/type/private_residence"
             className="group flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-[--muted] transition-colors hover:text-[--primary]"
           >
@@ -48,7 +49,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
             <span className="inline-block transition-transform group-hover:translate-x-1">
               →
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

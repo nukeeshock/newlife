@@ -1,5 +1,6 @@
 import { Hero } from "@/components/hero";
 import { FeaturedProperties } from "@/components/featured-properties";
+import { SeniorLivingSection } from "@/components/senior-living-section";
 import { CtaSection } from "@/components/cta-section";
 import { prisma } from "@/lib/db";
 
@@ -30,6 +31,13 @@ export default async function Home() {
       </div>
 
       <FeaturedProperties properties={featured} />
+
+      {/* Divider */}
+      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
+        <div className="divider-gold" />
+      </div>
+
+      <SeniorLivingSection />
 
       <CtaSection />
     </>

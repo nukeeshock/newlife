@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -15,15 +15,11 @@ export function useAuth() {
     adminId: null,
   });
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const response = await fetch("/api/auth/check");
       const data = await response.json();
-      
+
       setAuth({
         isAuthenticated: data.authenticated,
         isLoading: false,
@@ -36,7 +32,11 @@ export function useAuth() {
         adminId: null,
       });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const logout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });

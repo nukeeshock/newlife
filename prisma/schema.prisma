@@ -73,7 +73,8 @@ model Property {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  analyticsEvents AnalyticsEvent[]
+  analyticsEvents  AnalyticsEvent[]
+  contactInquiries ContactInquiry[]
 }
 
 enum ListingType {
@@ -102,6 +103,27 @@ model City {
   name      String   @unique
   country   String   @default("Vietnam")
   createdAt DateTime @default(now())
+}
+
+// ============================================
+// CONTACT INQUIRIES
+// ============================================
+
+model ContactInquiry {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  message    String
+  propertyId String?  // Optional: Referenz zu einer Property
+  read       Boolean  @default(false) // Für Admin-Dashboard
+  createdAt  DateTime @default(now())
+
+  // Relations
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([read])
 }
 
 // ============================================

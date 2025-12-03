@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { createCitySchema, validate, formatZodErrors } from "@/lib/validations";

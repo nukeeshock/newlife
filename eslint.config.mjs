@@ -13,6 +13,14 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Custom rule overrides
+  {
+    rules: {
+      // Deaktiviert: Diese Regel ist zu strikt für Standard-React-Patterns
+      // wie setMounted(true) in useEffect für Portal/SSR-Hydration
+      "react-hooks/set-state-in-effect": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

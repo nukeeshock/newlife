@@ -47,6 +47,16 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
     setMounted(true);
   }, []);
 
+  const fetchCities = async () => {
+    try {
+      const res = await fetch("/api/cities");
+      const data = await res.json();
+      setCities(data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       fetchCities();
@@ -58,16 +68,6 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
-
-  const fetchCities = async () => {
-    try {
-      const res = await fetch("/api/cities");
-      const data = await res.json();
-      setCities(data);
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
-  };
 
   // Auto-Berechnung VND wenn EUR sich ändert
   const handlePriceEURChange = (value: string) => {
