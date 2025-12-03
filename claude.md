@@ -38,6 +38,8 @@ Eine **Next.js 16** Real Estate Listing-Plattform für Premium-Mietobjekte in Vi
 - **Property**: slug, title, description, city, country, **listingType** (rent/buy), **priceEUR**, **priceVND**, status (available/reserved/rented/sold/archived), type, recommended, area, bedrooms, bathrooms, amenities[], images[], popularity
 - **Admin**: email, password (bcrypt gehashed!), name
 - **City**: name (unique), country
+- **ContactInquiry**: name, email, phone?, message, propertyId?, read (für Admin-Dashboard)
+- **RefreshToken**: token (gehashed), adminId, expiresAt, revokedAt?
 
 ### Enums
 - **ListingType**: `rent` (Mieten), `buy` (Kaufen)
@@ -108,6 +110,14 @@ export const POST = withAdminAuth(handler);
 | `/api/upload` | POST | Admin | Bild hochladen (Magic Bytes, Sharp Resize, WebP) |
 | `/api/upload` | DELETE | Admin | Bild löschen |
 
+### Contact
+| Route | Method | Auth | Beschreibung |
+|-------|--------|------|--------------|
+| `/api/contact` | POST | - | Kontaktanfrage senden (Zod, Rate Limited) |
+| `/api/contact/inquiries` | GET | Admin | Alle Anfragen abrufen |
+| `/api/contact/inquiries/[id]` | PATCH | Admin | Als gelesen markieren |
+| `/api/contact/inquiries/[id]` | DELETE | Admin | Anfrage löschen |
+
 ### Analytics (⚠️ umbenannt wegen Ad-Blocker!)
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
@@ -142,6 +152,7 @@ Verfügbare Schemas:
 - `loginSchema` - Email + Passwort
 - `createPropertySchema` / `updatePropertySchema`
 - `createCitySchema` / `updateCitySchema`
+- `contactFormSchema` - Name, Email, Phone?, Message
 - `createSessionSchema`, `createPageviewSchema`, `createEventSchema`, `endSessionSchema`
 
 ---
@@ -319,6 +330,7 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 ```bash
 pnpm dev          # Starten (Turbopack)
 pnpm build        # Build
+pnpm lint         # ESLint
 pnpm db:push      # Schema pushen
 pnpm db:seed      # Testdaten + Admin (mit bcrypt Hash!)
 pnpm db:studio    # Prisma Studio
