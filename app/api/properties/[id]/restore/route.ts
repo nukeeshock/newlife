@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
-
-// BigInt zu Number konvertieren für JSON-Serialisierung
-function serializeProperty(property: Record<string, unknown>) {
-  return JSON.parse(
-    JSON.stringify(property, (_, value) =>
-      typeof value === "bigint" ? Number(value) : value
-    )
-  );
-}
+import { serializeBigInt } from "@/lib/serialize";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -47,7 +39,7 @@ async function restorePropertyHandler(
       data: { status: "available" },
     });
 
-    return NextResponse.json(serializeProperty(property));
+    return NextResponse.json(serializeBigInt(property));
   } catch (error) {
     console.error("[PROPERTY_RESTORE_ERROR]", error);
     return NextResponse.json(

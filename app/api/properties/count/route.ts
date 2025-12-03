@@ -1,8 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { checkRateLimit, RATE_LIMITS, rateLimitExceededResponse } from "@/lib/rate-limit";
 
 // GET: Anzahl aller aktiven Properties
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Rate Limiting
+  const rateLimit = checkRateLimit(request, RATE_LIMITS.api);
+  if (!rateLimit.success) {
+    return rateLimitExceededResponse(rateLimit.resetAt);
+  }
+
   try {
     const count = await prisma.property.count({
       where: {

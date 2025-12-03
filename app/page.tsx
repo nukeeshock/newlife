@@ -3,6 +3,7 @@ import { FeaturedProperties } from "@/components/featured-properties";
 import { SeniorLivingSection } from "@/components/senior-living-section";
 import { CtaSection } from "@/components/cta-section";
 import { prisma } from "@/lib/db";
+import { serializeBigInt } from "@/lib/serialize";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,12 @@ export default async function Home() {
   // Empfohlene Properties und Gesamtzahl aus der Datenbank laden
   const [featured, totalCount] = await Promise.all([
     prisma.property.findMany({
-      where: { 
+      where: {
         recommended: true,
         status: { not: "archived" }
       },
       orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
+      take: 6,
     }),
     prisma.property.count({
       where: { status: { not: "archived" } },
@@ -30,7 +32,7 @@ export default async function Home() {
         <div className="divider-gold" />
       </div>
 
-      <FeaturedProperties properties={featured} />
+      <FeaturedProperties properties={serializeBigInt(featured)} />
 
       {/* Divider */}
       <div className="mx-auto w-full max-w-6xl px-6 md:px-8">

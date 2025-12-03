@@ -4,81 +4,99 @@ import {
   getTokensFromRequest,
   createAccessToken,
   createRefreshToken,
+  hashToken,
   ACCESS_TOKEN_COOKIE,
   REFRESH_TOKEN_COOKIE,
 } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
-  const { accessToken, refreshToken } = getTokensFromRequest(request);
+  try {
+    const { accessToken, refreshToken } = getTokensFromRequest(request);
 
-  // Kein Token vorhanden
-  if (!accessToken && !refreshToken) {
-    return NextResponse.json({ authenticated: false });
-  }
-
-  // Access Token prüfen
-  if (accessToken) {
-    const payload = await verifyToken(accessToken);
-    if (payload && payload.type === "access") {
-      return NextResponse.json({
-        authenticated: true,
-        admin: {
-          id: payload.sub,
-          email: payload.email,
-          name: payload.name,
-        },
-      });
+    // Kein Token vorhanden
+    if (!accessToken && !refreshToken) {
+      return NextResponse.json({ authenticated: false });
     }
-  }
 
-  // Access Token abgelaufen - Refresh Token prüfen
-  if (refreshToken) {
-    const refreshPayload = await verifyToken(refreshToken);
-    if (refreshPayload && refreshPayload.type === "refresh") {
-      // Neue Tokens generieren
-      const newAccessToken = await createAccessToken({
-        id: refreshPayload.sub,
-        email: refreshPayload.email,
-        name: refreshPayload.name,
-      });
-      const newRefreshToken = await createRefreshToken({
-        id: refreshPayload.sub,
-        email: refreshPayload.email,
-        name: refreshPayload.name,
-      });
+    // Access Token prüfen
+    if (accessToken) {
+      const payload = await verifyToken(accessToken);
+      if (payload && payload.type === "access") {
+        return NextResponse.json({
+          authenticated: true,
+          admin: {
+            id: payload.sub,
+            email: payload.email,
+            name: payload.name,
+          },
+        });
+      }
+    }
 
-      const response = NextResponse.json({
-        authenticated: true,
-        admin: {
+    // Access Token abgelaufen - Refresh Token prüfen
+    if (refreshToken) {
+      const refreshPayload = await verifyToken(refreshToken);
+      if (refreshPayload && refreshPayload.type === "refresh") {
+        // Token-Revocation in DB prüfen
+        const tokenHash = hashToken(refreshToken);
+        const storedToken = await prisma.refreshToken.findUnique({
+          where: { token: tokenHash },
+        });
+
+        // Token muss existieren und darf nicht revoked sein
+        if (!storedToken || storedToken.revokedAt !== null) {
+          return NextResponse.json({ authenticated: false });
+        }
+
+        // Neue Tokens generieren
+        const newAccessToken = await createAccessToken({
           id: refreshPayload.sub,
           email: refreshPayload.email,
           name: refreshPayload.name,
-        },
-      });
+        });
+        const newRefreshToken = await createRefreshToken({
+          id: refreshPayload.sub,
+          email: refreshPayload.email,
+          name: refreshPayload.name,
+        });
 
-      const isProduction = process.env.NODE_ENV === "production";
+        const response = NextResponse.json({
+          authenticated: true,
+          admin: {
+            id: refreshPayload.sub,
+            email: refreshPayload.email,
+            name: refreshPayload.name,
+          },
+        });
 
-      // Neue Cookies setzen
-      response.cookies.set(ACCESS_TOKEN_COOKIE, newAccessToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 15 * 60,
-      });
+        const isProduction = process.env.NODE_ENV === "production";
 
-      response.cookies.set(REFRESH_TOKEN_COOKIE, newRefreshToken, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60,
-      });
+        // Neue Cookies setzen
+        response.cookies.set(ACCESS_TOKEN_COOKIE, newAccessToken, {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 15 * 60,
+        });
 
-      return response;
+        response.cookies.set(REFRESH_TOKEN_COOKIE, newRefreshToken, {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: "strict",
+          path: "/",
+          maxAge: 7 * 24 * 60 * 60,
+        });
+
+        return response;
+      }
     }
-  }
 
-  // Alle Tokens ungültig
-  return NextResponse.json({ authenticated: false });
+    // Alle Tokens ungültig
+    return NextResponse.json({ authenticated: false });
+  } catch (error) {
+    console.error("[AUTH_CHECK_ERROR]", error);
+    return NextResponse.json({ authenticated: false });
+  }
 }

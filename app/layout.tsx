@@ -9,6 +9,7 @@ import { AdminProvider } from "@/lib/context/admin-context";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
 import { SentryInit } from "@/components/sentry-init";
 import { CookieBanner } from "@/components/cookie-banner";
+import { OrganizationSchema, WebSiteSchema } from "@/components/seo/json-ld";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +29,50 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "NEW LIFE VIETNAM – Exklusive Immobilien in Vietnam",
-  description: "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City. Ihr persönlicher Concierge für ein neues Leben in Vietnam.",
+  metadataBase: new URL("https://newlifevietnam.com"),
+  title: {
+    default: "NEW LIFE VIETNAM – Exklusive Immobilien in Vietnam",
+    template: "%s | NEW LIFE VIETNAM",
+  },
+  description:
+    "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City. Ihr persönlicher Concierge für ein neues Leben in Vietnam.",
+  keywords: [
+    "Immobilien Vietnam",
+    "Luxus Miete Vietnam",
+    "Da Nang Apartment",
+    "Hoi An Villa",
+    "Ho Chi Minh Wohnung",
+    "Auswandern Vietnam",
+    "Expat Vietnam",
+  ],
+  authors: [{ name: "NEW LIFE VIETNAM" }],
+  creator: "NEW LIFE VIETNAM",
+  publisher: "NEW LIFE VIETNAM",
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    url: "https://newlifevietnam.com",
+    siteName: "NEW LIFE VIETNAM",
+    title: "NEW LIFE VIETNAM – Exklusive Immobilien in Vietnam",
+    description:
+      "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NEW LIFE VIETNAM",
+    description: "Exklusive Immobilien in Vietnam",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -43,6 +86,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} antialiased`}
       >
         <AdminProvider>
+          <OrganizationSchema />
+          <WebSiteSchema />
           <SentryInit />
           <AnalyticsTracker />
           <div className="relative flex min-h-screen flex-col">

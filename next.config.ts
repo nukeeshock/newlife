@@ -3,6 +3,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
       {
         protocol: "https",
@@ -18,7 +21,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ["http://192.168.0.92:3000"],
   turbopack: {
     root: process.cwd(),
   },
@@ -35,8 +37,8 @@ export default withSentryConfig(nextConfig, {
   // Automatisch Releases erstellen
   widenClientFileUpload: true,
 
-  // Tunnel Route für Ad-Blocker-Umgehung (optional)
-  // tunnelRoute: "/monitoring",
+  // Tunnel Route für Ad-Blocker-Umgehung
+  tunnelRoute: "/monitoring",
 
   // Tree-shaking für kleinere Bundles (in Produktion aktivieren)
   disableLogger: process.env.NODE_ENV === "production",

@@ -122,12 +122,15 @@ export function TypePageShell({ properties, type, summary }: TypePageShellProps)
   }, [sort, updateURL]);
 
   // Sync mit URL bei externen Änderungen (z.B. Browser-Back)
+  // Verwende searchParams.toString() als Dependency für stabilere Referenz
+  const searchParamsString = searchParams.toString();
   useEffect(() => {
     const newFilters = getFiltersFromParams(searchParams);
     const newSort = (searchParams.get("sort") as SortOption) || "popular";
     setFilters(newFilters);
     setSort(newSort);
-  }, [searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParamsString]);
 
   // Städte aus der Datenbank laden
   useEffect(() => {

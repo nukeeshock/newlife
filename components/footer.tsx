@@ -65,6 +65,12 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-6 text-xs text-[--muted]">
             <Link
+              href="/faq"
+              className="transition-colors hover:text-[--primary]"
+            >
+              FAQ
+            </Link>
+            <Link
               href="/impressum"
               className="transition-colors hover:text-[--primary]"
             >

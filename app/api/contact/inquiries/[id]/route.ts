@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withAdminAuth } from "@/lib/middleware/admin-auth";
+import { updateInquirySchema, validate, formatZodErrors } from "@/lib/validations";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -59,6 +60,19 @@ async function updateInquiryHandler(
     const { id } = await context.params;
     const body = await request.json();
 
+    // Input validieren
+    const validation = validate(updateInquirySchema, body);
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          error: "Ungültige Eingabe",
+          code: "VALIDATION_ERROR",
+          details: formatZodErrors(validation.errors),
+        },
+        { status: 400 }
+      );
+    }
+
     // Prüfen ob Anfrage existiert
     const existing = await prisma.contactInquiry.findUnique({
       where: { id },
@@ -78,7 +92,7 @@ async function updateInquiryHandler(
     const updated = await prisma.contactInquiry.update({
       where: { id },
       data: {
-        read: typeof body.read === "boolean" ? body.read : existing.read,
+        read: validation.data.read,
       },
       include: {
         property: {

@@ -5,49 +5,55 @@ import { usePathname } from "next/navigation";
 import { hasAnalyticsConsent } from "@/components/cookie-banner";
 
 const STORAGE_KEY = "nlv_session_id";
+const TIMESTAMP_KEY = "nlv_session_timestamp";
+const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 Minuten Inaktivität = neue Session
 
 // Check if analytics is enabled (consent given)
 function isAnalyticsEnabled(): boolean {
   return hasAnalyticsConsent();
 }
 
+// Prüft ob die Session noch gültig ist (innerhalb 30 Min)
+function isSessionValid(): boolean {
+  const timestamp = localStorage.getItem(TIMESTAMP_KEY);
+  if (!timestamp) return false;
+  const elapsed = Date.now() - parseInt(timestamp, 10);
+  return elapsed < SESSION_TIMEOUT;
+}
+
+// Session-Timestamp aktualisieren
+function updateSessionTimestamp(): void {
+  localStorage.setItem(TIMESTAMP_KEY, Date.now().toString());
+}
+
 // Session ID aus localStorage holen oder neue erstellen
 async function getOrCreateSessionId(): Promise<string | null> {
   if (!isAnalyticsEnabled()) return null;
-  
+
   try {
     // Prüfen ob localStorage verfügbar ist
     if (typeof window === "undefined" || !window.localStorage) {
       return null;
     }
 
-    // Prüfen ob bereits eine Session existiert
+    // Prüfen ob bereits eine gültige Session existiert
     const existingId = localStorage.getItem(STORAGE_KEY);
+    if (existingId && isSessionValid()) {
+      // Session noch gültig, Timestamp aktualisieren
+      updateSessionTimestamp();
+      return existingId;
+    }
+
+    // Session abgelaufen oder nicht vorhanden - alte ID entfernen
     if (existingId) {
-      // Prüfen ob Session noch gültig ist (schneller HEAD-Request)
-      try {
-        const checkResponse = await fetch("/api/t/pv", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ sessionId: existingId, path: "/" }),
-        });
-        
-        if (checkResponse.status === 404) {
-          // Session existiert nicht mehr - löschen und neue erstellen
-          localStorage.removeItem(STORAGE_KEY);
-        } else {
-          return existingId;
-        }
-      } catch {
-        // Bei Fehler trotzdem die alte ID verwenden
-        return existingId;
-      }
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(TIMESTAMP_KEY);
     }
 
     // Neue Session erstellen
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s Timeout
-    
+
     const response = await fetch("/api/t/s", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -56,7 +62,7 @@ async function getOrCreateSessionId(): Promise<string | null> {
       }),
       signal: controller.signal,
     });
-    
+
     clearTimeout(timeoutId);
 
     if (!response.ok) {
@@ -66,6 +72,7 @@ async function getOrCreateSessionId(): Promise<string | null> {
     const data = await response.json();
     if (data.sessionId) {
       localStorage.setItem(STORAGE_KEY, data.sessionId);
+      updateSessionTimestamp();
       return data.sessionId;
     }
     return null;
@@ -78,26 +85,32 @@ async function getOrCreateSessionId(): Promise<string | null> {
 // Pageview tracken - komplett still
 async function trackPageview(sessionId: string, path: string): Promise<boolean> {
   if (!isAnalyticsEnabled()) return true;
-  
+
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s Timeout
-    
+
     const response = await fetch("/api/t/pv", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sessionId, path }),
       signal: controller.signal,
     });
-    
+
     clearTimeout(timeoutId);
-    
+
     // Bei 404 (Session nicht gefunden) - Session-ID löschen
     if (response.status === 404) {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(TIMESTAMP_KEY);
       return false;
     }
-    
+
+    // Bei Erfolg: Timestamp aktualisieren (Session bleibt aktiv)
+    if (response.ok) {
+      updateSessionTimestamp();
+    }
+
     return response.ok;
   } catch {
     // Alle Fehler still ignorieren (Netzwerk, Timeout, etc.)
@@ -159,6 +172,8 @@ export function AnalyticsTracker() {
 
   // Session initialisieren
   useEffect(() => {
+    let isMounted = true;
+
     const init = async () => {
       // Only initialize if consent given - jetzt sicher nach Mount
       if (!isAnalyticsEnabled()) return;
@@ -166,6 +181,7 @@ export function AnalyticsTracker() {
       initializedRef.current = true;
 
       let sessionId = await getOrCreateSessionId();
+      if (!isMounted) return;
       sessionIdRef.current = sessionId;
 
       // Erste Pageview tracken
@@ -173,8 +189,10 @@ export function AnalyticsTracker() {
         const success = await trackPageview(sessionId, pathname);
 
         // Falls Session nicht mehr existiert, neue erstellen
+        if (!isMounted) return;
         if (!success && !localStorage.getItem(STORAGE_KEY)) {
           sessionId = await getOrCreateSessionId();
+          if (!isMounted) return;
           sessionIdRef.current = sessionId;
           if (sessionId && pathname) {
             await trackPageview(sessionId, pathname);
@@ -201,6 +219,7 @@ export function AnalyticsTracker() {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
+      isMounted = false;
       clearTimeout(initTimeout);
       window.removeEventListener("cookie-consent-changed", handleConsentChange);
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -210,15 +229,21 @@ export function AnalyticsTracker() {
   // Bei Route-Wechsel neue Pageview tracken
   useEffect(() => {
     if (!initializedRef.current || !sessionIdRef.current) return;
-    
+
+    let isMounted = true;
+
     // Kleines Delay um sicherzustellen dass die Session initialisiert ist
     const timeout = setTimeout(async () => {
+      if (!isMounted) return;
+
       if (sessionIdRef.current && pathname) {
         const success = await trackPageview(sessionIdRef.current, pathname);
-        
+
         // Falls Session nicht mehr existiert, neue erstellen
+        if (!isMounted) return;
         if (!success && !localStorage.getItem(STORAGE_KEY)) {
           const newSessionId = await getOrCreateSessionId();
+          if (!isMounted) return;
           sessionIdRef.current = newSessionId;
           if (newSessionId && pathname) {
             await trackPageview(newSessionId, pathname);
@@ -227,7 +252,10 @@ export function AnalyticsTracker() {
       }
     }, 100);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
   }, [pathname]);
 
   // Diese Komponente rendert nichts

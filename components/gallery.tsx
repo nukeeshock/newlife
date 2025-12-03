@@ -5,11 +5,25 @@ import { useRef, useState } from "react";
 
 interface GalleryProps {
   images: string[];
+  propertyTitle: string;
+  propertyType?: string;
 }
 
-export function Gallery({ images }: GalleryProps) {
+export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
+
+  // Guard: No images → show placeholder
+  if (!images || images.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div className="flex h-[450px] items-center justify-center border border-[--glass-border] bg-[--card] text-[--muted] md:h-[550px]">
+          <span>Keine Bilder verfügbar</span>
+        </div>
+      </div>
+    );
+  }
+
   const activeImage = images[activeIndex] ?? images[0];
 
   const next = () => setActiveIndex((prev) => (prev + 1) % images.length);
@@ -41,11 +55,11 @@ export function Gallery({ images }: GalleryProps) {
       >
         <Image
           src={activeImage}
-          alt=""
+          alt={`${propertyTitle} - Bild ${activeIndex + 1} von ${images.length}${propertyType ? ` - ${propertyType}` : ""}`}
           fill
           className="object-cover transition-transform duration-700"
           sizes="(min-width: 1024px) 900px, 100vw"
-          priority
+          priority={activeIndex === 0}
         />
         
         {/* Gradient Overlay */}
@@ -90,7 +104,7 @@ export function Gallery({ images }: GalleryProps) {
                 : "border-[--glass-border] hover:border-[--primary]/50"
             }`}
           >
-            <Image src={img} alt="" fill className="object-cover" sizes="120px" />
+            <Image src={img} alt={`${propertyTitle} - Vorschau ${index + 1}`} fill className="object-cover" sizes="120px" />
           </button>
         ))}
       </div>

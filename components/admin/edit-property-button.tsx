@@ -67,24 +67,32 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
     setMounted(true);
   }, []);
 
-  const fetchCities = async () => {
-    try {
-      const res = await fetch("/api/cities");
-      const data = await res.json();
-      setCities(data);
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-    }
-  };
-
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchCities = async () => {
+      try {
+        const res = await fetch("/api/cities");
+        const data = await res.json();
+        if (isMounted) {
+          setCities(data);
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error fetching cities:", error);
+        }
+      }
+    };
+
     if (isOpen) {
       fetchCities();
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
+
     return () => {
+      isMounted = false;
       document.body.style.overflow = "";
     };
   }, [isOpen]);

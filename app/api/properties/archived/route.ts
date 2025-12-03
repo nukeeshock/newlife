@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withAdminAuth } from "@/lib/middleware/admin-auth";
-
-// BigInt zu Number konvertieren für JSON-Serialisierung
-function serializeProperties(properties: Record<string, unknown>[]) {
-  return JSON.parse(
-    JSON.stringify(properties, (_, value) =>
-      typeof value === "bigint" ? Number(value) : value
-    )
-  );
-}
+import { serializeBigInt } from "@/lib/serialize";
 
 // GET: Alle archivierten Properties abrufen (Admin only)
 async function getArchivedHandler() {
@@ -19,7 +11,7 @@ async function getArchivedHandler() {
       orderBy: { updatedAt: "desc" },
     });
 
-    return NextResponse.json(serializeProperties(properties));
+    return NextResponse.json(serializeBigInt(properties));
   } catch (error) {
     console.error("[ARCHIVED_PROPERTIES_ERROR]", error);
     return NextResponse.json(

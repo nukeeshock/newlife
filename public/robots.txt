@@ -1,0 +1,12 @@
+# robots.txt for NEW LIFE VIETNAM
+User-agent: *
+Allow: /
+
+# Admin und API-Bereiche ausschließen
+Disallow: /admin
+Disallow: /api
+Disallow: /login
+Disallow: /sentry-test
+
+# Sitemap
+Sitemap: https://newlifevietnam.com/sitemap.xml

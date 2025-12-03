@@ -162,6 +162,14 @@ export const contactFormSchema = z.object({
 });
 
 // ============================================
+// CONTACT INQUIRY ADMIN VALIDATIONS
+// ============================================
+
+export const updateInquirySchema = z.object({
+  read: z.boolean(),
+});
+
+// ============================================
 // ANALYTICS VALIDATIONS
 // ============================================
 

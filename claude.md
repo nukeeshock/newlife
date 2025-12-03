@@ -127,7 +127,7 @@ export const POST = withAdminAuth(handler);
 | `/api/t/e` | POST | - | Event loggen |
 | `/api/t/stats` | GET | Admin | Aggregierte Stats |
 
-**WICHTIG**: Die alten Routes `/api/analytics/*` existieren noch als Backup, aber der Client verwendet `/api/t/*`!
+**WICHTIG**: Analytics API ist `/api/t/*` (NICHT `/api/analytics/*`) wegen Ad-Blocker!
 
 ---
 
@@ -321,7 +321,7 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 
 ### Slug Auto-Numbering
 - "Villa Da Nang" → `villa-da-nang`
-- Duplikat → `villa-da-nang-lxyz123` (mit Timestamp-Suffix)
+- Duplikat → `villa-da-nang-2`, `villa-da-nang-3` etc.
 
 ---
 
@@ -331,6 +331,7 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 pnpm dev          # Starten (Turbopack)
 pnpm build        # Build
 pnpm lint         # ESLint
+pnpm tsc --noEmit # TypeScript Check (ohne Build)
 pnpm db:push      # Schema pushen
 pnpm db:seed      # Testdaten + Admin (mit bcrypt Hash!)
 pnpm db:studio    # Prisma Studio
@@ -345,6 +346,43 @@ turbopack: {
 
 ---
 
+## Client Components Best Practices
+
+### BigInt Serialisierung (WICHTIG!)
+Prisma `BigInt` (z.B. `priceVND`) kann nicht direkt an Client Components übergeben werden:
+```typescript
+import { serializeBigInt } from "@/lib/serialize";
+
+// Server Component → Client Component
+<FeaturedProperties properties={serializeBigInt(featured)} />
+```
+
+### Touch Handler Guards
+Immer prüfen ob Touch existiert:
+```typescript
+const handleTouchStart = (e: React.TouchEvent) => {
+  const touch = e.touches[0];
+  if (touch) {
+    setTouchStart(touch.clientX);
+  }
+};
+```
+
+### Keys in `.map()`
+- **Stabile IDs bevorzugen**: `key={property.id}`
+- **Index OK** wenn Array zur Laufzeit nicht mutiert wird
+- **Bei duplizierten Werten** (z.B. gleiche Bild-URLs): `key={index}` verwenden
+
+### AbortController für Fetch in useEffect
+```typescript
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 5000);
+await fetch(url, { signal: controller.signal });
+clearTimeout(timeoutId);
+```
+
+---
+
 ## Wichtige Hinweise
 
 ### 🔐 Security (KRITISCH!)
@@ -354,14 +392,13 @@ turbopack: {
 4. **Admin-Accounts** nur via `pnpm db:seed` oder Prisma Studio erstellen
 
 ### Architektur
-5. **Analytics API** ist `/api/t/*` (NICHT `/api/analytics/*`) wegen Ad-Blocker
-6. **Login** versteckt unter `/login` (nicht im Menü)
-7. **Soft Delete**: Properties werden archiviert, nicht gelöscht
-8. **priceVND**: Gespeichert in Millionen (500 = 500.000.000 VND)
+5. **Login** versteckt unter `/login` (nicht im Menü)
+6. **Soft Delete**: Properties werden archiviert, nicht gelöscht
+7. **priceVND**: Gespeichert in Millionen (500 = 500.000.000 VND)
 
 ### Troubleshooting
-9. **.next Ordner löschen** bei Turbopack-Problemen: `rm -rf .next`
-10. **Prisma regenerieren** nach Schema-Änderung: `pnpm prisma generate`
+8. **.next Ordner löschen** bei Turbopack-Problemen: `rm -rf .next`
+9. **Prisma regenerieren** nach Schema-Änderung: `pnpm prisma generate`
 
 ---
 

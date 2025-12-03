@@ -33,8 +33,31 @@ interface PropertyWithStats {
   whatsappClicks: number;
 }
 
+// Alte Analytics-Daten aufräumen (90+ Tage alt)
+async function cleanupOldAnalytics() {
+  const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
+
+  try {
+    // Alte Sessions und zugehörige Pageviews/Events löschen (Cascade)
+    const deleted = await prisma.analyticsSession.deleteMany({
+      where: {
+        startedAt: { lt: ninetyDaysAgo },
+      },
+    });
+
+    if (deleted.count > 0) {
+      console.log(`[ANALYTICS_CLEANUP] ${deleted.count} alte Sessions gelöscht`);
+    }
+  } catch {
+    // Cleanup-Fehler ignorieren, nicht blockierend
+  }
+}
+
 // GET: Analytics-Statistiken für Admin Dashboard (Admin only)
 async function getStatsHandler() {
+  // Cleanup im Hintergrund ausführen (nicht blockierend)
+  cleanupOldAnalytics();
+
   try {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -98,19 +121,27 @@ async function getStatsHandler() {
       }),
     ]);
 
-    // Avg Session Duration berechnen
+    // Avg Session Duration berechnen (max 2 Stunden, unrealistische Sessions ausfiltern)
+    const MAX_SESSION_DURATION = 2 * 60 * 60 * 1000; // 2 Stunden max (Millisekunden)
     let avgSessionDuration = 0;
     if (sessionsWithDuration.length > 0) {
-      const totalDuration = sessionsWithDuration.reduce(
-        (acc: number, session: SessionWithDuration) => {
-          if (session.endedAt) {
-            return acc + (session.endedAt.getTime() - session.startedAt.getTime());
-          }
-          return acc;
-        },
-        0
+      const validSessions = sessionsWithDuration.filter(
+        (session: SessionWithDuration) => {
+          if (!session.endedAt) return false;
+          const duration = session.endedAt.getTime() - session.startedAt.getTime();
+          return duration > 0 && duration <= MAX_SESSION_DURATION;
+        }
       );
-      avgSessionDuration = Math.round(totalDuration / sessionsWithDuration.length / 1000);
+
+      if (validSessions.length > 0) {
+        const totalDuration = validSessions.reduce(
+          (acc: number, session: SessionWithDuration) => {
+            return acc + (session.endedAt!.getTime() - session.startedAt.getTime());
+          },
+          0
+        );
+        avgSessionDuration = Math.round(totalDuration / validSessions.length / 1000);
+      }
     }
 
     // Pageviews pro Property zählen

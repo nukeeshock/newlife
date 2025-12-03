@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Honeypot-Check: Wenn website ausgefüllt = Bot
     if (website) {
-      console.log("[CONTACT_BOT_DETECTED]", getClientIP(request));
+      console.warn("[CONTACT_BOT_DETECTED]", getClientIP(request));
       // Fake-Success zurückgeben um Bot nicht zu warnen (identisch zur echten Response)
       const fakeId = `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 9)}`;
       return NextResponse.json(

@@ -50,6 +50,22 @@ export function formatStatus(status: string): string {
   return map[status] ?? status;
 }
 
+/**
+ * Status-Badge Tone Mapping für UI-Komponenten
+ */
+export type BadgeTone = "success" | "warning" | "info" | "muted";
+
+export function getStatusTone(status: string): BadgeTone {
+  const map: Record<string, BadgeTone> = {
+    available: "success",
+    reserved: "warning",
+    rented: "info",
+    sold: "info",
+    archived: "muted",
+  };
+  return map[status] ?? "muted";
+}
+
 export function formatType(type: string): string {
   const map: Record<string, string> = {
     private_residence: "Residenz",

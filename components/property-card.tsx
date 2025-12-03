@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState, type TouchEvent, type MouseEvent } from "react";
 import Link from "next/link";
 import type { Property } from "@/lib/types";
-import { formatPriceEUR, formatStatus, formatType, formatListingType, getPriceLabel } from "@/lib/format";
+import { formatPriceEUR, formatStatus, formatType, formatListingType, getPriceLabel, getStatusTone } from "@/lib/format";
 import { Badge } from "./ui/badge";
 import { useAuth } from "@/lib/hooks/use-auth";
 import { PropertyAdminActions } from "./admin/property-admin-actions";
@@ -25,12 +25,6 @@ export function PropertyCard({
   const [activeImage, setActiveImage] = useState(0);
   const touchStartX = useRef<number | null>(null);
   
-  const tone: Record<string, "success" | "warning" | "info" | "muted"> = {
-    available: "success",
-    reserved: "warning",
-    rented: "info",
-    archived: "muted",
-  };
 
   const images = property.images ?? [];
 
@@ -89,15 +83,19 @@ export function PropertyCard({
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {images[activeImage] && (
+          {images[activeImage] ? (
             <Image
               src={images[activeImage]}
-              alt={property.title}
+              alt={`${property.title} in ${property.city} - ${formatType(property.type)}${property.bedrooms ? `, ${property.bedrooms} Schlafzimmer` : ""}`}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
               sizes={isFeatured ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1024px) 360px, 100vw"}
               priority={showRecommendedFlag}
             />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-[--card] text-[--muted]">
+              <span className="text-sm">Kein Bild</span>
+            </div>
           )}
           
           {/* Gradient Overlay */}
@@ -105,7 +103,7 @@ export function PropertyCard({
           
           {/* Status Badge */}
           <div className="absolute left-4 top-4 flex gap-2">
-            <Badge tone={tone[property.status]}>{formatStatus(property.status)}</Badge>
+            <Badge tone={getStatusTone(property.status)}>{formatStatus(property.status)}</Badge>
           </div>
 
           {/* Type Label */}
@@ -145,7 +143,7 @@ export function PropertyCard({
               
               {/* Image Dots */}
               <div className="absolute bottom-4 right-4 flex gap-1.5">
-                {images.map((_: string, index: number) => (
+                {images.map((_url: string, index: number) => (
                   <span
                     key={index}
                     className={`h-1 w-1 rounded-full transition-colors ${

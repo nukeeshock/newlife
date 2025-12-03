@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Breadcrumb } from "@/components/breadcrumb";
+import { BreadcrumbSchema } from "@/components/seo/json-ld";
 
 // City data with content
 const cityData: Record<
@@ -272,12 +274,28 @@ export async function generateMetadata({
   const city = cityData[citySlug];
 
   if (!city) {
-    return { title: "Stadt nicht gefunden | NewLife Vietnam" };
+    return { title: "Stadt nicht gefunden | NEW LIFE VIETNAM" };
   }
 
+  const description = city.intro.slice(0, 155) + "...";
+
   return {
-    title: `${city.name} | NewLife Vietnam`,
-    description: city.intro,
+    title: `Immobilien in ${city.name} – Luxus-Mietobjekte`,
+    description,
+    openGraph: {
+      title: `${city.name} – Luxus-Immobilien in Vietnam`,
+      description,
+      type: "website",
+      url: `https://newlifevietnam.com/stadt/${citySlug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${city.name} – Immobilien`,
+      description,
+    },
+    alternates: {
+      canonical: `https://newlifevietnam.com/stadt/${citySlug}`,
+    },
   };
 }
 
@@ -294,9 +312,26 @@ export default async function CityPage({
   }
 
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative flex min-h-[60vh] items-center justify-center px-6 pt-32 pb-20">
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Home", url: "https://newlifevietnam.com" },
+          { name: city.name, url: `https://newlifevietnam.com/stadt/${citySlug}` },
+        ]}
+      />
+      <main className="min-h-screen">
+        {/* Breadcrumb */}
+        <div className="mx-auto w-full max-w-6xl px-6 pt-28">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: city.name },
+            ]}
+          />
+        </div>
+
+        {/* Hero Section */}
+        <section className="relative flex min-h-[50vh] items-center justify-center px-6 pt-8 pb-20">
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
             Entdecken Sie
@@ -472,7 +507,8 @@ export default async function CityPage({
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
 

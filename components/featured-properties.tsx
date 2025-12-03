@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useState, useEffect } from "react";
 import type { Property } from "@/lib/types";
 import { PropertyCard } from "./property-card";
 
@@ -7,9 +9,53 @@ interface FeaturedPropertiesProps {
 }
 
 export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+
+  // Reset activeIndex if it goes out of bounds when properties change
+  useEffect(() => {
+    if (activeIndex >= properties.length && properties.length > 0) {
+      setActiveIndex(properties.length - 1);
+    }
+  }, [properties.length, activeIndex]);
+
   if (properties.length === 0) {
     return null;
   }
+
+  // Safe current property (fallback to first if out of bounds)
+  const currentProperty = properties[activeIndex] ?? properties[0];
+
+  // Carousel navigation
+  const next = () =>
+    setActiveIndex((i) => Math.min(i + 1, properties.length - 1));
+  const prev = () => setActiveIndex((i) => Math.max(i - 1, 0));
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    if (touch) {
+      setTouchStart(touch.clientX);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const touch = e.changedTouches[0];
+    if (!touch) {
+      setTouchStart(null);
+      return;
+    }
+    const diff = touchStart - touch.clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+    setTouchStart(null);
+  };
 
   return (
     <section className="relative py-24 md:py-32">
@@ -23,34 +69,106 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
             Unsere <span className="italic">Empfehlungen</span>
           </h2>
           <p className="mt-4 max-w-xl text-base text-[--muted]">
-            Handverlesen von unserem Team – Objekte, die wir persönlich kennen und empfehlen.
+            Handverlesen von unserem Team – Objekte, die wir persönlich kennen
+            und empfehlen.
           </p>
         </div>
 
-        {/* Property Grid */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-10">
-          {properties.map((property) => (
+        {/* Mobile Carousel */}
+        <div className="md:hidden">
+          {/* Single Property Display */}
+          <div
+            className="relative"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <PropertyCard
-              key={property.id}
-              property={property}
+              property={currentProperty}
               showRecommendedFlag={false}
-              variant="featured"
+              variant="default"
             />
-          ))}
+
+            {/* Previous Arrow */}
+            {activeIndex > 0 && (
+              <button
+                onClick={prev}
+                className="absolute left-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-[--bg]/80 text-[--primary]/70 backdrop-blur-sm transition-colors hover:text-[--primary]"
+                aria-label="Vorheriges Objekt"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+            )}
+
+            {/* Next Arrow */}
+            {activeIndex < properties.length - 1 && (
+              <button
+                onClick={next}
+                className="absolute right-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-[--bg]/80 text-[--primary]/70 backdrop-blur-sm transition-colors hover:text-[--primary]"
+                aria-label="Nächstes Objekt"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* Dot Indicators */}
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            {properties.map((property, i) => (
+              <button
+                key={property.id}
+                onClick={() => setActiveIndex(i)}
+                className={`h-2 w-2 transition-colors ${
+                  i === activeIndex ? "bg-[--primary]" : "bg-[--muted]/30"
+                }`}
+                aria-label={`Gehe zu Objekt ${i + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Counter */}
+          <div className="mt-4 text-center text-sm text-[--muted]">
+            {activeIndex + 1} / {properties.length}
+          </div>
         </div>
 
-        {/* View All Link */}
-        <div className="mt-16 flex justify-center">
-          <Link
-            href="/type/private_residence"
-            className="group flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-[--muted] transition-colors hover:text-[--primary]"
-          >
-            <span>Alle Objekte ansehen</span>
-            <span className="inline-block transition-transform group-hover:translate-x-1">
-              →
-            </span>
-          </Link>
+        {/* Desktop Grid */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-2 gap-8 lg:gap-10">
+            {properties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                showRecommendedFlag={false}
+                variant="featured"
+              />
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   );

@@ -1,15 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
+import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { updatePropertySchema, validate, formatZodErrors } from "@/lib/validations";
+import { serializeBigInt } from "@/lib/serialize";
 
-// BigInt zu Number konvertieren für JSON-Serialisierung
-function serializeProperty(property: Record<string, unknown>) {
-  return JSON.parse(
-    JSON.stringify(property, (_, value) =>
-      typeof value === "bigint" ? Number(value) : value
-    )
+// Entfernte Bilder aus Vercel Blob löschen (nicht blockierend)
+async function cleanupRemovedImages(oldImages: string[], newImages: string[]) {
+  const removedImages = oldImages.filter(
+    (img) => !newImages.includes(img) && img.includes("vercel-storage.com")
   );
+
+  for (const url of removedImages) {
+    try {
+      await del(url);
+    } catch {
+      // Fehler ignorieren - Bild existiert möglicherweise nicht mehr
+    }
+  }
 }
 
 interface RouteParams {
@@ -32,7 +40,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    return NextResponse.json(serializeProperty(property));
+    return NextResponse.json(serializeBigInt(property));
   } catch (error) {
     console.error("[PROPERTY_GET_ERROR]", error);
     return NextResponse.json(
@@ -76,12 +84,17 @@ async function updatePropertyHandler(
       );
     }
 
+    // Bilder-Cleanup wenn images aktualisiert wurden
+    if (validation.data.images && existing.images) {
+      cleanupRemovedImages(existing.images, validation.data.images);
+    }
+
     const property = await prisma.property.update({
       where: { id },
       data: validation.data,
     });
 
-    return NextResponse.json(serializeProperty(property));
+    return NextResponse.json(serializeBigInt(property));
   } catch (error) {
     console.error("[PROPERTY_PATCH_ERROR]", error);
     return NextResponse.json(
