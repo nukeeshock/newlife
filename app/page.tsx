@@ -1,47 +1,5 @@
-import { Hero } from "@/components/hero";
-import { FeaturedProperties } from "@/components/featured-properties";
-import { SeniorLivingSection } from "@/components/senior-living-section";
-import { CtaSection } from "@/components/cta-section";
-import { prisma } from "@/lib/db";
-import { serializeBigInt } from "@/lib/serialize";
+import { GatewayPage } from "@/components/gateway/gateway-page";
 
-export const dynamic = "force-dynamic";
-
-export default async function Home() {
-  // Empfohlene Properties und Gesamtzahl aus der Datenbank laden
-  const [featured, totalCount] = await Promise.all([
-    prisma.property.findMany({
-      where: {
-        recommended: true,
-        status: { not: "archived" }
-      },
-      orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
-      take: 6,
-    }),
-    prisma.property.count({
-      where: { status: { not: "archived" } },
-    }),
-  ]);
-
-  return (
-    <>
-      <Hero propertyCount={totalCount} />
-      
-      {/* Divider */}
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
-        <div className="divider-gold" />
-      </div>
-
-      <FeaturedProperties properties={serializeBigInt(featured)} />
-
-      {/* Divider */}
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
-        <div className="divider-gold" />
-      </div>
-
-      <SeniorLivingSection />
-
-      <CtaSection />
-    </>
-  );
+export default function Home() {
+  return <GatewayPage />;
 }

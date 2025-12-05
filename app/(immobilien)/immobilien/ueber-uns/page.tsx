@@ -469,7 +469,7 @@ export default function UeberUnsPage() {
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="/kontakt"
+              href="/immobilien/kontakt"
               className="inline-flex items-center border border-[--primary] bg-[--primary] px-8 py-4 text-sm font-medium tracking-wide text-[--bg] transition-all hover:bg-transparent hover:text-[--primary]"
             >
               Jetzt Kontakt aufnehmen

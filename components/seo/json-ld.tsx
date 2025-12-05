@@ -66,7 +66,7 @@ export function PropertySchema({ property }: PropertySchemaProps) {
     "@type": "RealEstateListing",
     name: property.title,
     description: property.description,
-    url: `https://newlifevietnam.com/property/${property.slug}`,
+    url: `https://newlifevietnam.com/immobilien/property/${property.slug}`,
     image: property.images,
     datePosted: new Date().toISOString(),
     offers: {

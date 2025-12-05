@@ -64,7 +64,7 @@ export function CookieBanner() {
               anonyme Nutzungsstatistiken zu erheben. Sie können selbst
               entscheiden, ob Sie Cookies zulassen möchten.{" "}
               <Link
-                href="/datenschutz"
+                href="/immobilien/datenschutz"
                 className="text-[--primary] underline-offset-2 transition-colors hover:underline"
               >
                 Mehr erfahren

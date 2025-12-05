@@ -70,7 +70,7 @@ export function PropertyCard({
     <div className="flex flex-col">
       {/* Klickbare Card (Link) */}
       <Link
-        href={`/property/${property.slug}`}
+        href={`/immobilien/property/${property.slug}`}
         className={`group relative flex flex-col overflow-hidden border border-[--glass-border] bg-[--card] transition-all duration-500 hover:border-[--primary]/30 hover:shadow-[--shadow-glow] ${
           isFeatured ? "md:flex-row" : ""
         }`}

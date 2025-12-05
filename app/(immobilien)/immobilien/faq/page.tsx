@@ -70,7 +70,7 @@ export default function FAQPage() {
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
-                href="/kontakt"
+                href="/immobilien/kontakt"
                 className="inline-flex items-center justify-center border border-[--primary] bg-transparent px-8 py-3 text-sm font-medium uppercase tracking-widest text-[--primary] transition-all hover:bg-[--primary] hover:text-[--bg]"
               >
                 Kontakt aufnehmen
