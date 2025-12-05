@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import type { Property, PropertyType } from "@/lib/types";
 import { PropertyGrid } from "./property-grid";
 import { SortDropdown } from "./sort-dropdown";
 
 const ITEMS_PER_PAGE = 15;
+const DEBOUNCE_MS = 400;
 
 /**
  * Parst einen String zu Number, gibt null bei ungültigen Werten zurück
@@ -76,10 +77,14 @@ const propertyTypes: { value: PropertyType | ""; label: string }[] = [
   { value: "commercial", label: "Gewerbeflächen" },
 ];
 
+// Felder die Debouncing brauchen (Texteingabe)
+const debouncedFields: (keyof Filters)[] = ["minPrice", "maxPrice", "minArea", "maxArea"];
+
 export function PropertyListingPage({ properties }: PropertyListingPageProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   // Filter-State aus URL initialisieren
   const [filters, setFilters] = useState<Filters>(() => getFiltersFromParams(searchParams));
@@ -126,11 +131,24 @@ export function PropertyListingPage({ properties }: PropertyListingPageProps) {
   }, [pathname, router]);
 
   // Filter-Handler mit URL-Sync (Reset zu Seite 1)
+  // Debounced für Texteingaben, sofort für Dropdowns
   const handleFilterChange = useCallback((key: keyof Filters, value: string) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     setCurrentPage(1);
-    updateURL(newFilters, sort, 1);
+
+    // Debounce für Texteingabefelder (Preis, Fläche)
+    if (debouncedFields.includes(key)) {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+      debounceRef.current = setTimeout(() => {
+        updateURL(newFilters, sort, 1);
+      }, DEBOUNCE_MS);
+    } else {
+      // Dropdowns sofort aktualisieren
+      updateURL(newFilters, sort, 1);
+    }
   }, [filters, sort, updateURL]);
 
   // Sort-Handler mit URL-Sync (Reset zu Seite 1)
@@ -166,6 +184,15 @@ export function PropertyListingPage({ properties }: PropertyListingPageProps) {
     setCurrentPage(newPage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParamsString]);
+
+  // Cleanup debounce timer
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
   // Städte aus der Datenbank laden
   useEffect(() => {

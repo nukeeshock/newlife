@@ -78,7 +78,7 @@ async function main() {
       bedrooms: 5,
       bathrooms: 4,
       amenities: ["Seeterrasse", "Home Spa", "Garage für 3 Fahrzeuge", "Wöchentliche Reinigung inklusive"],
-      images: ["/da-nang.jpg", "/trees.jpg", "/da-nang.jpg"],
+      images: ["/da-nang.jpg", "/da-nang.jpg", "/da-nang.jpg"],
     },
     {
       slug: "skyline-apartment-saigon",
@@ -96,7 +96,7 @@ async function main() {
       bedrooms: 3,
       bathrooms: 3,
       amenities: ["Concierge", "Terrasse", "Privater Stellplatz", "Wöchentliche Reinigung inklusive"],
-      images: ["/trees.jpg", "/da-nang.jpg", "/trees.jpg"],
+      images: ["/da-nang.jpg", "/da-nang.jpg", "/da-nang.jpg"],
     },
     {
       slug: "courtyard-residence-hoi-an",
@@ -114,7 +114,7 @@ async function main() {
       bedrooms: 5,
       bathrooms: 3,
       amenities: ["Garteninnenhof", "Weinkeller", "Kamin", "Wöchentliche Reinigung inklusive"],
-      images: ["/da-nang.jpg", "/trees.jpg", "/da-nang.jpg"],
+      images: ["/da-nang.jpg", "/da-nang.jpg", "/da-nang.jpg"],
     },
     {
       slug: "marina-penthouse-da-nang",
@@ -132,7 +132,7 @@ async function main() {
       bedrooms: 3,
       bathrooms: 3,
       amenities: ["Doppelterrasse", "Kamin", "Hafenblick", "Wöchentliche Reinigung inklusive"],
-      images: ["/trees.jpg", "/da-nang.jpg", "/trees.jpg"],
+      images: ["/da-nang.jpg", "/da-nang.jpg", "/da-nang.jpg"],
     },
     {
       slug: "boutique-office-d1",
@@ -148,7 +148,7 @@ async function main() {
       popularity: 6,
       area: 280,
       amenities: ["Hohe Decken", "Eckeinheit", "Premium-Lage", "Wöchentliche Reinigung inklusive"],
-      images: ["/trees.jpg", "/da-nang.jpg", "/trees.jpg"],
+      images: ["/da-nang.jpg", "/da-nang.jpg", "/da-nang.jpg"],
     },
   ];
 

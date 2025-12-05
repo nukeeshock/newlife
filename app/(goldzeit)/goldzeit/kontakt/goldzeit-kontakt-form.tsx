@@ -352,7 +352,7 @@ ${formData.message}`;
               Lieber direkt? Schreiben Sie uns auf WhatsApp:
             </p>
             <a
-              href="https://wa.me/84832114684?text=Hallo,%20ich%20interessiere%20mich%20für%20das%20Goldzeit%20Living%20Konzept."
+              href="https://wa.me/84832114684?text=Hallo,%20ich%20interessiere%20mich%20f%C3%BCr%20das%20Goldzeit%20Living%20Konzept."
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center gap-2 border border-[--glass-border] px-4 py-2 text-sm text-[--text] transition-colors hover:border-[--primary] hover:text-[--primary]"

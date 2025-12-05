@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { GatewaySection } from "./gateway-section";
 
 export function GatewayPage() {
@@ -34,12 +35,22 @@ export function GatewayPage() {
         <div className="h-px w-full bg-white/10 lg:h-full lg:w-px" />
 
         {/* Logo Container */}
-        <div className="absolute flex flex-col items-center bg-zinc-950 px-6 py-4 lg:px-4 lg:py-6">
-          <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[#D4AF37]">
-            New Life
-          </span>
-          <span className="font-serif text-lg font-light tracking-wide text-white">
-            Vietnam
+        <div className="absolute flex flex-col items-start rounded-xl border border-white/10 bg-zinc-950/70 px-6 py-4 shadow-2xl backdrop-blur-md lg:px-8 lg:py-6">
+          <div className="flex items-center gap-3">
+            <span className="font-serif text-lg font-light tracking-[0.3em] text-white lg:text-xl">
+              NEW LIFE
+            </span>
+            <Image
+              src="/LOGO_NLV.png"
+              alt="NEW LIFE VIETNAM"
+              width={64}
+              height={64}
+              className="rounded-full"
+              priority
+            />
+          </div>
+          <span className="font-serif text-lg font-light tracking-[0.3em] text-white lg:text-xl">
+            VIETNAM
           </span>
         </div>
       </div>

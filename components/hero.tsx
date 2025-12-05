@@ -9,7 +9,7 @@ interface HeroProps {
 
 export function Hero({ propertyCount }: HeroProps) {
   return (
-    <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-6 py-20 md:min-h-[90vh] md:px-8">
+    <section className="relative flex min-h-[85vh] flex-col items-center justify-center overflow-hidden px-6 pt-32 pb-20 md:min-h-[90vh] md:px-8">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -61,7 +61,7 @@ export function Hero({ propertyCount }: HeroProps) {
         {/* CTA */}
         <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row">
           <a
-            href="https://wa.me/84832114684?text=Ich%20interessiere%20mich%20für%20Ihre%20exklusiven%20Objekte%20in%20Vietnam."
+            href="https://wa.me/84832114684?text=Ich%20interessiere%20mich%20f%C3%BCr%20Ihre%20exklusiven%20Objekte%20in%20Vietnam."
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClasses({

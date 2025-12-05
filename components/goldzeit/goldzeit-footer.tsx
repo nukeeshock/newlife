@@ -71,10 +71,10 @@ export function GoldzeitFooter() {
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               <a
-                href="mailto:goldzeit@newlifevietnam.com"
+                href="mailto:contact@newlifevietnam.de"
                 className="text-white/80 transition-colors hover:text-orange-400"
               >
-                goldzeit@newlifevietnam.com
+                contact@newlifevietnam.de
               </a>
               <a
                 href="https://wa.me/84832114684"

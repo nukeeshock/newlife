@@ -104,10 +104,10 @@ export function Footer() {
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               <a
-                href="mailto:contact@newlifevietnam.com"
+                href="mailto:contact@newlifevietnam.de"
                 className="text-white/80 transition-colors hover:text-[--primary]"
               >
-                contact@newlifevietnam.com
+                contact@newlifevietnam.de
               </a>
               <a
                 href="https://wa.me/84832114684"

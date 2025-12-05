@@ -30,7 +30,7 @@ export function CtaSection() {
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
-            href="https://wa.me/84832114684?text=Ich%20möchte%20mehr%20über%20Ihre%20Objekte%20erfahren."
+            href="https://wa.me/84832114684?text=Ich%20m%C3%B6chte%20mehr%20%C3%BCber%20Ihre%20Objekte%20erfahren."
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClasses({
@@ -41,7 +41,7 @@ export function CtaSection() {
             WhatsApp Kontakt
           </a>
           <a
-            href="mailto:contact@newlifevietnam.com"
+            href="mailto:contact@newlifevietnam.de"
             className={buttonClasses({
               variant: "ghost",
               className: "min-w-[220px] px-8 py-4 text-base",

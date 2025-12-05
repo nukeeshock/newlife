@@ -55,11 +55,20 @@ export const metadata: Metadata = {
     title: "NEW LIFE VIETNAM - Immobilien & Co-Living in Vietnam",
     description:
       "NLV Real Estate und NLV Goldzeit Living - Ihr Partner in Vietnam.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "NEW LIFE VIETNAM Logo",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "NEW LIFE VIETNAM",
     description: "Immobilien & Co-Living in Vietnam",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
