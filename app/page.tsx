@@ -1,47 +1,62 @@
-import { Hero } from "@/components/hero";
-import { FeaturedProperties } from "@/components/featured-properties";
-import { SeniorLivingSection } from "@/components/senior-living-section";
-import { CtaSection } from "@/components/cta-section";
-import { prisma } from "@/lib/db";
-import { serializeBigInt } from "@/lib/serialize";
 
-export const dynamic = "force-dynamic";
+import { SiteFooter } from '@/components/layout/footer';
+import { ChoiceCard } from '@/components/gateway/choice';
 
-export default async function Home() {
-  // Empfohlene Properties und Gesamtzahl aus der Datenbank laden
-  const [featured, totalCount] = await Promise.all([
-    prisma.property.findMany({
-      where: {
-        recommended: true,
-        status: { not: "archived" }
-      },
-      orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
-      take: 6,
-    }),
-    prisma.property.count({
-      where: { status: { not: "archived" } },
-    }),
-  ]);
-
+export default function GatewayPage() {
   return (
-    <>
-      <Hero propertyCount={totalCount} />
-      
-      {/* Divider */}
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
-        <div className="divider-gold" />
+    <div style={{
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: '#1A1A1A',
+      display: 'flex',
+      flexDirection: 'column',
+      color: '#F3F3F3',
+      fontFamily: 'serif', 
+    }}>
+      {/* Video Background Placeholder */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        height: '100%',
+        width: '100%',
+        backgroundColor: '#000',
+        opacity: 0.5,
+        zIndex: 1,
+      }}></div>
+
+      {/* Main Content */}
+      <main style={{
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2, 
+        textAlign: 'center' 
+      }}>
+        <h1 style={{ fontSize: '3rem', fontWeight: 'normal', letterSpacing: '0.1em', marginBottom: '4rem' }}>
+          NEW LIFE VIETNAM
+        </h1>
+
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          <ChoiceCard 
+            href="/wohnen"
+            title="Exklusives Langzeitwohnen"
+            description="Ihr neuer Lebensabschnitt im Paradies."
+          />
+          <ChoiceCard 
+            href="/immobilien"
+            title="Luxus-Immobilien"
+            description="Finden und investieren Sie in Vietnams Juwelen."
+          />
+        </div>
+      </main>
+
+      {/* Footer */}
+      <div style={{zIndex: 2}}>
+        <SiteFooter />
       </div>
-
-      <FeaturedProperties properties={serializeBigInt(featured)} />
-
-      {/* Divider */}
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
-        <div className="divider-gold" />
-      </div>
-
-      <SeniorLivingSection />
-
-      <CtaSection />
-    </>
+    </div>
   );
 }
