@@ -61,6 +61,13 @@ export function PropertySchema({ property }: PropertySchemaProps) {
   const isForRent = property.listingType === "rent";
   const price = property.priceEUR || 0;
 
+  // Berechne Datumsfelder einmalig (vermeidet impure Date.now() im Schema-Objekt)
+  const now = new Date();
+  const datePosted = now.toISOString();
+  const priceValidUntilDate = new Date(now);
+  priceValidUntilDate.setDate(priceValidUntilDate.getDate() + 30);
+  const priceValidUntil = priceValidUntilDate.toISOString().split("T")[0];
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -68,16 +75,12 @@ export function PropertySchema({ property }: PropertySchemaProps) {
     description: property.description,
     url: `https://newlifevietnam.com/immobilien/property/${property.slug}`,
     image: property.images,
-    datePosted: new Date().toISOString(),
+    datePosted,
     offers: {
       "@type": "Offer",
       price: price,
       priceCurrency: "EUR",
-      ...(isForRent && {
-        priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-          .toISOString()
-          .split("T")[0],
-      }),
+      ...(isForRent && { priceValidUntil }),
       availability:
         property.status === "available"
           ? "https://schema.org/InStock"
