@@ -76,7 +76,7 @@ export default function FAQPage() {
                 Kontakt aufnehmen
               </Link>
               <a
-                href="https://wa.me/4915112345678?text=Hallo,%20ich%20habe%20eine%20Frage%20zu%20Vietnam."
+                href="https://wa.me/84832114684?text=Hallo,%20ich%20habe%20eine%20Frage%20zu%20Vietnam."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 border border-[--glass-border] bg-transparent px-8 py-3 text-sm font-medium uppercase tracking-widest text-[--text] transition-all hover:border-[--primary]/50 hover:text-[--primary]"

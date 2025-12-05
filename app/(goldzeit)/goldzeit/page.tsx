@@ -7,9 +7,9 @@ import { GoldzeitTeam } from "@/components/goldzeit/goldzeit-team";
 import { GoldzeitCta } from "@/components/goldzeit/goldzeit-cta";
 
 export const metadata: Metadata = {
-  title: "NLV Goldzeit Living | Co-Living in Vietnam fuer Best Ager",
+  title: "NLV Goldzeit Living | Co-Living in Vietnam für Best Ager",
   description:
-    "Das exklusive Shared Living Konzept fuer Menschen ab 50+ in Da Nang, Vietnam. Pool-Villen, Vollpension, deutschsprachige Betreuung. Ab 999 EUR pro Monat.",
+    "Das exklusive Shared Living Konzept für Menschen ab 50+ in Da Nang, Vietnam. Pool-Villen, Vollpension, deutschsprachige Betreuung. Ab 999 EUR pro Monat.",
   keywords: [
     "Co-Living Vietnam",
     "Senioren WG Vietnam",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NLV Goldzeit Living | Gemeinsam leben in Vietnam",
     description:
-      "Pool-Villen, Vollpension, 24/7 Betreuung. Das Shared Living Konzept fuer Best Ager in Da Nang.",
+      "Pool-Villen, Vollpension, 24/7 Betreuung. Das Shared Living Konzept für Best Ager in Da Nang.",
     type: "website",
     locale: "de_DE",
   },

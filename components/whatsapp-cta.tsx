@@ -9,7 +9,7 @@ export function WhatsAppCTA({ propertyTitle, slug }: WhatsAppCTAProps) {
   const text = encodeURIComponent(
     `Guten Tag, ich interessiere mich für "${propertyTitle}" (${slug}). Können Sie mir weitere Informationen zusenden?`,
   );
-  const href = `https://wa.me/4915112345678?text=${text}`;
+  const href = `https://wa.me/84832114684?text=${text}`;
 
   return (
     <a

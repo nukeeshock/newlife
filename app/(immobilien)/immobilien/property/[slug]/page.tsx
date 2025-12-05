@@ -229,7 +229,7 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
                   {property.amenities.map((item: string, index: number) => (
                     <span
                       key={`${item}-${index}`}
-                      className="border border-[--glass-border] bg-[--glass] px-4 py-2 text-sm text-[--text]"
+                      className="border border-[--border] bg-white px-4 py-2 text-sm text-[--accent] shadow-sm"
                     >
                       {item}
                     </span>
@@ -240,44 +240,44 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
           </div>
 
           {/* Eckdaten Sidebar */}
-          <div className="border border-[--glass-border] bg-[--card] p-6 lg:p-8">
-            <h3 className="font-serif text-xl font-light text-[--text]">
+          <div className="border border-[--border] bg-white p-6 shadow-sm lg:p-8">
+            <h3 className="font-serif text-xl font-light text-[--accent]">
               Eckdaten
             </h3>
             <dl className="mt-6 space-y-4">
-              <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+              <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                 <dt className="text-[--muted]">Angebot</dt>
-                <dd className="font-medium text-[--text]">{formatListingType(listingType)}</dd>
+                <dd className="font-semibold text-[--accent]">{formatListingType(listingType)}</dd>
               </div>
-              <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+              <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                 <dt className="text-[--muted]">{priceLabel}</dt>
-                <dd className="font-medium text-[--primary]">{formatPriceEUR(priceEUR)}</dd>
+                <dd className="font-semibold text-[--primary]">{formatPriceEUR(priceEUR)}</dd>
               </div>
               {property.area && (
-                <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+                <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                   <dt className="text-[--muted]">Fläche</dt>
-                  <dd className="font-medium text-[--text]">{property.area} m²</dd>
+                  <dd className="font-semibold text-[--accent]">{property.area} m²</dd>
                 </div>
               )}
               {property.bedrooms && (
-                <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+                <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                   <dt className="text-[--muted]">Schlafzimmer</dt>
-                  <dd className="font-medium text-[--text]">{property.bedrooms}</dd>
+                  <dd className="font-semibold text-[--accent]">{property.bedrooms}</dd>
                 </div>
               )}
               {property.bathrooms && (
-                <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+                <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                   <dt className="text-[--muted]">Bäder</dt>
-                  <dd className="font-medium text-[--text]">{property.bathrooms}</dd>
+                  <dd className="font-semibold text-[--accent]">{property.bathrooms}</dd>
                 </div>
               )}
-              <div className="flex justify-between border-b border-[--glass-border] pb-4 text-sm">
+              <div className="flex justify-between border-b border-[--border] pb-4 text-sm">
                 <dt className="text-[--muted]">Status</dt>
-                <dd className="font-medium text-[--text]">{formatStatus(property.status)}</dd>
+                <dd className="font-semibold text-[--accent]">{formatStatus(property.status)}</dd>
               </div>
               <div className="flex justify-between text-sm">
                 <dt className="text-[--muted]">Typ</dt>
-                <dd className="font-medium text-[--text]">{formatType(property.type)}</dd>
+                <dd className="font-semibold text-[--accent]">{formatType(property.type)}</dd>
               </div>
             </dl>
           </div>

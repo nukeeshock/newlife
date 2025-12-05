@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | NEW LIFE VIETNAM",
   },
   description:
-    "NLV Real Estate fuer exklusive Immobilien und NLV Goldzeit Living fuer Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
+    "NLV Real Estate für exklusive Immobilien und NLV Goldzeit Living für Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
   keywords: [
     "Immobilien Vietnam",
     "Co-Living Vietnam",

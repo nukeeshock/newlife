@@ -22,7 +22,7 @@ export function OrganizationSchema() {
       addressCountry: "VN",
     },
     priceRange: "$$$$",
-    telephone: "+49 151 123 456 78",
+    telephone: "+84 83 211 4684",
     email: "contact@newlifevietnam.com",
   };
 

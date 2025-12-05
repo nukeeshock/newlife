@@ -4,11 +4,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Das Konzept - NLV Goldzeit Living",
   description:
-    "Erfahren Sie alles ueber unser Shared Living Konzept in Vietnam. Pool-Villen, Gemeinschaft, Vollpension und deutschsprachige Betreuung fuer Best Ager.",
+    "Erfahren Sie alles über unser Shared Living Konzept in Vietnam. Pool-Villen, Gemeinschaft, Vollpension und deutschsprachige Betreuung für Best Ager.",
   openGraph: {
     title: "Das Goldzeit Living Konzept",
     description:
-      "Gemeinsam leben in Vietnam - das innovative Co-Living Konzept fuer Menschen ab 50+.",
+      "Gemeinsam leben in Vietnam - das innovative Co-Living Konzept für Menschen ab 50+.",
     type: "website",
   },
 };
@@ -26,9 +26,9 @@ export default function GoldzeitKonzeptPage() {
             Gemeinsam leben. <span className="italic text-[--primary]">Selbstbestimmt.</span>
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-[--muted]">
-            Stellen Sie sich vor: Sie wachen auf in einer luxurioesen Pool-Villa,
+            Stellen Sie sich vor: Sie wachen auf in einer luxuriösen Pool-Villa,
             umgeben von Gleichgesinnten, mit allem was Sie brauchen - und das zu einem
-            Bruchteil dessen, was es in Europa kosten wuerde.
+            Bruchteil dessen, was es in Europa kosten würde.
           </p>
         </div>
 
@@ -44,44 +44,44 @@ export default function GoldzeitKonzeptPage() {
               Das Problem: Einsamkeit im Alter
             </h2>
             <p className="mb-4 leading-relaxed text-[--muted]">
-              In Deutschland leben Millionen Menschen ueber 50 allein. Die Kinder sind
+              In Deutschland leben Millionen Menschen über 50 allein. Die Kinder sind
               ausgezogen, der Partner vielleicht verstorben, die sozialen Kontakte werden
-              weniger. Altersheime sind teuer und unpersoenlich, betreutes Wohnen oft
+              weniger. Altersheime sind teuer und unpersönlich, betreutes Wohnen oft
               nicht viel besser.
             </p>
             <p className="leading-relaxed text-[--muted]">
               Gleichzeitig steigen die Lebenshaltungskosten, die Rente reicht kaum,
-              und der Traum von einem erfuellten Ruhestand scheint in weite Ferne zu ruecken.
+              und der Traum von einem erfüllten Ruhestand scheint in weite Ferne zu rücken.
             </p>
           </div>
         </section>
 
-        {/* Section: Die Loesung */}
+        {/* Section: Die Lösung */}
         <section className="mb-20 border border-white/5 bg-[--surface] p-8 md:p-12">
           <div className="mx-auto max-w-3xl">
             <h2 className="mb-6 font-serif text-2xl font-light text-[--text]">
-              Unsere Loesung: Shared Living in Vietnam
+              Unsere Lösung: Shared Living in Vietnam
             </h2>
             <p className="mb-6 leading-relaxed text-[--muted]">
-              NLV Goldzeit Living bietet Ihnen das Beste aus beiden Welten: Die Privatsphaere
+              NLV Goldzeit Living bietet Ihnen das Beste aus beiden Welten: Die Privatsphäre
               eines eigenen Zimmers mit Bad, kombiniert mit der Gemeinschaft einer
-              Wohngruppe in einer luxurioesen Pool-Villa.
+              Wohngruppe in einer luxuriösen Pool-Villa.
             </p>
             <div className="grid gap-6 md:grid-cols-2">
               <div className="border border-white/5 bg-[--bg] p-6">
-                <h3 className="mb-3 font-bold text-[--primary]">Privatsphaere</h3>
+                <h3 className="mb-3 font-bold text-[--primary]">Privatsphäre</h3>
                 <ul className="space-y-2 text-sm text-[--muted]">
                   <li>- Eigenes Schlafzimmer mit eigenem Bad</li>
-                  <li>- Hochwertige Moebel und Ausstattung</li>
+                  <li>- Hochwertige Möbel und Ausstattung</li>
                   <li>- Klimaanlage und WLAN</li>
-                  <li>- Abschliessbarer Rueckzugsort</li>
+                  <li>- Abschließbarer Rückzugsort</li>
                 </ul>
               </div>
               <div className="border border-white/5 bg-[--bg] p-6">
                 <h3 className="mb-3 font-bold text-[--primary]">Gemeinschaft</h3>
                 <ul className="space-y-2 text-sm text-[--muted]">
-                  <li>- Grosszuegige Gemeinschaftsraeume</li>
-                  <li>- Gemeinsame Mahlzeiten (2x taeglich)</li>
+                  <li>- Großzügige Gemeinschaftsräume</li>
+                  <li>- Gemeinsame Mahlzeiten (2x täglich)</li>
                   <li>- Tropischer Garten mit Pool</li>
                   <li>- Gesellschaft von Gleichgesinnten</li>
                 </ul>
@@ -97,9 +97,9 @@ export default function GoldzeitKonzeptPage() {
               Der Standort: Da Nang, Vietnam
             </h2>
             <p className="mb-4 leading-relaxed text-[--muted]">
-              Da Nang ist eine der modernsten und sichersten Staedte Vietnams. Mit
-              kilometerlangen Sandstraenden, exzellenter medizinischer Versorgung und
-              einem eigenen internationalen Flughafen ist es der ideale Ort fuer Ihren
+              Da Nang ist eine der modernsten und sichersten Städte Vietnams. Mit
+              kilometerlangen Sandstränden, exzellenter medizinischer Versorgung und
+              einem eigenen internationalen Flughafen ist es der ideale Ort für Ihren
               neuen Lebensabschnitt.
             </p>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -109,7 +109,7 @@ export default function GoldzeitKonzeptPage() {
               </div>
               <div className="text-center">
                 <div className="mb-2 text-3xl font-bold text-[--primary]">70%</div>
-                <div className="text-sm text-[--muted]">Guenstigere Lebenshaltung</div>
+                <div className="text-sm text-[--muted]">Günstigere Lebenshaltung</div>
               </div>
               <div className="text-center">
                 <div className="mb-2 text-3xl font-bold text-[--primary]">24/7</div>
@@ -130,22 +130,22 @@ export default function GoldzeitKonzeptPage() {
                 <h3 className="mb-2 font-bold text-[--text]">Morgens</h3>
                 <p className="text-sm text-[--muted]">
                   Aufwachen ohne Wecker, ein erfrischendes Bad im Pool oder Yoga auf der
-                  Terrasse. Gemeinsames Fruehstueck mit frischen tropischen Fruechten und
+                  Terrasse. Gemeinsames Frühstück mit frischen tropischen Früchten und
                   vietnamesischem Kaffee.
                 </p>
               </div>
               <div className="border-l-2 border-[--primary] pl-6">
                 <h3 className="mb-2 font-bold text-[--text]">Mittags</h3>
                 <p className="text-sm text-[--muted]">
-                  Zeit fuer sich - lesen, spazieren am Strand, Hobbys nachgehen oder
-                  die Stadt erkunden. Die Haushaltshilfe kuemmert sich um alles Organisatorische.
+                  Zeit für sich - lesen, spazieren am Strand, Hobbys nachgehen oder
+                  die Stadt erkunden. Die Haushaltshilfe kümmert sich um alles Organisatorische.
                 </p>
               </div>
               <div className="border-l-2 border-[--primary] pl-6">
                 <h3 className="mb-2 font-bold text-[--text]">Abends</h3>
                 <p className="text-sm text-[--muted]">
-                  Gemeinsames Abendessen mit vietnamesischer oder internationaler Kueche.
-                  Danach vielleicht ein Spieleabend, ein Film oder einfach gute Gespraeche
+                  Gemeinsames Abendessen mit vietnamesischer oder internationaler Küche.
+                  Danach vielleicht ein Spieleabend, ein Film oder einfach gute Gespräche
                   bei einem Glas Wein.
                 </p>
               </div>
@@ -157,10 +157,10 @@ export default function GoldzeitKonzeptPage() {
         <section className="mb-20 border border-white/5 bg-[--surface] p-8 md:p-12">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="mb-6 font-serif text-2xl font-light text-[--text]">
-              Wir sind fuer Sie da
+              Wir sind für Sie da
             </h2>
             <p className="mb-8 leading-relaxed text-[--muted]">
-              Unser Team besteht aus deutschen Ansprechpartnern in Deutschland (fuer
+              Unser Team besteht aus deutschen Ansprechpartnern in Deutschland (für
               Ihre Vorbereitung), deutschen Betreuern vor Ort in Vietnam und erfahrenen
               vietnamesischen Mitarbeitern. Sie sind nie allein.
             </p>
@@ -168,19 +168,19 @@ export default function GoldzeitKonzeptPage() {
               <div>
                 <div className="mb-2 text-lg font-bold text-[--text]">Beratung DE</div>
                 <p className="text-sm text-[--muted]">
-                  Ihre Ansprechpartner in Deutschland fuer alle Fragen vor der Abreise.
+                  Ihre Ansprechpartner in Deutschland für alle Fragen vor der Abreise.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-lg font-bold text-[--text]">Betreuung VN</div>
                 <p className="text-sm text-[--muted]">
-                  Deutsche Betreuer vor Ort, 24/7 erreichbar fuer alle Anliegen.
+                  Deutsche Betreuer vor Ort, 24/7 erreichbar für alle Anliegen.
                 </p>
               </div>
               <div>
                 <div className="mb-2 text-lg font-bold text-[--text]">Haushalt</div>
                 <p className="text-sm text-[--muted]">
-                  Vietnamesische Haushaltshilfen, 8h taeglich im Einsatz.
+                  Vietnamesische Haushaltshilfen, 8h täglich im Einsatz.
                 </p>
               </div>
             </div>
@@ -191,16 +191,16 @@ export default function GoldzeitKonzeptPage() {
         <section className="mb-20">
           <div className="mx-auto max-w-3xl">
             <h2 className="mb-8 font-serif text-2xl font-light text-[--text]">
-              Haeufige Fragen
+              Häufige Fragen
             </h2>
             <div className="space-y-6">
               <div>
                 <h3 className="mb-2 font-bold text-[--text]">
-                  Brauche ich ein Visum fuer Vietnam?
+                  Brauche ich ein Visum für Vietnam?
                 </h3>
                 <p className="text-sm text-[--muted]">
                   Ja, aber wir helfen Ihnen dabei. Es gibt verschiedene Visum-Optionen,
-                  die Aufenthalte von mehreren Monaten bis zu einem Jahr ermoeglichen.
+                  die Aufenthalte von mehreren Monaten bis zu einem Jahr ermöglichen.
                   Wir beraten Sie individuell.
                 </p>
               </div>
@@ -209,17 +209,17 @@ export default function GoldzeitKonzeptPage() {
                   Wie ist die medizinische Versorgung?
                 </h3>
                 <p className="text-sm text-[--muted]">
-                  Da Nang hat mehrere internationale Krankenhaeuser mit englisch- und
-                  teilweise deutschsprachigen Aerzten. Wir haben ein Netzwerk von
+                  Da Nang hat mehrere internationale Krankenhäuser mit englisch- und
+                  teilweise deutschsprachigen Ärzten. Wir haben ein Netzwerk von
                   Medizinern und begleiten Sie bei Bedarf zu Terminen.
                 </p>
               </div>
               <div>
                 <h3 className="mb-2 font-bold text-[--text]">
-                  Kann ich jederzeit zurueck nach Deutschland?
+                  Kann ich jederzeit zurück nach Deutschland?
                 </h3>
                 <p className="text-sm text-[--muted]">
-                  Selbstverstaendlich. Es gibt keine Mindestaufenthaltsdauer. Viele unserer
+                  Selbstverständlich. Es gibt keine Mindestaufenthaltsdauer. Viele unserer
                   Bewohner verbringen die Wintermonate in Vietnam und den Sommer in Deutschland.
                 </p>
               </div>
@@ -228,8 +228,8 @@ export default function GoldzeitKonzeptPage() {
                   Was ist, wenn ich nicht (mehr) alleine reisen kann?
                 </h3>
                 <p className="text-sm text-[--muted]">
-                  Wir organisieren auf Wunsch einen Begleitservice - sowohl fuer die Anreise
-                  als auch fuer eventuelle Rueckfluege. Sie sind bei uns in guten Haenden.
+                  Wir organisieren auf Wunsch einen Begleitservice - sowohl für die Anreise
+                  als auch für eventuelle Rückflüge. Sie sind bei uns in guten Händen.
                 </p>
               </div>
             </div>
@@ -239,7 +239,7 @@ export default function GoldzeitKonzeptPage() {
         {/* CTA */}
         <section className="mx-auto max-w-2xl text-center">
           <h2 className="mb-4 font-serif text-2xl font-light text-[--text]">
-            Bereit fuer Ihr neues Leben?
+            Bereit für Ihr neues Leben?
           </h2>
           <p className="mb-8 text-[--muted]">
             Fordern Sie jetzt unverbindlich weitere Informationen an.
@@ -252,7 +252,7 @@ export default function GoldzeitKonzeptPage() {
               Kostenlose Beratung
             </Link>
             <a
-              href="https://wa.me/4915112345678"
+              href="https://wa.me/84832114684"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 border border-[--glass-border] px-8 py-4 text-[--text] transition-colors hover:border-[--primary] hover:text-[--primary]"

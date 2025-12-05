@@ -475,7 +475,7 @@ export default function UeberUnsPage() {
               Jetzt Kontakt aufnehmen
             </Link>
             <a
-              href="https://wa.me/4915112345678"
+              href="https://wa.me/84832114684"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-[--glass-border] px-8 py-4 text-sm font-medium tracking-wide text-[--text] transition-all hover:border-[--primary] hover:text-[--primary]"

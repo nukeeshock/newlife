@@ -1,45 +1,93 @@
 import { Metadata } from "next";
+import { Hero } from "@/components/hero";
+import { FeaturedProperties } from "@/components/featured-properties";
+import { CtaSection } from "@/components/cta-section";
 import { prisma } from "@/lib/db";
 import { serializeBigInt } from "@/lib/serialize";
-import { PropertyListWithFilters } from "@/components/property-list-with-filters";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Alle Immobilien - NLV Real Estate",
+  title: "NLV Real Estate - Exklusive Immobilien in Vietnam",
   description:
-    "Entdecken Sie unsere handverlesenen Luxus-Immobilien in Vietnam. Villen, Residenzen, Apartments und Gewerbeflaechen in Da Nang, Hoi An und Ho Chi Minh City.",
+    "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City. Ihr persönlicher Concierge für exklusive Immobilien in Vietnam.",
 };
 
 export default async function ImmobilienPage() {
-  const properties = await prisma.property.findMany({
-    where: {
-      status: { not: "archived" },
-    },
-    orderBy: [{ recommended: "desc" }, { popularity: "asc" }, { createdAt: "desc" }],
-  });
+  const [featured, totalCount] = await Promise.all([
+    prisma.property.findMany({
+      where: {
+        recommended: true,
+        status: { not: "archived" },
+      },
+      orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
+      take: 6,
+    }),
+    prisma.property.count({
+      where: { status: { not: "archived" } },
+    }),
+  ]);
 
   return (
-    <div className="min-h-screen bg-[--bg]">
-      {/* Hero Section */}
-      <section className="relative flex min-h-[40vh] items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-[--bg] via-transparent to-[--bg]" />
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-16 text-center md:px-8">
-          <span className="text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
-            NLV Real Estate
-          </span>
-          <h1 className="mt-4 font-serif text-4xl font-light text-[--text] md:text-5xl lg:text-6xl">
-            Alle Immobilien
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-[--muted]">
-            Entdecken Sie unsere handverlesene Auswahl an Premium-Immobilien in Vietnam.
-            Filtern Sie nach Typ, Stadt oder Preis.
-          </p>
+    <>
+      <Hero propertyCount={totalCount} />
+
+      {/* Divider */}
+      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
+        <div className="divider-gold" />
+      </div>
+
+      <FeaturedProperties properties={serializeBigInt(featured)} />
+
+      {/* Divider */}
+      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
+        <div className="divider-gold" />
+      </div>
+
+      {/* Goldzeit Teaser Section */}
+      <section className="py-20">
+        <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
+          <div className="border border-[--border] bg-white p-8 shadow-sm md:p-12">
+            <div className="flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
+              <div className="flex-1">
+                <span className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-600">
+                  NLV Goldzeit Living
+                </span>
+                <h2 className="mt-2 font-serif text-2xl font-light text-[--accent] md:text-3xl">
+                  Gemeinsam leben in Vietnam
+                </h2>
+                <p className="mt-4 text-[--muted]">
+                  Unser Co-Living Konzept für Best Ager: Pool-Villen, Vollpension,
+                  deutschsprachige Betreuung - ab 999 EUR pro Monat.
+                </p>
+              </div>
+              <Link
+                href="/goldzeit"
+                className="flex items-center gap-2 border border-orange-600 bg-orange-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-700"
+              >
+                Mehr erfahren
+                <svg
+                  aria-hidden="true"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Properties with Filters */}
-      <PropertyListWithFilters properties={serializeBigInt(properties)} />
-    </div>
+      <CtaSection />
+    </>
   );
 }

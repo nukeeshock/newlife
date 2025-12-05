@@ -92,7 +92,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
             {activeIndex > 0 && (
               <button
                 onClick={prev}
-                className="absolute left-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-[--bg]/80 text-[--primary]/70 backdrop-blur-sm transition-colors hover:text-[--primary]"
+                className="absolute left-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-white/90 text-[--accent] shadow-md backdrop-blur-sm transition-colors hover:text-[--primary]"
                 aria-label="Vorheriges Objekt"
               >
                 <svg
@@ -115,7 +115,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
             {activeIndex < properties.length - 1 && (
               <button
                 onClick={next}
-                className="absolute right-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-[--bg]/80 text-[--primary]/70 backdrop-blur-sm transition-colors hover:text-[--primary]"
+                className="absolute right-2 top-32 z-10 flex h-10 w-10 items-center justify-center bg-white/90 text-[--accent] shadow-md backdrop-blur-sm transition-colors hover:text-[--primary]"
                 aria-label="Nächstes Objekt"
               >
                 <svg

@@ -6,18 +6,18 @@ interface BadgeProps {
 }
 
 const toneStyles: Record<NonNullable<BadgeProps["tone"]>, string> = {
-  default: "bg-[--glass] text-[--text] border border-[--glass-border]",
-  success: "bg-emerald-500/10 text-emerald-300 border border-emerald-500/20",
-  warning: "bg-amber-500/10 text-amber-300 border border-amber-500/20",
-  info: "bg-sky-500/10 text-sky-300 border border-sky-500/20",
-  muted: "bg-[--glass] text-[--muted] border border-[--glass-border]",
+  default: "bg-white text-[--accent] border border-[--border] shadow-sm",
+  success: "bg-emerald-50 text-emerald-700 border border-emerald-200",
+  warning: "bg-amber-50 text-amber-700 border border-amber-200",
+  info: "bg-sky-50 text-sky-700 border border-sky-200",
+  muted: "bg-gray-100 text-[--muted] border border-gray-200",
   gold: "bg-[--primary-muted] text-[--primary] border border-[--primary]/20",
 };
 
 export function Badge({ children, tone = "default" }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium uppercase tracking-wider ${toneStyles[tone]}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold uppercase tracking-wider ${toneStyles[tone]}`}
     >
       {children}
     </span>

@@ -1,55 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  /* Midnight Champagne Palette */
-  --bg: #08090d;
-  --surface: #0d0f14;
-  --card: #12141a;
-  --card-elevated: #181b23;
-  
-  /* Warme, einladende Texttöne */
-  --text: #f5f3ef;
-  --text-secondary: #e8e4dd;
-  --muted: #a09a90;
-  
-  /* Borders */
-  --border: #1e2028;
-  --border-subtle: #16181e;
-  
-  /* Champagner-Gold als Primärfarbe */
-  --primary: #c9a962;
-  --primary-hover: #d4b872;
-  --primary-muted: rgba(201, 169, 98, 0.15);
-  
-  /* Akzente */
-  --accent: #8b7355;
-  --accent-warm: #a08060;
-  
-  /* Glassmorphism - wärmer, subtiler */
-  --glass: rgba(245, 243, 239, 0.03);
-  --glass-hover: rgba(245, 243, 239, 0.06);
-  --glass-border: rgba(245, 243, 239, 0.08);
-  --glass-border-hover: rgba(201, 169, 98, 0.25);
-  
-  /* Shadows - tiefer, luxuriöser */
-  --shadow-strong: 0 25px 80px rgba(0, 0, 0, 0.55);
-  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 60px rgba(201, 169, 98, 0.08);
+  /* Warm Light Premium Palette */
+  --bg: #F9F9F7;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --card-elevated: #FFFFFF;
+
+  /* Premium Text - Deep Navy for high readability */
+  --text: #0A2239;
+  --text-secondary: #1A3A52;
+  --muted: #5A6B7A;
+
+  /* Borders - Subtle warmth */
+  --border: #E5E0D8;
+  --border-subtle: #EDE9E3;
+
+  /* Warm Gold as Primary */
+  --primary: #B8860B;
+  --primary-hover: #DAA520;
+  --primary-muted: rgba(184, 134, 11, 0.12);
+
+  /* Accents - Deep Navy for buttons/actions */
+  --accent: #0A2239;
+  --accent-warm: #1A3A52;
+
+  /* Subtle surface variations */
+  --glass: rgba(10, 34, 57, 0.03);
+  --glass-hover: rgba(10, 34, 57, 0.06);
+  --glass-border: rgba(10, 34, 57, 0.08);
+  --glass-border-hover: rgba(184, 134, 11, 0.3);
+
+  /* Shadows - Soft and elegant for light mode */
+  --shadow-card: 0 2px 8px rgba(10, 34, 57, 0.06), 0 1px 3px rgba(10, 34, 57, 0.04);
+  --shadow-strong: 0 20px 60px rgba(10, 34, 57, 0.12);
+  --shadow-soft: 0 8px 30px rgba(10, 34, 57, 0.08);
+  --shadow-glow: 0 0 40px rgba(184, 134, 11, 0.1);
 }
 
 /* ============================================
    NLV Goldzeit Living Theme - Orange Accents
    ============================================ */
 .goldzeit-theme {
-  --bg: #09090b;
-  --surface: #18181b;
-  --card: #27272a;
-  --card-elevated: #3f3f46;
+  --bg: #FDF8F3;
+  --surface: #FFFFFF;
+  --card: #FFFFFF;
+  --card-elevated: #FFFFFF;
 
   /* Orange als Primärfarbe */
   --primary: #ea580c;
   --primary-hover: #f97316;
-  --primary-muted: rgba(234, 88, 12, 0.15);
+  --primary-muted: rgba(234, 88, 12, 0.12);
 
   /* Akzente */
   --accent: #c2410c;
@@ -59,12 +60,12 @@
   --glass-border-hover: rgba(234, 88, 12, 0.25);
 
   /* Shadows mit Orange */
-  --shadow-glow: 0 0 60px rgba(234, 88, 12, 0.08);
+  --shadow-glow: 0 0 40px rgba(234, 88, 12, 0.1);
 }
 
 /* Goldzeit Selection */
 .goldzeit-theme ::selection {
-  background: rgba(234, 88, 12, 0.25);
+  background: rgba(234, 88, 12, 0.2);
 }
 
 /* Goldzeit Divider */
@@ -117,53 +118,12 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-weight: 400;
   min-height: 100vh;
   margin: 0;
   position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Vietnam Background - Visible, atmospheric */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  background-image: url("/da-nang.jpg");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  opacity: 0.35;
-  filter: saturate(0.5) brightness(0.7);
-  pointer-events: none;
-}
-
-/* Dark overlay - gradient from top, keeps content readable */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background: 
-    linear-gradient(180deg, 
-      rgba(8, 9, 13, 0.5) 0%, 
-      rgba(8, 9, 13, 0.7) 40%,
-      rgba(8, 9, 13, 0.88) 70%,
-      rgba(8, 9, 13, 0.95) 100%
-    ),
-    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(201, 169, 98, 0.08), transparent 50%);
-  pointer-events: none;
-}
-
-/* Subtle noise texture for depth */
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.02;
-  pointer-events: none;
 }
 
 /* Elegante Serif für Headlines */
@@ -179,7 +139,7 @@ a {
 
 /* Selection */
 ::selection {
-  background: rgba(201, 169, 98, 0.25);
+  background: rgba(184, 134, 11, 0.2);
   color: var(--text);
 }
 
@@ -207,24 +167,24 @@ img {
   background: var(--muted);
 }
 
-/* Native Select Options - sichtbare Textfarbe für hellen Dropdown-Hintergrund */
+/* Native Select Options */
 select option {
-  background-color: #1a1a1a;
-  color: #f5f3ef;
+  background-color: #FFFFFF;
+  color: var(--text);
   padding: 8px 12px;
 }
 
 select option:hover,
 select option:focus,
 select option:checked {
-  background-color: #2a2a2a;
+  background-color: #F5F0EB;
 }
 
 /* Elegante Trennlinie */
 .divider-gold {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--primary), transparent);
-  opacity: 0.3;
+  opacity: 0.4;
 }
 
 /* Gold Shimmer Animation für besondere Elemente */
@@ -237,7 +197,7 @@ select option:checked {
   background: linear-gradient(
     90deg,
     var(--primary) 0%,
-    #e8d5a3 50%,
+    #DAA520 50%,
     var(--primary) 100%
   );
   background-size: 200% 100%;
@@ -245,17 +205,4 @@ select option:checked {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-/* Vignette effect for more depth */
-.vignette {
-  position: relative;
-}
-
-.vignette::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 40%, rgba(8, 9, 13, 0.4) 100%);
 }

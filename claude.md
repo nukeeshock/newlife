@@ -427,8 +427,8 @@ clearTimeout(timeoutId);
 
 ---
 
-## Kontaktdaten (Platzhalter)
-- WhatsApp: +49 151 123 456 78
+## Kontaktdaten
+- WhatsApp: +84 83 211 4684
 - E-Mail: contact@newlifevietnam.com
 
 ## Sprache

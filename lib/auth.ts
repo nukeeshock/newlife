@@ -109,59 +109,6 @@ export async function verifyPassword(
 }
 
 // ============================================
-// COOKIE FUNKTIONEN
-// ============================================
-
-/**
- * Auth-Cookies setzen
- * SameSite=Strict für CSRF-Protection
- */
-export function setAuthCookies(
-  response: Response,
-  accessToken: string,
-  refreshToken: string
-): void {
-  const isProduction = process.env.NODE_ENV === "production";
-
-  // Access Token Cookie (15 min) - SameSite=Strict für CSRF-Schutz
-  response.headers.append(
-    "Set-Cookie",
-    `${ACCESS_TOKEN_COOKIE}=${accessToken}; HttpOnly; ${
-      isProduction ? "Secure; " : ""
-    }SameSite=Strict; Path=/; Max-Age=${15 * 60}`
-  );
-
-  // Refresh Token Cookie (7 Tage) - SameSite=Strict für CSRF-Schutz
-  response.headers.append(
-    "Set-Cookie",
-    `${REFRESH_TOKEN_COOKIE}=${refreshToken}; HttpOnly; ${
-      isProduction ? "Secure; " : ""
-    }SameSite=Strict; Path=/; Max-Age=${7 * 24 * 60 * 60}`
-  );
-}
-
-/**
- * Auth-Cookies löschen
- */
-export function clearAuthCookies(response: Response): void {
-  const isProduction = process.env.NODE_ENV === "production";
-  
-  response.headers.append(
-    "Set-Cookie",
-    `${ACCESS_TOKEN_COOKIE}=; HttpOnly; ${
-      isProduction ? "Secure; " : ""
-    }SameSite=Strict; Path=/; Max-Age=0`
-  );
-  
-  response.headers.append(
-    "Set-Cookie",
-    `${REFRESH_TOKEN_COOKIE}=; HttpOnly; ${
-      isProduction ? "Secure; " : ""
-    }SameSite=Strict; Path=/; Max-Age=0`
-  );
-}
-
-// ============================================
 // TOKEN HASHING (für DB-Speicherung)
 // ============================================
 

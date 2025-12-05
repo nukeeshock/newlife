@@ -159,12 +159,12 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
   };
 
   const inputClasses =
-    "w-full bg-[#0d0f14] border border-[rgba(245,243,239,0.08)] px-4 py-3 text-sm text-[#f5f3ef] outline-none transition-all focus:border-[#c9a962]/50 placeholder:text-[#a09a90]/60";
+    "w-full bg-white border border-[--border] px-4 py-3 text-sm text-[--text] outline-none transition-all focus:border-[--primary]/50 placeholder:text-[--muted]/60";
 
   const selectClasses =
-    "w-full bg-[#0d0f14] border border-[rgba(245,243,239,0.08)] px-4 py-3 text-sm text-[#f5f3ef] outline-none transition-all focus:border-[#c9a962]/50 appearance-none cursor-pointer";
+    "w-full bg-white border border-[--border] px-4 py-3 text-sm text-[--text] outline-none transition-all focus:border-[--primary]/50 appearance-none cursor-pointer";
 
-  const labelClasses = "text-xs font-medium uppercase tracking-[0.2em] text-[#a09a90]";
+  const labelClasses = "text-xs font-medium uppercase tracking-[0.2em] text-[--muted]";
 
   const priceLabel = formData.listingType === "buy" ? "Kaufpreis" : "Monatsmiete";
 
@@ -180,21 +180,21 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
       />
       
       {/* Modal Content */}
-      <div 
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-[rgba(245,243,239,0.1)] bg-[#12141a] shadow-2xl"
+      <div
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto border border-[--border] bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between border-b border-[rgba(245,243,239,0.08)] bg-[#12141a] px-6 py-4">
-          <h2 className="font-serif text-xl font-light text-[#f5f3ef]">
-            Neues Objekt hinzufügen
+        <div className="sticky top-0 flex items-center justify-between border-b border-[--border] bg-white px-6 py-4">
+          <h2 className="font-serif text-xl font-light text-[--text]">
+            Neues Objekt hinzufuegen
           </h2>
           <button
             type="button"
             onClick={handleClose}
-            className="text-2xl text-[#a09a90] transition-colors hover:text-[#f5f3ef]"
+            className="text-2xl text-[--muted] transition-colors hover:text-[--text]"
           >
-            ×
+            x
           </button>
         </div>
 
@@ -243,8 +243,8 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#a09a90]">
-                  ▼
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
+                  v
                 </div>
               </div>
             </div>
@@ -257,20 +257,20 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
                   required
                   className={selectClasses}
                 >
-                  <option value="">Stadt auswählen...</option>
+                  <option value="">Stadt auswaehlen...</option>
                   {cities.map((city) => (
                     <option key={city.id} value={city.name}>
                       {city.name}
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#a09a90]">
-                  ▼
+                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
+                  v
                 </div>
               </div>
               {cities.length === 0 && (
-                <p className="text-xs text-[#a09a90]">
-                  Keine Städte vorhanden. <a href="/admin" className="text-[#c9a962] hover:underline">Städte verwalten →</a>
+                <p className="text-xs text-[--muted]">
+                  Keine Staedte vorhanden. <a href="/admin" className="text-[--primary] hover:underline">Staedte verwalten</a>
                 </p>
               )}
             </div>
@@ -289,7 +289,7 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
                   required
                   className={inputClasses}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a09a90] text-sm">EUR</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[--muted] text-sm">EUR</span>
               </div>
               <div className="relative">
                 <input
@@ -300,11 +300,11 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
                   required
                   className={inputClasses}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a09a90] text-sm">VND</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[--muted] text-sm">VND</span>
               </div>
             </div>
-            <p className="text-xs text-[#a09a90]">
-              Gib einen Wert ein – der andere wird automatisch umgerechnet (Kurs: ~26.500 VND/EUR)
+            <p className="text-xs text-[--muted]">
+              Gib einen Wert ein - der andere wird automatisch umgerechnet (Kurs: ~26.500 VND/EUR)
             </p>
           </div>
 
@@ -364,18 +364,18 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-4 border-t border-[rgba(245,243,239,0.08)] pt-6">
+          <div className="flex items-center justify-end gap-4 border-t border-[--border] pt-6">
             <button
               type="button"
               onClick={handleClose}
-              className="px-6 py-3 text-sm font-medium text-[#a09a90] transition-colors hover:text-[#f5f3ef]"
+              className="px-6 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text]"
             >
               Abbrechen
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#c9a962] px-6 py-3 text-sm font-medium text-[#08090d] transition-colors hover:bg-[#d4b872] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[--accent] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[--accent-warm] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Wird erstellt..." : "Erstellen"}
             </button>

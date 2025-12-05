@@ -38,7 +38,7 @@ export function GoldzeitKontaktForm() {
     if (!formData.email.trim()) {
       newErrors.email = "E-Mail ist erforderlich";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Ungueltige E-Mail-Adresse";
+      newErrors.email = "Ungültige E-Mail-Adresse";
     }
     if (!formData.message.trim()) {
       newErrors.message = "Nachricht ist erforderlich";
@@ -46,7 +46,7 @@ export function GoldzeitKontaktForm() {
       newErrors.message = "Nachricht muss mindestens 10 Zeichen lang sein";
     }
     if (!formData.privacy) {
-      newErrors.privacy = "Bitte akzeptieren Sie die Datenschutzerklaerung";
+      newErrors.privacy = "Bitte akzeptieren Sie die Datenschutzerklärung";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -57,7 +57,7 @@ export function GoldzeitKontaktForm() {
     setStatus("submitting");
 
     try {
-      // Erstelle spezielle Nachricht fuer Goldzeit
+      // Erstelle spezielle Nachricht für Goldzeit
       const goldzeitMessage = `[NLV GOLDZEIT LIVING ANFRAGE]
 
 Interesse an: ${formData.interest === "single" ? "Einzelzimmer (1.399 EUR)" : formData.interest === "couple" ? "Paar-Zimmer (999 EUR p.P.)" : "Allgemeine Frage"}
@@ -80,7 +80,7 @@ ${formData.message}`;
           data = await response.json();
         } catch {
           setErrors({
-            general: `Server-Fehler (${response.status}). Bitte versuchen Sie es spaeter erneut.`,
+            general: `Server-Fehler (${response.status}). Bitte versuchen Sie es später erneut.`,
           });
           setStatus("error");
           return;
@@ -113,7 +113,7 @@ ${formData.message}`;
       });
     } catch {
       setErrors({
-        general: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es spaeter erneut.",
+        general: "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
       });
       setStatus("error");
     }
@@ -150,7 +150,7 @@ ${formData.message}`;
               </h3>
               <p className="mt-2 text-sm text-[--muted]">
                 Ihre Anfrage wurde erfolgreich gesendet. Wir melden uns
-                schnellstmoeglich bei Ihnen mit weiteren Informationen.
+                schnellstmöglich bei Ihnen mit weiteren Informationen.
               </p>
               <button
                 onClick={() => setStatus("idle")}
@@ -204,7 +204,7 @@ ${formData.message}`;
                       ? "border-red-500"
                       : "border-[--glass-border]"
                   }`}
-                  placeholder="Ihr vollstaendiger Name"
+                  placeholder="Ihr vollständiger Name"
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-400">{errors.name}</p>
@@ -300,7 +300,7 @@ ${formData.message}`;
                       ? "border-red-500"
                       : "border-[--glass-border]"
                   }`}
-                  placeholder="Erzaehlen Sie uns von Ihren Wuenschen und stellen Sie Ihre Fragen..."
+                  placeholder="Erzählen Sie uns von Ihren Wünschen und stellen Sie Ihre Fragen..."
                 />
                 {errors.message && (
                   <p className="mt-1 text-sm text-red-400">{errors.message}</p>
@@ -324,7 +324,7 @@ ${formData.message}`;
                       href="/immobilien/datenschutz"
                       className="text-[--primary] underline-offset-2 hover:underline"
                     >
-                      Datenschutzerklaerung
+                      Datenschutzerklärung
                     </Link>{" "}
                     gelesen und stimme der Verarbeitung meiner Daten zu.{" "}
                     <span className="text-[--primary]">*</span>
@@ -352,7 +352,7 @@ ${formData.message}`;
               Lieber direkt? Schreiben Sie uns auf WhatsApp:
             </p>
             <a
-              href="https://wa.me/4915112345678?text=Hallo,%20ich%20interessiere%20mich%20fuer%20das%20Goldzeit%20Living%20Konzept."
+              href="https://wa.me/84832114684?text=Hallo,%20ich%20interessiere%20mich%20für%20das%20Goldzeit%20Living%20Konzept."
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center gap-2 border border-[--glass-border] px-4 py-2 text-sm text-[--text] transition-colors hover:border-[--primary] hover:text-[--primary]"

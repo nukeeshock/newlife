@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import React from 'react';
 
@@ -7,24 +6,14 @@ interface HeaderProps {
 }
 
 export const SiteHeader = ({ children }: HeaderProps) => (
-  <header style={{
-    position: 'relative', // To ensure it stays above other content if needed
-    zIndex: 10,
-    padding: '1.5rem 5%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#1A1A1A',
-    color: '#F3F3F3',
-    borderBottom: '1px solid #333'
-  }}>
+  <header className="relative z-10 flex items-center justify-between border-b border-[#0A2239]/10 bg-white px-[5%] py-6">
     <Link href="/" passHref>
-      <div style={{ fontSize: '1.5rem', fontWeight: 'normal', letterSpacing: '0.05em', cursor: 'pointer' }}>
+      <div className="cursor-pointer font-serif text-2xl font-light tracking-wide text-[#0A2239]">
         NEW LIFE VIETNAM
       </div>
     </Link>
     {children && (
-      <nav style={{ fontFamily: 'sans-serif', display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+      <nav className="flex items-center gap-10 font-sans">
         {children}
       </nav>
     )}

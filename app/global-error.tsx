@@ -16,18 +16,18 @@ export default function GlobalError({
 
   return (
     <html lang="de">
-      <body className="bg-[#08090d] text-[#f5f3ef]">
+      <body className="bg-[#F9F9F7] text-[#0A2239]">
         <div className="flex min-h-screen flex-col items-center justify-center px-6">
           <div className="text-center">
             <h1 className="font-serif text-4xl font-light">
               Etwas ist schiefgelaufen
             </h1>
-            <p className="mt-4 text-[#a09a90]">
+            <p className="mt-4 text-[#5A6B7A]">
               Ein unerwarteter Fehler ist aufgetreten.
             </p>
             <button
               onClick={reset}
-              className="mt-8 border border-[#c9a962] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-wider text-[#c9a962] transition-colors hover:bg-[#c9a962]/10"
+              className="mt-8 border border-[#B8860B] bg-transparent px-6 py-3 text-sm font-medium uppercase tracking-wider text-[#B8860B] transition-colors hover:bg-[#B8860B]/10"
             >
               Erneut versuchen
             </button>

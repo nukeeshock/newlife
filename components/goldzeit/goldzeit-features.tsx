@@ -13,8 +13,8 @@ export function GoldzeitFeatures() {
             Ihr neuer Alltag.
           </h2>
           <p className="mt-4 max-w-xl text-[--muted]">
-            Wir kuemmern uns um den Haushalt, das Essen und die Buerokratie.
-            Sie kuemmern sich darum, das Leben zu geniessen.
+            Wir kümmern uns um den Haushalt, das Essen und die Bürokratie.
+            Sie kümmern sich darum, das Leben zu genießen.
           </p>
         </div>
 
@@ -34,8 +34,8 @@ export function GoldzeitFeatures() {
             </div>
             <h3 className="mb-3 text-xl font-bold text-[--text]">Haushalt &amp; Service</h3>
             <p className="mb-4 text-sm leading-relaxed text-[--muted]">
-              Schluss mit Putzen. Eine Haushaltshilfe ist <strong className="text-[--text]">8 Stunden taeglich</strong> vor Ort.
-              Sie kuemmert sich um Reinigung, kleine Erledigungen und sorgt fuer Ordnung.
+              Schluss mit Putzen. Eine Haushaltshilfe ist <strong className="text-[--text]">8 Stunden täglich</strong> vor Ort.
+              Sie kümmert sich um Reinigung, kleine Erledigungen und sorgt für Ordnung.
             </p>
             <ul className="space-y-2 text-xs text-[--muted]">
               <li className="flex items-center gap-2">
@@ -69,14 +69,14 @@ export function GoldzeitFeatures() {
             <h3 className="mb-3 text-xl font-bold text-[--text]">Verpflegung</h3>
             <p className="mb-4 text-sm leading-relaxed text-[--muted]">
               Gesund und lecker. <strong className="text-[--text]">Halbpension inklusive</strong> (2 Mahlzeiten pro Tag).
-              Geniessen Sie vietnamesische und internationale Kueche ohne selbst kochen zu muessen.
+              Genießen Sie vietnamesische und internationale Küche ohne selbst kochen zu müssen.
             </p>
             <ul className="space-y-2 text-xs text-[--muted]">
               <li className="flex items-center gap-2">
                 <svg aria-hidden="true" className="h-3 w-3 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Fruehstueck &amp; Dinner
+                Frühstück &amp; Dinner
               </li>
               <li className="flex items-center gap-2">
                 <svg aria-hidden="true" className="h-3 w-3 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -116,7 +116,7 @@ export function GoldzeitFeatures() {
                 <svg aria-hidden="true" className="h-3 w-3 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Aerzte-Netzwerk
+                Ärzte-Netzwerk
               </li>
             </ul>
           </div>

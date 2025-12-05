@@ -20,7 +20,7 @@ export function GoldzeitCta() {
           </Link>
 
           <a
-            href="https://wa.me/4915112345678"
+            href="https://wa.me/84832114684"
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-full items-center justify-center gap-3 border border-[--glass-border] py-4 font-medium text-[--text] transition-all hover:border-[--primary] hover:text-[--primary]"

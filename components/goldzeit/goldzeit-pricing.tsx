@@ -37,10 +37,10 @@ export function GoldzeitPricing() {
               <p className="mb-4 font-bold text-[--text]">Alles Inklusive:</p>
               <div className="grid grid-cols-1 gap-3 text-sm text-[--muted]">
                 {[
-                  "Moebliertes Zimmer + Bad",
+                  "Möbliertes Zimmer + Bad",
                   "Halbpension (2 Mahlzeiten)",
                   "8h Haushaltshilfe Service",
-                  "Bettwaesche-Service",
+                  "Bettwäsche-Service",
                   "Strom, Wasser, WLAN",
                   "24/7 Deutsche Betreuung",
                 ].map((item, i) => (
@@ -68,7 +68,7 @@ export function GoldzeitPricing() {
             <div className="mb-6 flex items-start justify-between">
               <div>
                 <h3 className="text-2xl font-bold text-[--text]">Premium Upgrade</h3>
-                <p className="mt-1 text-sm text-[--muted]">Goennen Sie sich das Extra an Luxus.</p>
+                <p className="mt-1 text-sm text-[--muted]">Gönnen Sie sich das Extra an Luxus.</p>
               </div>
               <div className="text-right">
                 <p className="text-3xl font-bold text-[--primary]">+ 199 EUR</p>
@@ -92,7 +92,7 @@ export function GoldzeitPricing() {
                 <div>
                   <h4 className="text-sm font-bold text-[--text]">Wellness &amp; Beauty</h4>
                   <p className="mt-1 text-xs text-[--muted]">
-                    1x Massage/Woche, 1x Yoga/Woche, 1x Manikuere/Pedikuere &amp; Haarschnitt pro Monat.
+                    1x Massage/Woche, 1x Yoga/Woche, 1x Maniküre/Pediküre &amp; Haarschnitt pro Monat.
                   </p>
                 </div>
               </div>
@@ -110,9 +110,9 @@ export function GoldzeitPricing() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-[--text]">Persoenliche Waesche</h4>
+                  <h4 className="text-sm font-bold text-[--text]">Persönliche Wäsche</h4>
                   <p className="mt-1 text-xs text-[--muted]">
-                    Waschen &amp; Buegeln Ihrer privaten Kleidung inklusive.
+                    Waschen &amp; Bügeln Ihrer privaten Kleidung inklusive.
                   </p>
                 </div>
               </div>
@@ -132,7 +132,7 @@ export function GoldzeitPricing() {
                 <div>
                   <h4 className="text-sm font-bold text-[--text]">Shopping Service</h4>
                   <p className="mt-1 text-xs text-[--muted]">
-                    Einkaufsservice inkl. Transport fuer persoenliche Wuensche.
+                    Einkaufsservice inkl. Transport für persönliche Wünsche.
                   </p>
                 </div>
               </div>
@@ -147,11 +147,6 @@ export function GoldzeitPricing() {
           </div>
         </div>
 
-        <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-[--muted]">
-          *Preise gelten fuer heterosexuelle Paare und lesbische Paare.
-          Aufgrund lokaler Gegebenheiten und Unterbringungsstrukturen gilt fuer schwule Paare
-          derzeit ein abweichender Tarif (+100%). Einzelheiten auf Anfrage.
-        </p>
       </div>
     </section>
   );

@@ -37,9 +37,9 @@ export function GoldzeitHero() {
 
           {/* Description */}
           <p className="mb-10 max-w-xl text-xl font-light leading-relaxed text-[--muted]">
-            Das exklusive WG-Konzept fuer Best Ager in Da Nang.
-            Entfliehen Sie der Einsamkeit und geniessen Sie den Luxus einer Pool-Villa
-            mit Full-Service - zu einem Preis, der in Europa unmoeglich waere.
+            Das exklusive WG-Konzept für Best Ager in Da Nang.
+            Entfliehen Sie der Einsamkeit und genießen Sie den Luxus einer Pool-Villa
+            mit Full-Service - zu einem Preis, der in Europa unmöglich wäre.
           </p>
 
           {/* CTA */}
@@ -48,7 +48,7 @@ export function GoldzeitHero() {
               href="#pricing"
               className="bg-[--primary] px-8 py-4 text-center font-medium text-white transition-all hover:bg-[--primary-hover]"
             >
-              Preise &amp; Verfuegbarkeit
+              Preise &amp; Verfügbarkeit
             </Link>
             <div className="flex items-center gap-4 border-l border-[--glass-border] px-6 py-4">
               <div className="text-right">
@@ -75,7 +75,7 @@ export function GoldzeitHero() {
           <ul className="space-y-4">
             {[
               "Private Zimmer mit Bad in Pool-Villa",
-              "Halbpension (2 Mahlzeiten taeglich)",
+              "Halbpension (2 Mahlzeiten täglich)",
               "8h Haushaltshilfe pro Tag",
               "Deutschsprachige Betreuung 24/7",
             ].map((item, i) => (

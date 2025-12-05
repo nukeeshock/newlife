@@ -1,10 +1,9 @@
 import "dotenv/config";
 import { PrismaClient, PropertyStatus, PropertyType } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { BCRYPT_ROUNDS } from "@/lib/auth";
 
 const prisma = new PrismaClient();
-
-const BCRYPT_ROUNDS = 12;
 
 async function main() {
   console.log("🌱 Seeding database...");

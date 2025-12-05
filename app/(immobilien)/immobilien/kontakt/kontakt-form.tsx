@@ -330,7 +330,7 @@ export function KontaktForm() {
               Lieber direkt? Schreiben Sie uns auf WhatsApp:
             </p>
             <a
-              href="https://wa.me/4915112345678?text=Hallo,%20ich%20interessiere%20mich%20für%20Ihre%20Immobilien%20in%20Vietnam."
+              href="https://wa.me/84832114684?text=Hallo,%20ich%20interessiere%20mich%20für%20Ihre%20Immobilien%20in%20Vietnam."
               target="_blank"
               rel="noopener noreferrer"
               className={buttonClasses({

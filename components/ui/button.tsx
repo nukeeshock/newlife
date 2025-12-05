@@ -20,15 +20,15 @@ export function buttonClasses({
   className = "",
 }: ButtonStyleProps) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-none text-sm font-medium tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[--primary] focus-visible:ring-offset-2 focus-visible:ring-offset-[--bg]";
-  
+    "inline-flex items-center justify-center gap-2 rounded-none text-sm font-semibold tracking-wide transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[--primary] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+
   const variants: Record<ButtonVariant, string> = {
     primary:
-      "bg-[--primary] text-[--bg] hover:bg-[--primary-hover] shadow-[0_4px_20px_rgba(201,169,98,0.25)] hover:shadow-[0_6px_30px_rgba(201,169,98,0.35)]",
+      "bg-[--accent] text-white hover:bg-[--accent-warm] shadow-md hover:shadow-lg",
     ghost:
-      "border border-[--glass-border] bg-transparent text-[--text] hover:border-[--primary]/50 hover:text-[--primary]",
+      "border border-[--border] bg-transparent text-[--accent] hover:border-[--primary] hover:text-[--primary]",
     soft:
-      "bg-[--glass] text-[--text] border border-[--glass-border] hover:bg-[--glass-hover] hover:border-[--glass-border-hover]",
+      "bg-[--bg] text-[--accent] border border-[--border] hover:bg-white hover:border-[--primary]/30",
   };
 
   return `${base} ${variants[variant]} ${fullWidth ? "w-full" : ""} px-6 py-3 ${className}`;

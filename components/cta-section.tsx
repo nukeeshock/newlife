@@ -5,7 +5,7 @@ export function CtaSection() {
     <section className="relative py-24 md:py-32">
       {/* Background Accent */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,169,98,0.04),transparent_70%)]" />
+        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(184,134,11,0.06),transparent_70%)]" />
       </div>
 
       <div className="relative mx-auto w-full max-w-4xl px-6 text-center md:px-8">
@@ -30,7 +30,7 @@ export function CtaSection() {
 
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
-            href="https://wa.me/4915112345678?text=Ich%20möchte%20mehr%20über%20Ihre%20Objekte%20erfahren."
+            href="https://wa.me/84832114684?text=Ich%20möchte%20mehr%20über%20Ihre%20Objekte%20erfahren."
             target="_blank"
             rel="noopener noreferrer"
             className={buttonClasses({

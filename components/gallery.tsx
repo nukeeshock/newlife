@@ -17,7 +17,7 @@ export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
   if (!images || images.length === 0) {
     return (
       <div className="space-y-4">
-        <div className="flex h-[450px] items-center justify-center border border-[--glass-border] bg-[--card] text-[--muted] md:h-[550px]">
+        <div className="flex h-[450px] items-center justify-center border border-[--border] bg-[#F5F0EB] text-[--muted] md:h-[550px]">
           <span>Keine Bilder verfügbar</span>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
     <div className="space-y-4">
       {/* Main Image */}
       <div
-        className="group relative h-[450px] overflow-hidden border border-[--glass-border] bg-[--card] md:h-[550px]"
+        className="group relative h-[450px] overflow-hidden border border-[--border] bg-[#F5F0EB] md:h-[550px]"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -66,32 +66,32 @@ export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
           sizes="(min-width: 1024px) 900px, 100vw"
           priority={activeIndex === 0}
         />
-        
+
         {/* Gradient Overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[--bg]/40 via-transparent to-transparent" />
-        
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+
         {/* Navigation */}
         {images.length > 1 && (
           <>
             <button
               onClick={prev}
-              className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[--glass-border] bg-[--bg]/70 text-[--text] opacity-0 backdrop-blur transition-all hover:border-[--primary]/50 hover:text-[--primary] group-hover:opacity-100"
+              className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-white/50 bg-white/90 text-[--accent] opacity-0 shadow-md backdrop-blur transition-all hover:bg-white hover:text-[--primary] group-hover:opacity-100"
               aria-label="Vorheriges Bild"
             >
               ‹
             </button>
             <button
               onClick={next}
-              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-[--glass-border] bg-[--bg]/70 text-[--text] opacity-0 backdrop-blur transition-all hover:border-[--primary]/50 hover:text-[--primary] group-hover:opacity-100"
+              className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center border border-white/50 bg-white/90 text-[--accent] opacity-0 shadow-md backdrop-blur transition-all hover:bg-white hover:text-[--primary] group-hover:opacity-100"
               aria-label="Nächstes Bild"
             >
               ›
             </button>
           </>
         )}
-        
+
         {/* Counter */}
-        <div className="absolute bottom-4 right-4 border border-[--glass-border] bg-[--bg]/70 px-4 py-2 text-xs text-[--text] backdrop-blur">
+        <div className="absolute bottom-4 right-4 bg-white/90 px-4 py-2 text-xs font-medium text-[--accent] shadow-md backdrop-blur">
           {activeIndex + 1} / {images.length}
         </div>
       </div>
@@ -103,10 +103,10 @@ export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
             key={img + index}
             type="button"
             onClick={() => setActiveIndex(index)}
-            className={`relative h-20 w-28 flex-shrink-0 overflow-hidden border transition-all ${
+            className={`relative h-20 w-28 flex-shrink-0 overflow-hidden border-2 transition-all ${
               index === activeIndex
-                ? "border-[--primary]"
-                : "border-[--glass-border] hover:border-[--primary]/50"
+                ? "border-[--primary] shadow-md"
+                : "border-[--border] hover:border-[--primary]/50"
             }`}
           >
             <Image src={img} alt={`${propertyTitle} - Vorschau ${index + 1}`} fill className="object-cover" sizes="120px" />

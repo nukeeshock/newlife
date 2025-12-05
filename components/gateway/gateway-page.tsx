@@ -9,7 +9,7 @@ export function GatewayPage() {
         theme="orange"
         title="NLV Goldzeit Living"
         subtitle="Gemeinsam leben in Vietnam"
-        description="Pool-Villen, Gemeinschaft, Vollpension - Das Co-Living Konzept fuer Best Ager"
+        description="Pool-Villen, Gemeinschaft, Vollpension - Das Co-Living Konzept für Best Ager"
         backgroundImage="/gateway-goldzeit.jpg"
         icon={
           <svg
@@ -35,7 +35,7 @@ export function GatewayPage() {
 
         {/* Logo Container */}
         <div className="absolute flex flex-col items-center bg-zinc-950 px-6 py-4 lg:px-4 lg:py-6">
-          <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[#c9a962]">
+          <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-[#D4AF37]">
             New Life
           </span>
           <span className="font-serif text-lg font-light tracking-wide text-white">

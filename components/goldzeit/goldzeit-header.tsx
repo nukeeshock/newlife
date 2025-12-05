@@ -133,7 +133,7 @@ export function GoldzeitHeader() {
 
           {/* WhatsApp CTA */}
           <a
-            href="https://wa.me/4915112345678"
+            href="https://wa.me/84832114684"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
