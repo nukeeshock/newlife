@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { buttonClasses } from "@/components/ui/button";
 import { ImageUpload } from "./image-upload";
 import { eurToVnd, vndToEur } from "@/lib/format";
 import type { PropertyType } from "@/lib/types";
@@ -15,7 +14,7 @@ interface City {
 }
 
 interface AddPropertyButtonProps {
-  type: PropertyType;
+  type?: PropertyType;
 }
 
 const LISTING_TYPES = [
@@ -23,7 +22,14 @@ const LISTING_TYPES = [
   { value: "buy", label: "Kaufen" },
 ];
 
-export function AddPropertyButton({ type }: AddPropertyButtonProps) {
+const PROPERTY_TYPES = [
+  { value: "private_residence", label: "Residenz" },
+  { value: "house", label: "Villa" },
+  { value: "apartment", label: "Apartment" },
+  { value: "commercial", label: "Gewerbefläche" },
+];
+
+export function AddPropertyButton({ type: propType }: AddPropertyButtonProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,6 +39,7 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
     title: "",
     description: "",
     city: "",
+    propertyType: propType || ("apartment" as PropertyType),
     listingType: "rent",
     priceEUR: "",
     priceVND: "",
@@ -111,7 +118,7 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
           title: formData.title,
           description: formData.description,
           city: formData.city,
-          type,
+          type: propType || formData.propertyType,
           listingType: formData.listingType,
           priceEUR: parseInt(formData.priceEUR) || 0,
           priceVND: parseInt(formData.priceVND) || 0,
@@ -133,6 +140,7 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
           title: "",
           description: "",
           city: "",
+          propertyType: propType || ("apartment" as PropertyType),
           listingType: "rent",
           priceEUR: "",
           priceVND: "",
@@ -226,8 +234,31 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
             />
           </div>
 
-          {/* Listing Type & City */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Property Type, Listing Type & City */}
+          <div className={`grid gap-4 ${propType ? "grid-cols-2" : "grid-cols-3"}`}>
+            {/* Property Type - only show if not provided as prop */}
+            {!propType && (
+              <div className="space-y-2">
+                <label className={labelClasses}>Objektart *</label>
+                <div className="relative">
+                  <select
+                    value={formData.propertyType}
+                    onChange={(e) => setFormData({ ...formData, propertyType: e.target.value as PropertyType })}
+                    required
+                    className={selectClasses}
+                  >
+                    {PROPERTY_TYPES.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
+                    v
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="space-y-2">
               <label className={labelClasses}>Angebots-Art *</label>
               <div className="relative">
@@ -387,17 +418,16 @@ export function AddPropertyButton({ type }: AddPropertyButtonProps) {
 
   return (
     <>
-      {/* Add Button */}
+      {/* Add Button - Admin Style */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={buttonClasses({
-          variant: "primary",
-          className: "gap-2",
-        })}
+        className="mb-8 inline-flex items-center gap-2 border-2 border-dashed border-emerald-500 bg-emerald-50 px-6 py-3 text-sm font-semibold tracking-wide text-emerald-700 transition-all hover:border-solid hover:bg-emerald-500 hover:text-white"
       >
-        <span className="text-lg">+</span>
-        <span>Objekt hinzufügen</span>
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        <span>Neues Objekt hinzufügen</span>
       </button>
 
       {/* Modal via Portal */}

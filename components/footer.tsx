@@ -44,25 +44,25 @@ export function Footer() {
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               <Link
-                href="/immobilien"
+                href="/immobilien/objekte"
                 className="text-white/80 transition-colors hover:text-[--primary]"
               >
-                Alle Immobilien
+                Alle Objekte
               </Link>
               <Link
-                href="/immobilien/type/private_residence"
+                href="/immobilien/objekte?type=private_residence"
                 className="text-white/80 transition-colors hover:text-[--primary]"
               >
                 Residenzen
               </Link>
               <Link
-                href="/immobilien/type/house"
+                href="/immobilien/objekte?type=house"
                 className="text-white/80 transition-colors hover:text-[--primary]"
               >
                 Villen
               </Link>
               <Link
-                href="/immobilien/type/apartment"
+                href="/immobilien/objekte?type=apartment"
                 className="text-white/80 transition-colors hover:text-[--primary]"
               >
                 Apartments

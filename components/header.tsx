@@ -3,13 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
-const navLinks = [
-  { href: "/immobilien/type/private_residence", label: "Residenzen" },
-  { href: "/immobilien/type/house", label: "Villen" },
-  { href: "/immobilien/type/apartment", label: "Apartments" },
-  { href: "/immobilien/type/commercial", label: "Gewerbeflächen" },
-];
-
 const cityLinks = [
   { href: "/immobilien/stadt/da-nang", label: "Da Nang" },
   { href: "/immobilien/stadt/hoi-an", label: "Hoi An" },
@@ -20,11 +13,8 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [citiesOpen, setCitiesOpen] = useState(false);
-  const [immobilienOpen, setImmobilienOpen] = useState(false);
   const [mobileCitiesOpen, setMobileCitiesOpen] = useState(false);
-  const [mobileImmobilienOpen, setMobileImmobilienOpen] = useState(false);
   const citiesDropdownRef = useRef<HTMLDivElement>(null);
-  const immobilienDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -33,14 +23,11 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close dropdowns when clicking outside
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (citiesDropdownRef.current && !citiesDropdownRef.current.contains(event.target as Node)) {
         setCitiesOpen(false);
-      }
-      if (immobilienDropdownRef.current && !immobilienDropdownRef.current.contains(event.target as Node)) {
-        setImmobilienOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -116,51 +103,13 @@ export function Header() {
             </div>
           </div>
 
-          {/* Immobilien Dropdown */}
-          <div
-            className="relative"
-            ref={immobilienDropdownRef}
-            onMouseEnter={() => setImmobilienOpen(true)}
-            onMouseLeave={() => setImmobilienOpen(false)}
+          {/* Immobilien - Direct Link */}
+          <Link
+            href="/immobilien/objekte"
+            className="py-2 text-sm font-medium tracking-wide text-[--muted] transition-colors duration-300 hover:text-[--primary]"
           >
-            <button
-              type="button"
-              className={`flex cursor-pointer items-center gap-1.5 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${
-                immobilienOpen ? "text-[--primary]" : "text-[--muted] hover:text-[--primary]"
-              }`}
-            >
-              Immobilien
-              <svg
-                aria-hidden="true"
-                className={`h-3 w-3 transition-transform duration-200 ${immobilienOpen ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            <div
-              className={`absolute left-0 top-full min-w-[180px] pt-2 transition-all duration-200 ${
-                immobilienOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0 pointer-events-none"
-              }`}
-            >
-              <div className="border border-[--border] bg-white shadow-lg">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setImmobilienOpen(false)}
-                    className="block px-5 py-3 text-sm font-medium tracking-wide text-[--text] transition-colors duration-200 hover:bg-[--bg] hover:text-[--primary]"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+            Immobilien
+          </Link>
 
           <Link
             href="/immobilien/ueber-uns"
@@ -278,58 +227,23 @@ export function Header() {
             </div>
           </div>
 
-          {/* Immobilien Accordion */}
-          <div className="border-b border-[--border]">
-            <button
-              type="button"
-              onClick={() => setMobileImmobilienOpen(!mobileImmobilienOpen)}
-              className={`flex w-full items-center justify-between py-5 text-base font-medium tracking-wide transition-colors ${
-                mobileImmobilienOpen ? "text-[--primary]" : "text-[--text] hover:text-[--primary]"
-              }`}
+          {/* Immobilien - Direct Link */}
+          <Link
+            href="/immobilien/objekte"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-3 border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-5 w-5 text-[--primary]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <span className="flex items-center gap-3">
-                <svg
-                  aria-hidden="true"
-                  className="h-5 w-5 text-[--primary]"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-                </svg>
-                Immobilien
-              </span>
-              <svg
-                aria-hidden="true"
-                className={`h-4 w-4 transition-transform duration-300 ${mobileImmobilienOpen ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ${
-                mobileImmobilienOpen ? "max-h-[300px] opacity-100 pb-3" : "max-h-0 opacity-0"
-              }`}
-            >
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setMobileImmobilienOpen(false);
-                  }}
-                  className="flex items-center gap-3 py-3 pl-8 text-sm font-medium tracking-wide text-[--muted] transition-colors hover:text-[--primary]"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[--primary]/50" />
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </div>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+            </svg>
+            Immobilien
+          </Link>
 
           <Link
             href="/immobilien/ueber-uns"

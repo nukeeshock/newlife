@@ -1,6 +1,6 @@
 "use client";
 
-import type { SortOption } from "./type-page-shell";
+import type { SortOption } from "./property-listing-page";
 
 interface SortDropdownProps {
   value: SortOption;

@@ -203,7 +203,7 @@ await trackEvent("whatsapp_click", propertyId);
    - Städte aus existierenden Properties
    - PLUS alle Städte aus der Datenbank (auch ohne Properties)
 
-### Code (type-page-shell.tsx)
+### Code (property-listing-page.tsx)
 ```typescript
 const availableCities = useMemo(() => {
   const propertyCities = properties.map((p) => p.city);

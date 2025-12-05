@@ -50,7 +50,7 @@ export function GatewayPage() {
         theme="gold"
         title="NLV Real Estate"
         subtitle="Exklusive Immobilien in Vietnam"
-        description="Villen, Apartments, Residenzen - Ihr Traumhaus in Da Nang, Hoi An & Ho Chi Minh"
+        description="Villen, Apartments, Residenzen - Ihre Traumimmobilie in Vietnam"
         backgroundImage="/gateway-realestate.jpg"
         icon={
           <svg

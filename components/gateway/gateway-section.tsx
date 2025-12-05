@@ -32,11 +32,11 @@ export function GatewaySection({
         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <div className="absolute inset-0 bg-zinc-950/70 transition-colors duration-500 group-hover:bg-zinc-950/60" />
+        <div className="absolute inset-0 bg-zinc-950/40 transition-colors duration-500 group-hover:bg-zinc-950/30" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center">
+      <div className="relative z-10 text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
         {/* Icon */}
         <div
           className="mx-auto mb-6 flex h-16 w-16 items-center justify-center transition-transform duration-300 group-hover:scale-110"
@@ -51,10 +51,10 @@ export function GatewaySection({
         </h2>
 
         {/* Subtitle */}
-        <p className="mt-2 text-lg text-zinc-400">{subtitle}</p>
+        <p className="mt-2 text-lg text-zinc-100">{subtitle}</p>
 
         {/* Description */}
-        <p className="mt-4 text-sm text-zinc-500">{description}</p>
+        <p className="mt-4 text-sm text-zinc-200">{description}</p>
 
         {/* CTA Arrow */}
         <div

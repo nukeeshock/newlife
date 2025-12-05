@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChangeEvent } from "react";
-import type { Filters } from "./type-page-shell";
+import type { Filters } from "./property-listing-page";
 
 interface FilterBarProps {
   filters: Filters;

@@ -481,19 +481,19 @@ export default async function CityPage({
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-3">
             <Link
-              href={`/type/apartment?city=${encodeURIComponent(city.propertyType)}`}
+              href={`/immobilien/objekte?type=apartment&city=${encodeURIComponent(city.propertyType)}`}
               className="inline-flex items-center border border-[--primary] bg-[--primary] px-6 py-4 text-sm font-medium tracking-wide text-[--bg] transition-all hover:bg-transparent hover:text-[--primary]"
             >
               Apartments
             </Link>
             <Link
-              href={`/type/house?city=${encodeURIComponent(city.propertyType)}`}
+              href={`/immobilien/objekte?type=house&city=${encodeURIComponent(city.propertyType)}`}
               className="inline-flex items-center border border-[--primary] bg-[--primary] px-6 py-4 text-sm font-medium tracking-wide text-[--bg] transition-all hover:bg-transparent hover:text-[--primary]"
             >
               Villen
             </Link>
             <Link
-              href={`/immobilien/type/private_residence?city=${encodeURIComponent(city.propertyType)}`}
+              href={`/immobilien/objekte?type=private_residence&city=${encodeURIComponent(city.propertyType)}`}
               className="inline-flex items-center border border-[--primary] bg-[--primary] px-6 py-4 text-sm font-medium tracking-wide text-[--bg] transition-all hover:bg-transparent hover:text-[--primary]"
             >
               Residenzen
