@@ -4,40 +4,72 @@ import { prisma } from "@/lib/db";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://newlifevietnam.com";
 
-  // Statische Seiten
-  const staticPages: MetadataRoute.Sitemap = [
+  // Gateway (Startseite)
+  const gatewayPage: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: "weekly",
       priority: 1,
     },
+  ];
+
+  // NLV Goldzeit Living Seiten
+  const goldzeitPages: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}/kontakt`,
+      url: `${baseUrl}/goldzeit`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/goldzeit/konzept`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/faq`,
+      url: `${baseUrl}/goldzeit/kontakt`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+  ];
+
+  // NLV Real Estate Statische Seiten
+  const immobilienStaticPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/immobilien`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${baseUrl}/immobilien/kontakt`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/immobilien/faq`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/ueber-uns`,
+      url: `${baseUrl}/immobilien/ueber-uns`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/datenschutz`,
+      url: `${baseUrl}/immobilien/datenschutz`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: `${baseUrl}/impressum`,
+      url: `${baseUrl}/immobilien/impressum`,
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
@@ -51,18 +83,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "house",
     "commercial",
   ].map((type) => ({
-    url: `${baseUrl}/type/${type}`,
+    url: `${baseUrl}/immobilien/type/${type}`,
     lastModified: new Date(),
     changeFrequency: "daily" as const,
     priority: 0.9,
   }));
 
-  // Städte-Seiten
+  // Staedte-Seiten
   const cities = await prisma.city.findMany({
     select: { name: true },
   });
   const cityPages: MetadataRoute.Sitemap = cities.map((city) => ({
-    url: `${baseUrl}/stadt/${city.name.toLowerCase().replace(/\s+/g, "-")}`,
+    url: `${baseUrl}/immobilien/stadt/${city.name.toLowerCase().replace(/\s+/g, "-")}`,
     lastModified: new Date(),
     changeFrequency: "daily" as const,
     priority: 0.8,
@@ -74,11 +106,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { slug: true, updatedAt: true },
   });
   const propertyPages: MetadataRoute.Sitemap = properties.map((property) => ({
-    url: `${baseUrl}/property/${property.slug}`,
+    url: `${baseUrl}/immobilien/property/${property.slug}`,
     lastModified: property.updatedAt,
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 
-  return [...staticPages, ...typePages, ...cityPages, ...propertyPages];
+  return [
+    ...gatewayPage,
+    ...goldzeitPages,
+    ...immobilienStaticPages,
+    ...typePages,
+    ...cityPages,
+    ...propertyPages,
+  ];
 }

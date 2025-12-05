@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
           { revokedAt: { not: null } },
         ],
       },
-    }).catch(() => {}); // Fehler ignorieren
+    }).catch((err) => console.warn("[REFRESH_TOKEN_CLEANUP_ERROR]", err));
 
     // Response mit Cookies
     const response = NextResponse.json({

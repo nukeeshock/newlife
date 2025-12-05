@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { AdminBar } from "@/components/admin/admin-bar";
 import { AdminProvider } from "@/lib/context/admin-context";
 import { AnalyticsTracker } from "@/components/analytics/analytics-tracker";
@@ -31,19 +29,20 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL("https://newlifevietnam.com"),
   title: {
-    default: "NEW LIFE VIETNAM – Exklusive Immobilien in Vietnam",
+    default: "NEW LIFE VIETNAM - Immobilien & Co-Living in Vietnam",
     template: "%s | NEW LIFE VIETNAM",
   },
   description:
-    "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City. Ihr persönlicher Concierge für ein neues Leben in Vietnam.",
+    "NLV Real Estate fuer exklusive Immobilien und NLV Goldzeit Living fuer Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
   keywords: [
     "Immobilien Vietnam",
-    "Luxus Miete Vietnam",
+    "Co-Living Vietnam",
     "Da Nang Apartment",
     "Hoi An Villa",
     "Ho Chi Minh Wohnung",
     "Auswandern Vietnam",
     "Expat Vietnam",
+    "Senioren Vietnam",
   ],
   authors: [{ name: "NEW LIFE VIETNAM" }],
   creator: "NEW LIFE VIETNAM",
@@ -53,14 +52,14 @@ export const metadata: Metadata = {
     locale: "de_DE",
     url: "https://newlifevietnam.com",
     siteName: "NEW LIFE VIETNAM",
-    title: "NEW LIFE VIETNAM – Exklusive Immobilien in Vietnam",
+    title: "NEW LIFE VIETNAM - Immobilien & Co-Living in Vietnam",
     description:
-      "Handverlesene Luxus-Mietobjekte in Da Nang, Hoi An und Ho Chi Minh City.",
+      "NLV Real Estate und NLV Goldzeit Living - Ihr Partner in Vietnam.",
   },
   twitter: {
     card: "summary_large_image",
     title: "NEW LIFE VIETNAM",
-    description: "Exklusive Immobilien in Vietnam",
+    description: "Immobilien & Co-Living in Vietnam",
   },
   robots: {
     index: true,
@@ -90,12 +89,8 @@ export default function RootLayout({
           <WebSiteSchema />
           <SentryInit />
           <AnalyticsTracker />
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1 pb-16">{children}</main>
-            <Footer />
-            <AdminBar />
-          </div>
+          {children}
+          <AdminBar />
           <CookieBanner />
         </AdminProvider>
       </body>

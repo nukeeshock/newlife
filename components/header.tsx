@@ -4,16 +4,16 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 
 const navLinks = [
-  { href: "/type/private_residence", label: "Residenzen" },
-  { href: "/type/house", label: "Villen" },
-  { href: "/type/apartment", label: "Apartments" },
-  { href: "/type/commercial", label: "Gewerbeflächen" },
+  { href: "/immobilien/type/private_residence", label: "Residenzen" },
+  { href: "/immobilien/type/house", label: "Villen" },
+  { href: "/immobilien/type/apartment", label: "Apartments" },
+  { href: "/immobilien/type/commercial", label: "Gewerbeflächen" },
 ];
 
 const cityLinks = [
-  { href: "/stadt/da-nang", label: "Da Nang" },
-  { href: "/stadt/hoi-an", label: "Hoi An" },
-  { href: "/stadt/ho-chi-minh", label: "Ho Chi Minh City" },
+  { href: "/immobilien/stadt/da-nang", label: "Da Nang" },
+  { href: "/immobilien/stadt/hoi-an", label: "Hoi An" },
+  { href: "/immobilien/stadt/ho-chi-minh", label: "Ho Chi Minh City" },
 ];
 
 export function Header() {
@@ -57,13 +57,13 @@ export function Header() {
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 md:px-8">
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-3">
+        <Link href="/immobilien" className="group flex items-center gap-3">
           <div className="flex flex-col leading-tight">
             <span className="text-xs font-medium uppercase tracking-[0.35em] text-[--primary]">
-              New Life
+              NLV Real
             </span>
             <span className="font-serif text-lg font-light tracking-wide text-[--text]">
-              Vietnam
+              Estate
             </span>
           </div>
         </Link>
@@ -163,7 +163,7 @@ export function Header() {
           </div>
 
           <Link
-            href="/ueber-uns"
+            href="/immobilien/ueber-uns"
             className="text-sm font-medium tracking-wide text-[--muted] transition-colors duration-300 hover:text-[--primary]"
           >
             Wer wir sind
@@ -171,9 +171,24 @@ export function Header() {
         </nav>
 
         {/* Desktop CTA - Right */}
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           <Link
-            href="/kontakt"
+            href="/goldzeit"
+            className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-orange-500 transition-colors duration-300 hover:text-orange-400"
+          >
+            NLV Goldzeit Living
+            <svg
+              aria-hidden="true"
+              className="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+          <Link
+            href="/immobilien/kontakt"
             className="text-sm font-medium tracking-wide text-[--muted] transition-colors duration-300 hover:text-[--primary]"
           >
             Kontakt
@@ -317,7 +332,7 @@ export function Header() {
           </div>
 
           <Link
-            href="/ueber-uns"
+            href="/immobilien/ueber-uns"
             onClick={() => setMobileOpen(false)}
             className="border-b border-[--glass-border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
           >
@@ -325,11 +340,29 @@ export function Header() {
           </Link>
 
           <Link
-            href="/kontakt"
+            href="/immobilien/kontakt"
             onClick={() => setMobileOpen(false)}
             className="border-b border-[--glass-border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
           >
             Kontakt
+          </Link>
+
+          {/* Link to Goldzeit */}
+          <Link
+            href="/goldzeit"
+            onClick={() => setMobileOpen(false)}
+            className="mt-4 flex items-center justify-center gap-2 border border-orange-500/30 bg-orange-500/10 py-4 text-sm font-medium tracking-wide text-orange-500 transition-colors hover:bg-orange-500 hover:text-white"
+          >
+            <svg
+              aria-hidden="true"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            NLV Goldzeit Living
           </Link>
 
           {/* WhatsApp CTA */}

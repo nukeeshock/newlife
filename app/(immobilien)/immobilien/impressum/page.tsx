@@ -1,5 +1,3 @@
-
-import Link from 'next/link';
 import { SiteHeader } from '@/components/layout/header';
 import { SiteFooter } from '@/components/layout/footer';
 

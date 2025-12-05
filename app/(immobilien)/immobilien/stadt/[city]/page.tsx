@@ -493,13 +493,13 @@ export default async function CityPage({
               Villen
             </Link>
             <Link
-              href={`/type/private_residence?city=${encodeURIComponent(city.propertyType)}`}
+              href={`/immobilien/type/private_residence?city=${encodeURIComponent(city.propertyType)}`}
               className="inline-flex items-center border border-[--primary] bg-[--primary] px-6 py-4 text-sm font-medium tracking-wide text-[--bg] transition-all hover:bg-transparent hover:text-[--primary]"
             >
               Residenzen
             </Link>
             <Link
-              href="/kontakt"
+              href="/immobilien/kontakt"
               className="inline-flex items-center border border-[--glass-border] px-8 py-4 text-sm font-medium tracking-wide text-[--text] transition-all hover:border-[--primary] hover:text-[--primary]"
             >
               Beratung anfordern

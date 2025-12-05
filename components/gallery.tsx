@@ -35,7 +35,12 @@ export function Gallery({ images, propertyTitle, propertyType }: GalleryProps) {
 
   const handleTouchEnd = (event: React.TouchEvent) => {
     if (touchStartX.current === null) return;
-    const delta = event.changedTouches[0]?.clientX - touchStartX.current;
+    const touch = event.changedTouches[0];
+    if (!touch) {
+      touchStartX.current = null;
+      return;
+    }
+    const delta = touch.clientX - touchStartX.current;
     const threshold = 40;
     if (delta > threshold) {
       prev();
