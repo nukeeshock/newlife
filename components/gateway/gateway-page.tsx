@@ -24,11 +24,11 @@ export function GatewayPage() {
 
           {/* Brand Text */}
           <div className="mt-3 flex flex-col items-center sm:mt-4">
-            <span className="text-[9px] font-medium uppercase tracking-[0.3em] text-zinc-400 sm:text-[10px] sm:tracking-[0.4em]">
+            <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/90 drop-shadow-md sm:text-[10px] sm:tracking-[0.4em]">
               Willkommen bei
             </span>
-            <h1 className="mt-1 font-serif text-xl font-light tracking-[0.08em] text-white drop-shadow-lg sm:text-2xl sm:tracking-[0.1em] lg:text-3xl">
-              <span className="font-medium">NewLife</span> Vietnam
+            <h1 className="mt-1 font-serif text-xl font-normal tracking-[0.08em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-2xl sm:tracking-[0.1em] lg:text-3xl">
+              <span className="font-semibold">NewLife</span> Vietnam
             </h1>
           </div>
         </div>
@@ -59,22 +59,22 @@ export function GatewayPage() {
             </div>
 
             {/* Label */}
-            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] text-orange-400 drop-shadow-md sm:text-xs sm:tracking-[0.3em]">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] text-orange-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-xs sm:tracking-[0.3em]">
               Co-Living Konzept
             </span>
 
             {/* Title */}
-            <h2 className="mt-2 font-serif text-2xl font-light text-white drop-shadow-lg sm:mt-3 sm:text-3xl lg:text-4xl">
+            <h2 className="mt-2 font-serif text-2xl font-normal text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:mt-3 sm:text-3xl lg:text-4xl">
               Goldzeit Living
             </h2>
 
             {/* Description */}
-            <p className="mx-auto mt-3 max-w-[280px] text-sm leading-relaxed text-zinc-300 drop-shadow-md sm:mt-4 sm:max-w-xs sm:text-base">
+            <p className="mx-auto mt-3 max-w-[280px] text-sm font-medium leading-relaxed text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:mt-4 sm:max-w-xs sm:text-base">
               Pool-Villen, Gemeinschaft, Vollpension - Das Co-Living Konzept für Best Ager
             </p>
 
             {/* CTA */}
-            <div className="mt-6 inline-flex items-center gap-2 border-b-2 border-orange-400/60 pb-1 text-sm font-semibold text-orange-400 transition-all duration-300 group-hover:gap-4 group-hover:border-orange-400 sm:mt-8 sm:text-base">
+            <div className="mt-6 inline-flex items-center gap-2 border-b-2 border-orange-300/80 pb-1 text-sm font-bold text-orange-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:gap-4 group-hover:border-orange-200 group-hover:text-orange-200 sm:mt-8 sm:text-base">
               <span>Entdecken</span>
               <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -124,22 +124,22 @@ export function GatewayPage() {
             </div>
 
             {/* Label */}
-            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] text-amber-400 drop-shadow-md sm:text-xs sm:tracking-[0.3em]">
+            <span className="inline-block text-[10px] font-bold uppercase tracking-[0.25em] text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-xs sm:tracking-[0.3em]">
               Premium Immobilien
             </span>
 
             {/* Title */}
-            <h2 className="mt-2 font-serif text-2xl font-light text-white drop-shadow-lg sm:mt-3 sm:text-3xl lg:text-4xl">
+            <h2 className="mt-2 font-serif text-2xl font-normal text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:mt-3 sm:text-3xl lg:text-4xl">
               NLV Real Estate
             </h2>
 
             {/* Description */}
-            <p className="mx-auto mt-3 max-w-[280px] text-sm leading-relaxed text-zinc-300 drop-shadow-md sm:mt-4 sm:max-w-xs sm:text-base">
+            <p className="mx-auto mt-3 max-w-[280px] text-sm font-medium leading-relaxed text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:mt-4 sm:max-w-xs sm:text-base">
               Exklusive Villen, Apartments & Residenzen - Ihre Traumimmobilie in Vietnam
             </p>
 
             {/* CTA */}
-            <div className="mt-6 inline-flex items-center gap-2 border-b-2 border-amber-400/60 pb-1 text-sm font-semibold text-amber-400 transition-all duration-300 group-hover:gap-4 group-hover:border-amber-400 sm:mt-8 sm:text-base">
+            <div className="mt-6 inline-flex items-center gap-2 border-b-2 border-amber-300/80 pb-1 text-sm font-bold text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:gap-4 group-hover:border-amber-200 group-hover:text-amber-200 sm:mt-8 sm:text-base">
               <span>Entdecken</span>
               <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
