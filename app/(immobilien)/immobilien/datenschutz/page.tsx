@@ -40,7 +40,7 @@ export default function DatenschutzPage() {
             </h2>
             <div className="space-y-2">
               <p className="font-semibold text-[--text]">NLV Real Estate</p>
-              <p>New Life Vietnam</p>
+              <p>NewLife Vietnam</p>
               <p>[Adresse]</p>
               <p>
                 E-Mail:{" "}

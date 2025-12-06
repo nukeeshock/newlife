@@ -1,4 +1,4 @@
-# robots.txt for NEW LIFE VIETNAM
+# robots.txt for NewLife Vietnam
 User-agent: *
 Allow: /
 

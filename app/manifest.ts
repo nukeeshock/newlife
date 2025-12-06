@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "NEW LIFE VIETNAM",
+    name: "NewLife Vietnam",
     short_name: "NLV",
     description: "Premium Real Estate in Vietnam - Villas, Apartments & Residenzen",
     start_url: "/",

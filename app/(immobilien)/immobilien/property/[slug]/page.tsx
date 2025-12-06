@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
   const description = property.description.slice(0, 160);
 
   return {
-    title: `${property.title} | NEW LIFE VIETNAM`,
+    title: `${property.title} | NewLife Vietnam`,
     description,
     openGraph: {
       title: property.title,

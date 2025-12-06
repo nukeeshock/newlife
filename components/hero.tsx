@@ -40,7 +40,7 @@ export function Hero({ propertyCount }: HeroProps) {
         <div className="animate-fadeInDown opacity-0-initial mb-8 flex items-center gap-4">
           <span className="h-px w-12 bg-gradient-to-r from-transparent via-[--primary]/70 to-transparent" />
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[--primary]">
-            New Life Vietnam
+            NewLife Vietnam
           </span>
           <span className="h-px w-12 bg-gradient-to-r from-transparent via-[--primary]/70 to-transparent" />
         </div>

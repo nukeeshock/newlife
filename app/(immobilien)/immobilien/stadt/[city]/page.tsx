@@ -274,7 +274,7 @@ export async function generateMetadata({
   const city = cityData[citySlug];
 
   if (!city) {
-    return { title: "Stadt nicht gefunden | NEW LIFE VIETNAM" };
+    return { title: "Stadt nicht gefunden | NewLife Vietnam" };
   }
 
   const description = city.intro.slice(0, 155) + "...";

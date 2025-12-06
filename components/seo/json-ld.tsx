@@ -8,7 +8,7 @@ export function OrganizationSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
-    name: "NEW LIFE VIETNAM",
+    name: "NewLife Vietnam",
     url: "https://newlifevietnam.com",
     description:
       "Premium Immobilien-Concierge für Luxus-Mietobjekte in Vietnam. Spezialisiert auf Da Nang, Hoi An und Ho Chi Minh City.",
@@ -179,7 +179,7 @@ export function WebSiteSchema() {
   const schema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "NEW LIFE VIETNAM",
+    name: "NewLife Vietnam",
     url: "https://newlifevietnam.com",
     description: "Premium Immobilien in Vietnam",
     inLanguage: "de-DE",

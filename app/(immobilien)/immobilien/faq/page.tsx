@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     "Antworten auf häufige Fragen zu Immobilien in Vietnam: Mietprozess, Visum, Nebenkosten, Sicherheit und mehr. Alles was Sie über das Leben in Vietnam wissen müssen.",
   openGraph: {
-    title: "FAQ – NEW LIFE VIETNAM",
+    title: "FAQ – NewLife Vietnam",
     description:
       "Häufige Fragen zu Immobilien in Vietnam, Mietprozess, Visa und Lebenshaltungskosten.",
     type: "website",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FAQ – NEW LIFE VIETNAM",
+    title: "FAQ – NewLife Vietnam",
     description: "Häufige Fragen zu Immobilien in Vietnam",
   },
   alternates: {

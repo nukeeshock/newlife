@@ -29,8 +29,8 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL("https://newlifevietnam.com"),
   title: {
-    default: "NEW LIFE VIETNAM - Immobilien & Co-Living in Vietnam",
-    template: "%s | NEW LIFE VIETNAM",
+    default: "NewLife Vietnam - Immobilien & Co-Living in Vietnam",
+    template: "%s | NewLife Vietnam",
   },
   description:
     "NLV Real Estate für exklusive Immobilien und NLV Goldzeit Living für Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
@@ -44,15 +44,15 @@ export const metadata: Metadata = {
     "Expat Vietnam",
     "Senioren Vietnam",
   ],
-  authors: [{ name: "NEW LIFE VIETNAM" }],
-  creator: "NEW LIFE VIETNAM",
-  publisher: "NEW LIFE VIETNAM",
+  authors: [{ name: "NewLife Vietnam" }],
+  creator: "NewLife Vietnam",
+  publisher: "NewLife Vietnam",
   openGraph: {
     type: "website",
     locale: "de_DE",
     url: "https://newlifevietnam.com",
-    siteName: "NEW LIFE VIETNAM",
-    title: "NEW LIFE VIETNAM - Immobilien & Co-Living in Vietnam",
+    siteName: "NewLife Vietnam",
+    title: "NewLife Vietnam - Immobilien & Co-Living in Vietnam",
     description:
       "NLV Real Estate und NLV Goldzeit Living - Ihr Partner in Vietnam.",
     images: [
@@ -60,13 +60,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "NEW LIFE VIETNAM Logo",
+        alt: "NewLife Vietnam Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NEW LIFE VIETNAM",
+    title: "NewLife Vietnam",
     description: "Immobilien & Co-Living in Vietnam",
     images: ["/og-image.png"],
   },

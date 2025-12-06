@@ -40,7 +40,7 @@ export default function GoldzeitDatenschutzPage() {
             </h2>
             <div className="space-y-2">
               <p className="font-semibold text-[--text]">NLV Goldzeit Living</p>
-              <p>Ein Angebot von New Life Vietnam</p>
+              <p>Ein Angebot von NewLife Vietnam</p>
               <p>[Adresse]</p>
               <p>
                 E-Mail:{" "}
