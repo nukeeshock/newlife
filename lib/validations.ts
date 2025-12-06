@@ -170,6 +170,44 @@ export const updateInquirySchema = z.object({
 });
 
 // ============================================
+// ADMIN USER VALIDATIONS
+// ============================================
+
+export const createAdminSchema = z.object({
+  email: z
+    .string()
+    .min(1, "E-Mail ist erforderlich")
+    .email("Ungültige E-Mail-Adresse")
+    .max(200, "E-Mail darf maximal 200 Zeichen lang sein")
+    .transform((val) => val.trim().toLowerCase()),
+  password: z
+    .string()
+    .min(8, "Passwort muss mindestens 8 Zeichen lang sein")
+    .max(100, "Passwort darf maximal 100 Zeichen lang sein"),
+  name: z
+    .string()
+    .max(100, "Name darf maximal 100 Zeichen lang sein")
+    .transform((val) => val.trim())
+    .optional()
+    .nullable(),
+});
+
+export const updateAdminSchema = z.object({
+  email: z
+    .string()
+    .email("Ungültige E-Mail-Adresse")
+    .max(200)
+    .transform((val) => val.trim().toLowerCase())
+    .optional(),
+  name: z
+    .string()
+    .max(100)
+    .transform((val) => val.trim())
+    .optional()
+    .nullable(),
+});
+
+// ============================================
 // ANALYTICS VALIDATIONS
 // ============================================
 
