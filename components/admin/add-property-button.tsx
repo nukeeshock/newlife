@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./image-upload";
 import { eurToVnd, vndToEur } from "@/lib/format";
+import { useAuth } from "@/lib/hooks/use-auth";
 import type { PropertyType } from "@/lib/types";
 
 interface City {
@@ -31,6 +32,7 @@ const PROPERTY_TYPES = [
 
 export function AddPropertyButton({ type: propType }: AddPropertyButtonProps) {
   const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
@@ -165,6 +167,11 @@ export function AddPropertyButton({ type: propType }: AddPropertyButtonProps) {
   const handleClose = () => {
     setIsOpen(false);
   };
+
+  // Admin-only: Zeige Button nur wenn eingeloggt
+  if (authLoading || !isAuthenticated) {
+    return null;
+  }
 
   const inputClasses =
     "w-full bg-white border border-[--border] px-4 py-3 text-sm text-[--text] outline-none transition-all focus:border-[--primary]/50 placeholder:text-[--muted]/60";

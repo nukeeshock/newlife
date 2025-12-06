@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Gallery } from "@/components/gallery";
-import { WhatsAppCTA } from "@/components/whatsapp-cta";
+import { PropertyContactCTA } from "@/components/property-contact-cta";
+import { FloatingContactButtons } from "@/components/contact-buttons";
 import { buttonClasses } from "@/components/ui/button";
 import {
   formatPriceEUR,
@@ -186,7 +187,7 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
               )}
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <WhatsAppCTA propertyTitle={property.title} slug={property.slug} />
+              <PropertyContactCTA propertyTitle={property.title} slug={property.slug} propertyId={property.id} />
               <button
                 type="button"
                 className={buttonClasses({
@@ -284,6 +285,9 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
         </div>
       </div>
       </div>
+
+      {/* Floating Contact Buttons */}
+      <FloatingContactButtons propertyId={property.id} />
     </>
   );
 }

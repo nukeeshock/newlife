@@ -1,4 +1,5 @@
 import { buttonClasses } from "./ui/button";
+import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon } from "./contact-buttons";
 
 export function CtaSection() {
   return (
@@ -24,30 +25,51 @@ export function CtaSection() {
         </h2>
 
         <p className="mx-auto mt-6 max-w-xl text-lg text-[--muted]">
-          Vereinbaren Sie ein unverbindliches Gespräch. Wir zeigen Ihnen, 
+          Vereinbaren Sie ein unverbindliches Gespräch. Wir zeigen Ihnen,
           welche Möglichkeiten Vietnam für Sie bereithält.
         </p>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        {/* Messenger Buttons */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a
-            href="https://wa.me/84832114684?text=Ich%20m%C3%B6chte%20mehr%20%C3%BCber%20Ihre%20Objekte%20erfahren."
+            href={`${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Ich möchte mehr über Ihre Objekte erfahren.")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className={buttonClasses({
-              variant: "primary",
-              className: "min-w-[220px] px-8 py-4 text-base",
-            })}
+            className="group relative inline-flex min-w-[160px] items-center justify-center gap-2 overflow-hidden bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#20BD5A] active:scale-95"
           >
-            WhatsApp Kontakt
+            <WhatsAppIcon className="h-5 w-5" />
+            WhatsApp
           </a>
+          <a
+            href={CONTACT_LINKS.line}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex min-w-[160px] items-center justify-center gap-2 overflow-hidden bg-[#00B900] px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#00A000] active:scale-95"
+          >
+            <LineIcon className="h-5 w-5" />
+            Line
+          </a>
+          <a
+            href={CONTACT_LINKS.zalo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative inline-flex min-w-[160px] items-center justify-center gap-2 overflow-hidden bg-[#0068FF] px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#0058DD] active:scale-95"
+          >
+            <ZaloIcon className="h-5 w-5" />
+            Zalo
+          </a>
+        </div>
+
+        {/* Email Alternative */}
+        <div className="mt-6">
           <a
             href="mailto:contact@newlifevietnam.de"
             className={buttonClasses({
               variant: "ghost",
-              className: "min-w-[220px] px-8 py-4 text-base",
+              className: "px-8 py-3 text-sm",
             })}
           >
-            E-Mail schreiben
+            Oder per E-Mail
           </a>
         </div>
 

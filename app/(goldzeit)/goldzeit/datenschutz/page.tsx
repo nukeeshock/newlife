@@ -1,17 +1,17 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Datenschutz | NLV Real Estate",
-  description: "Datenschutzerklärung von NLV Real Estate",
+  title: "Datenschutz | NLV Goldzeit Living",
+  description: "Datenschutzerklärung von NLV Goldzeit Living",
 };
 
-export default function DatenschutzPage() {
+export default function GoldzeitDatenschutzPage() {
   return (
-    <div className="pt-24">
-      <div className="mx-auto w-full max-w-3xl px-6 py-16 md:px-8">
+    <div className="py-16">
+      <div className="mx-auto w-full max-w-3xl px-6 md:px-8">
         {/* Header */}
         <div className="mb-12">
-          <span className="text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
+          <span className="text-xs font-medium uppercase tracking-[0.3em] text-orange-400">
             Rechtliches
           </span>
           <h1 className="mt-4 font-serif text-4xl font-light text-[--text] md:text-5xl">
@@ -39,14 +39,14 @@ export default function DatenschutzPage() {
               2. Verantwortliche Stelle
             </h2>
             <div className="space-y-2">
-              <p className="font-semibold text-[--text]">NLV Real Estate</p>
-              <p>New Life Vietnam</p>
+              <p className="font-semibold text-[--text]">NLV Goldzeit Living</p>
+              <p>Ein Angebot von New Life Vietnam</p>
               <p>[Adresse]</p>
               <p>
                 E-Mail:{" "}
                 <a
                   href="mailto:contact@newlifevietnam.de"
-                  className="text-[--primary] hover:underline"
+                  className="text-orange-400 hover:underline"
                 >
                   contact@newlifevietnam.de
                 </a>
@@ -128,8 +128,8 @@ export default function DatenschutzPage() {
           {/* Back Link */}
           <div className="mt-12 border-t border-[--glass-border] pt-8">
             <Link
-              href="/immobilien"
-              className="inline-flex items-center gap-2 text-sm text-[--primary] transition-colors hover:text-[--primary]/80"
+              href="/goldzeit"
+              className="inline-flex items-center gap-2 text-sm text-orange-400 transition-colors hover:text-orange-300"
             >
               <svg
                 className="h-4 w-4"
@@ -144,7 +144,7 @@ export default function DatenschutzPage() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Zurück zu NLV Real Estate
+              Zurück zu Goldzeit Living
             </Link>
           </div>
         </div>

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { buttonClasses } from "@/components/ui/button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -121,11 +120,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className={buttonClasses({
-                variant: "primary",
-                fullWidth: true,
-                className: `mt-8 py-4 ${loading ? "opacity-50 cursor-not-allowed" : ""}`,
-              })}
+              className={`mt-8 w-full bg-[--primary] py-4 text-base font-bold text-white shadow-lg transition-all duration-300 hover:bg-[--primary]/90 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 ${loading ? "" : "hover:scale-[1.02]"}`}
             >
               {loading ? "Wird geprüft..." : "Anmelden"}
             </button>
