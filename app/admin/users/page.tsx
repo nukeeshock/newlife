@@ -102,18 +102,18 @@ function Modal({
 
       {/* Modal Content */}
       <div
-        className="relative w-full max-w-md border border-[--glass-border] bg-[--card] shadow-2xl"
+        className="relative w-full max-w-md border border-[#E5E0D8] bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[--glass-border] px-6 py-4">
-          <h2 className="font-serif text-xl font-light text-[--text]">
+        <div className="flex items-center justify-between border-b border-[#E5E0D8] px-6 py-4">
+          <h2 className="font-serif text-xl font-light text-[#0A2239]">
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 text-[--muted] transition-colors hover:text-[--text]"
+            className="p-2 text-[#5A6B7A] transition-colors hover:text-[#0A2239]"
           >
             <svg
               className="h-5 w-5"
@@ -189,9 +189,9 @@ function AddAdminModal({
   };
 
   const inputClasses =
-    "w-full bg-[--surface] border border-[--glass-border] px-4 py-3 text-sm text-[--text] outline-none transition-all focus:border-[--primary]/50 placeholder:text-[--muted]/60";
+    "w-full bg-[#F9F9F7] border border-[#E5E0D8] px-4 py-3 text-sm text-[#0A2239] outline-none transition-all focus:border-[#B8860B]/50 placeholder:text-[#5A6B7A]/60";
   const labelClasses =
-    "text-xs font-medium uppercase tracking-[0.2em] text-[--muted]";
+    "text-xs font-medium uppercase tracking-[0.2em] text-[#5A6B7A]";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Neuen Admin hinzufügen">
@@ -246,14 +246,14 @@ function AddAdminModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm text-[--muted] transition-colors hover:text-[--text]"
+            className="px-5 py-2.5 text-sm text-[#5A6B7A] transition-colors hover:text-[#0A2239]"
           >
             Abbrechen
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="border border-[--primary] bg-[--primary] px-6 py-2.5 text-sm font-medium text-[--bg] transition-all hover:bg-transparent hover:text-[--primary] disabled:opacity-50"
+            className="border border-[#B8860B] bg-[#B8860B] px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-transparent hover:text-[#B8860B] disabled:opacity-50"
           >
             {loading ? "Wird erstellt..." : "Admin erstellen"}
           </button>
@@ -278,9 +278,11 @@ function EditAdminModal({
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPasswordField, setShowPasswordField] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     name: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -288,7 +290,9 @@ function EditAdminModal({
       setFormData({
         email: admin.email,
         name: admin.name || "",
+        password: "",
       });
+      setShowPasswordField(false);
     }
   }, [admin]);
 
@@ -300,10 +304,19 @@ function EditAdminModal({
     setError(null);
 
     try {
+      // Nur Passwort mitsenden wenn es ausgefüllt wurde
+      const payload: { email: string; name: string; password?: string } = {
+        email: formData.email,
+        name: formData.name,
+      };
+      if (formData.password) {
+        payload.password = formData.password;
+      }
+
       const res = await fetch(`/api/admins/${admin.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -321,9 +334,9 @@ function EditAdminModal({
   };
 
   const inputClasses =
-    "w-full bg-[--surface] border border-[--glass-border] px-4 py-3 text-sm text-[--text] outline-none transition-all focus:border-[--primary]/50 placeholder:text-[--muted]/60";
+    "w-full bg-[#F9F9F7] border border-[#E5E0D8] px-4 py-3 text-sm text-[#0A2239] outline-none transition-all focus:border-[#B8860B]/50 placeholder:text-[#5A6B7A]/60";
   const labelClasses =
-    "text-xs font-medium uppercase tracking-[0.2em] text-[--muted]";
+    "text-xs font-medium uppercase tracking-[0.2em] text-[#5A6B7A]";
 
   return (
     <Modal
@@ -362,24 +375,50 @@ function EditAdminModal({
           />
         </div>
 
-        <div className="border-t border-[--glass-border] pt-4">
-          <p className="text-xs text-[--muted]">
-            Passwort kann nicht geändert werden.
-          </p>
+        <div className="border-t border-[#E5E0D8] pt-4">
+          {!showPasswordField ? (
+            <button
+              type="button"
+              onClick={() => setShowPasswordField(true)}
+              className="flex items-center gap-2 text-sm text-[#B8860B] transition-colors hover:text-[#DAA520]"
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+              </svg>
+              Passwort ändern
+            </button>
+          ) : (
+            <div className="space-y-2">
+              <label className={labelClasses}>Neues Passwort</label>
+              <input
+                type="password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
+                placeholder="Mindestens 8 Zeichen"
+                minLength={8}
+                className={inputClasses}
+              />
+              <p className="text-xs text-[#5A6B7A]">
+                Leer lassen um das Passwort nicht zu ändern
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm text-[--muted] transition-colors hover:text-[--text]"
+            className="px-5 py-2.5 text-sm text-[#5A6B7A] transition-colors hover:text-[#0A2239]"
           >
             Abbrechen
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="border border-[--primary] bg-[--primary] px-6 py-2.5 text-sm font-medium text-[--bg] transition-all hover:bg-transparent hover:text-[--primary] disabled:opacity-50"
+            className="border border-[#B8860B] bg-[#B8860B] px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-transparent hover:text-[#B8860B] disabled:opacity-50"
           >
             {loading ? "Wird gespeichert..." : "Speichern"}
           </button>
@@ -411,14 +450,14 @@ function DeleteConfirmModal({
       title="Admin löschen"
     >
       <div className="space-y-6">
-        <p className="text-[--text]">
+        <p className="text-[#0A2239]">
           Möchtest du{" "}
-          <span className="font-medium text-[--primary]">
+          <span className="font-medium text-[#B8860B]">
             {admin?.name || admin?.email}
           </span>{" "}
           wirklich löschen?
         </p>
-        <p className="text-sm text-[--muted]">
+        <p className="text-sm text-[#5A6B7A]">
           Diese Aktion kann nicht rückgängig gemacht werden. Alle zugehörigen
           Sessions werden ebenfalls gelöscht.
         </p>
@@ -427,7 +466,7 @@ function DeleteConfirmModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 text-sm text-[--muted] transition-colors hover:text-[--text]"
+            className="px-5 py-2.5 text-sm text-[#5A6B7A] transition-colors hover:text-[#0A2239]"
           >
             Abbrechen
           </button>

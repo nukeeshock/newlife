@@ -205,6 +205,11 @@ export const updateAdminSchema = z.object({
     .transform((val) => val.trim())
     .optional()
     .nullable(),
+  password: z
+    .string()
+    .min(8, "Passwort muss mindestens 8 Zeichen haben")
+    .max(100)
+    .optional(),
 });
 
 // ============================================

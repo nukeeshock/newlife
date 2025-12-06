@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { updateAdminSchema, validate, formatZodErrors } from "@/lib/validations";
@@ -9,7 +10,7 @@ interface RouteParams {
 }
 
 // ============================================
-// PATCH: Admin aktualisieren (nur name und email - KEIN Passwort!)
+// PATCH: Admin aktualisieren (name, email, optional password)
 // ============================================
 
 async function updateAdminHandler(
@@ -45,9 +46,18 @@ async function updateAdminHandler(
       );
     }
 
+    // Update-Daten vorbereiten
+    const { password, ...otherData } = validation.data;
+    const updateData: { email?: string; name?: string | null; password?: string } = { ...otherData };
+
+    // Passwort hashen wenn mitgegeben
+    if (password) {
+      updateData.password = await bcrypt.hash(password, 12);
+    }
+
     const admin = await prisma.admin.update({
       where: { id },
-      data: validation.data,
+      data: updateData,
       select: {
         id: true,
         email: true,
