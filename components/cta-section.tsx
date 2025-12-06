@@ -1,10 +1,12 @@
-import { buttonClasses } from "./ui/button";
-import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon } from "./contact-buttons";
+"use client";
 
-const messengerButtons = [
-  { href: `${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Ich möchte mehr über Ihre Objekte erfahren.")}`, Icon: WhatsAppIcon, label: "WhatsApp", bg: "#25D366", hover: "#20BD5A" },
-  { href: CONTACT_LINKS.line, Icon: LineIcon, label: "Line", bg: "#00B900", hover: "#00A000" },
-  { href: CONTACT_LINKS.zalo, Icon: ZaloIcon, label: "Zalo", bg: "#0068FF", hover: "#0058DD" },
+import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon, EmailIcon } from "./contact-buttons";
+
+const contactButtons = [
+  { href: `${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Ich möchte mehr über Ihre Objekte erfahren.")}`, Icon: WhatsAppIcon, label: "WhatsApp", bg: "#25D366" },
+  { href: CONTACT_LINKS.line, Icon: LineIcon, label: "Line", bg: "#00B900" },
+  { href: CONTACT_LINKS.zalo, Icon: ZaloIcon, label: "Zalo", bg: "#0068FF" },
+  { href: CONTACT_LINKS.email, Icon: EmailIcon, label: "E-Mail", bg: "#38BDF8" },
 ];
 
 export function CtaSection() {
@@ -35,37 +37,24 @@ export function CtaSection() {
           welche Möglichkeiten Vietnam für Sie bereithält.
         </p>
 
-        {/* Messenger Buttons */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          {messengerButtons.map((btn, i) => (
+        {/* Contact Buttons - 2x2 Grid */}
+        <div className="mx-auto mt-10 grid max-w-md grid-cols-2 gap-3">
+          {contactButtons.map((btn, i) => (
             <a
               key={btn.label}
               href={btn.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="animate-fadeInUp opacity-0-initial group relative inline-flex min-w-[160px] items-center justify-center gap-2 overflow-hidden px-6 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl active:scale-95"
+              target={btn.label === "E-Mail" ? undefined : "_blank"}
+              rel={btn.label === "E-Mail" ? undefined : "noopener noreferrer"}
+              className="animate-fadeInUp opacity-0-initial group relative inline-flex items-center justify-center gap-2.5 overflow-hidden px-5 py-4 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
               style={{
                 backgroundColor: btn.bg,
-                animationDelay: `${300 + i * 100}ms`,
+                animationDelay: `${300 + i * 80}ms`,
               }}
             >
               <btn.Icon className="h-5 w-5" />
               {btn.label}
             </a>
           ))}
-        </div>
-
-        {/* Email Alternative */}
-        <div className="animate-fadeInUp delay-600 opacity-0-initial mt-6">
-          <a
-            href="mailto:contact@newlifevietnam.de"
-            className={buttonClasses({
-              variant: "ghost",
-              className: "px-8 py-3 text-sm transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]",
-            })}
-          >
-            Oder per E-Mail
-          </a>
         </div>
 
         {/* Trust Note */}

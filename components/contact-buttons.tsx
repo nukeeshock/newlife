@@ -7,7 +7,17 @@ export const CONTACT_LINKS = {
   whatsapp: "https://wa.me/84832114684",
   line: "https://line.me/ti/p/JUBHZJdgBg",
   zalo: "https://zaloapp.com/qr/p/qc1vj9pyvb78",
+  email: "mailto:contact@newlifevietnam.de",
 };
+
+// Email Icon SVG - Elegant envelope
+export function EmailIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5zm2 0v.217l7 4.2 7-4.2V5H5zm14 2.383l-7 4.2-7-4.2V19h14V7.383z" />
+    </svg>
+  );
+}
 
 // WhatsApp Icon SVG
 export function WhatsAppIcon({ className = "h-5 w-5" }: { className?: string }) {
@@ -27,12 +37,17 @@ export function LineIcon({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
-// Zalo Icon SVG
+// Zalo Icon SVG - Speech bubble with Z
 export function ZaloIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 48 48" fill="currentColor">
-      <path d="M24 0C10.745 0 0 10.745 0 24s10.745 24 24 24 24-10.745 24-24S37.255 0 24 0zm6.525 32.065c-.195.585-.975 1.065-1.62 1.2-.435.09-.99.165-2.88-.615-2.415-.99-3.975-3.42-4.095-3.585-.12-.15-.99-1.32-.99-2.52s.63-1.785.855-2.025c.195-.21.465-.3.63-.3.15 0 .315 0 .45.015.15.015.345-.06.54.405.195.48.675 1.65.735 1.77.06.12.105.27.015.42-.075.165-.12.255-.24.39-.12.15-.24.33-.345.435-.12.12-.24.255-.105.495.15.24.645 1.065 1.38 1.725.945.855 1.74 1.125 1.995 1.245.24.12.39.105.54-.06.135-.165.6-.705.765-.945.165-.24.33-.195.555-.12.225.09 1.44.675 1.68.795.255.12.42.195.48.285.075.105.075.585-.12 1.17zm-3.72-6.585c-.87-1.065-2.115-1.695-3.525-1.695-2.49 0-4.515 2.025-4.515 4.515 0 .795.21 1.545.57 2.19l-1.26 3.72 3.855-1.23c.615.33 1.32.525 2.07.525h.015c2.49 0 4.515-2.025 4.515-4.515 0-1.41-.615-2.73-1.695-3.615l-.03.105z" />
-      <path d="M35.4 12.6H12.6c-1.65 0-3 1.35-3 3v16.8c0 1.65 1.35 3 3 3h22.8c1.65 0 3-1.35 3-3V15.6c0-1.65-1.35-3-3-3zm-19.665 15.3H12.9v-6.75h.885v5.895h1.95v.855zm4.965 0h-.81l-.09-.69c-.39.54-.855.81-1.395.81-.465 0-.825-.165-1.095-.51-.255-.33-.39-.795-.39-1.395v-4.065h.87v3.885c0 .39.075.69.21.885.135.195.345.285.615.285.195 0 .39-.06.57-.195.195-.12.345-.3.45-.51v-4.35h.87v5.85h.195zm4.35-2.295c0 .72-.15 1.29-.465 1.695-.3.405-.735.615-1.29.615-.54 0-.975-.195-1.29-.585l-.06.495h-.795v-8.025h.87v2.79c.315-.375.72-.57 1.215-.57.57 0 1.005.21 1.32.63.315.42.48 1.005.48 1.77v1.185h.015zm4.29 2.295h-.87v-.57c-.315.435-.75.66-1.305.66-.435 0-.78-.135-1.02-.42-.24-.27-.36-.66-.36-1.155 0-.54.165-.975.51-1.29.33-.315.795-.48 1.38-.48.285 0 .555.03.795.105v-.36c0-.36-.075-.615-.225-.78-.15-.165-.39-.24-.72-.24-.375 0-.795.105-1.26.315l-.27-.66c.54-.255 1.08-.375 1.635-.375.585 0 1.02.15 1.32.45.285.3.435.75.435 1.35v3.45h-.045z" />
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      {/* Speech bubble shape */}
+      <path d="M12 2C6.48 2 2 5.92 2 10.68c0 2.72 1.46 5.14 3.74 6.7-.1.95-.54 2.47-1.27 3.68-.14.24.08.52.35.44 1.72-.48 3.58-1.26 4.86-2.1.73.14 1.5.22 2.32.22 5.52 0 10-3.92 10-8.76S17.52 2 12 2z" />
+      {/* Bold Z letterform */}
+      <path
+        d="M8 7.2h8v1.6h-5.4l5.4 5.2v1.8H8v-1.6h5.4L8 9V7.2z"
+        fill="white"
+      />
     </svg>
   );
 }
@@ -52,7 +67,7 @@ const pulseEffect = `
 `;
 
 interface MessengerButtonProps {
-  type: "whatsapp" | "line" | "zalo";
+  type: "whatsapp" | "line" | "zalo" | "email";
   message?: string;
   propertyId?: string;
   variant?: "icon" | "full" | "compact";
@@ -84,6 +99,12 @@ export function MessengerButton({
       label: "Zalo",
       color: "bg-[#0068FF] hover:bg-[#0058DD]",
       baseUrl: CONTACT_LINKS.zalo,
+    },
+    email: {
+      icon: EmailIcon,
+      label: "E-Mail",
+      color: "bg-[#38BDF8] hover:bg-[#7DD3FC]",
+      baseUrl: CONTACT_LINKS.email,
     },
   };
 

@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon } from "@/components/contact-buttons";
+import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon, EmailIcon } from "@/components/contact-buttons";
 
 export function GoldzeitFooter() {
   return (
@@ -72,10 +74,11 @@ export function GoldzeitFooter() {
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               <a
-                href="mailto:contact@newlifevietnam.de"
-                className="text-white/80 transition-colors hover:text-orange-400"
+                href={CONTACT_LINKS.email}
+                className="inline-flex items-center gap-2 text-white/80 transition-all hover:text-white hover:scale-105"
               >
-                contact@newlifevietnam.de
+                <EmailIcon className="h-4 w-4" />
+                E-Mail
               </a>
               <a
                 href={CONTACT_LINKS.whatsapp}

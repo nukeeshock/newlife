@@ -1,10 +1,13 @@
-import Link from "next/link";
-import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon } from "@/components/contact-buttons";
+"use client";
 
-const messengerButtons = [
+import Link from "next/link";
+import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon, EmailIcon } from "@/components/contact-buttons";
+
+const contactButtons = [
   { href: CONTACT_LINKS.whatsapp, Icon: WhatsAppIcon, label: "WhatsApp", bg: "#25D366" },
   { href: CONTACT_LINKS.line, Icon: LineIcon, label: "Line", bg: "#00B900" },
   { href: CONTACT_LINKS.zalo, Icon: ZaloIcon, label: "Zalo", bg: "#0068FF" },
+  { href: CONTACT_LINKS.email, Icon: EmailIcon, label: "E-Mail", bg: "#38BDF8" },
 ];
 
 export function GoldzeitCta() {
@@ -16,7 +19,7 @@ export function GoldzeitCta() {
             Interesse geweckt?
           </h2>
           <p className="animate-fadeInUp delay-100 opacity-0-initial text-[--muted]">
-            Fordern Sie unverbindlich das Expose an.
+            Vereinbaren Sie ein unverbindliches Gespräch.
           </p>
         </div>
 
@@ -28,22 +31,22 @@ export function GoldzeitCta() {
             Kostenlose Beratung anfordern
           </Link>
 
-          {/* Messenger Buttons */}
-          <div className="grid grid-cols-3 gap-3">
-            {messengerButtons.map((btn, i) => (
+          {/* Contact Buttons - 2x2 Grid */}
+          <div className="grid grid-cols-2 gap-3">
+            {contactButtons.map((btn, i) => (
               <a
                 key={btn.label}
                 href={btn.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="animate-fadeInUp opacity-0-initial flex flex-col items-center justify-center gap-2 py-4 text-white transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
+                target={btn.label === "E-Mail" ? undefined : "_blank"}
+                rel={btn.label === "E-Mail" ? undefined : "noopener noreferrer"}
+                className="animate-fadeInUp opacity-0-initial flex items-center justify-center gap-2.5 py-4 text-white transition-all duration-300 hover:scale-[1.03] hover:shadow-lg active:scale-[0.97]"
                 style={{
                   backgroundColor: btn.bg,
-                  animationDelay: `${300 + i * 100}ms`,
+                  animationDelay: `${300 + i * 80}ms`,
                 }}
               >
-                <btn.Icon className="h-6 w-6" />
-                <span className="text-xs font-medium">{btn.label}</span>
+                <btn.Icon className="h-5 w-5" />
+                <span className="text-sm font-semibold">{btn.label}</span>
               </a>
             ))}
           </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon } from "@/components/contact-buttons";
+import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon, EmailIcon } from "@/components/contact-buttons";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
@@ -140,43 +140,50 @@ ${formData.message}`;
             Interesse <span className="italic text-[--primary]">geweckt?</span>
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-[--muted]">
-            Fordern Sie unverbindlich weitere Informationen zu unserem
-            Goldzeit Living Konzept an. Wir beraten Sie gerne.
+            Vereinbaren Sie ein unverbindliches Gespräch. Wir zeigen Ihnen,
+            welche Möglichkeiten Vietnam für Sie oder Ihre Lieben bereithält.
           </p>
         </div>
 
-        {/* Messenger Buttons - Prominent */}
-        <div className="mx-auto mt-12 max-w-3xl">
+        {/* Contact Buttons - 2x2 Grid */}
+        <div className="mx-auto mt-12 max-w-2xl">
           <h2 className="mb-6 text-center font-serif text-2xl font-light text-[--text]">
             Schreiben Sie uns direkt
           </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4">
             <a
               href={`${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Hallo, ich interessiere mich für das Goldzeit Living Konzept.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center justify-center gap-3 bg-[#25D366] py-8 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#20BD5A] active:scale-95"
+              className="flex items-center justify-center gap-3 bg-[#25D366] py-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
             >
-              <WhatsAppIcon className="h-10 w-10" />
-              <span className="text-lg font-semibold">WhatsApp</span>
+              <WhatsAppIcon className="h-6 w-6" />
+              <span className="text-base font-semibold">WhatsApp</span>
             </a>
             <a
               href={CONTACT_LINKS.line}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center justify-center gap-3 bg-[#00B900] py-8 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#00A000] active:scale-95"
+              className="flex items-center justify-center gap-3 bg-[#00B900] py-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
             >
-              <LineIcon className="h-10 w-10" />
-              <span className="text-lg font-semibold">Line</span>
+              <LineIcon className="h-6 w-6" />
+              <span className="text-base font-semibold">Line</span>
             </a>
             <a
               href={CONTACT_LINKS.zalo}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center justify-center gap-3 bg-[#0068FF] py-8 text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#0058DD] active:scale-95"
+              className="flex items-center justify-center gap-3 bg-[#0068FF] py-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
             >
-              <ZaloIcon className="h-10 w-10" />
-              <span className="text-lg font-semibold">Zalo</span>
+              <ZaloIcon className="h-6 w-6" />
+              <span className="text-base font-semibold">Zalo</span>
+            </a>
+            <a
+              href={CONTACT_LINKS.email}
+              className="flex items-center justify-center gap-3 bg-[#38BDF8] py-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:bg-[#7DD3FC] active:scale-[0.97]"
+            >
+              <EmailIcon className="h-6 w-6" />
+              <span className="text-base font-semibold">E-Mail</span>
             </a>
           </div>
         </div>
