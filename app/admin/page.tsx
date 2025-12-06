@@ -313,10 +313,10 @@ export default function AdminPage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="mb-8 flex gap-4 border-b border-[--glass-border]">
+      <div className="mb-8 flex flex-wrap gap-1 sm:gap-4 border-b border-[--glass-border]">
         <button
           onClick={() => setActiveTab("archive")}
-          className={`px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "archive"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -326,7 +326,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("cities")}
-          className={`px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "cities"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -336,7 +336,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("inquiries")}
-          className={`px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "inquiries"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -351,7 +351,7 @@ export default function AdminPage() {
         </button>
         <Link
           href="/admin/analytics"
-          className="px-4 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text]"
+          className="whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text]"
         >
           Analytics
         </Link>
@@ -377,52 +377,55 @@ export default function AdminPage() {
               {archivedProperties.map((property) => (
                 <div
                   key={property.id}
-                  className="flex items-center gap-4 border border-[--glass-border] bg-[--card] p-4 transition-colors hover:border-[--primary]/20"
+                  className="flex flex-col sm:flex-row sm:items-center gap-4 border border-[--glass-border] bg-[--card] p-4 transition-colors hover:border-[--primary]/20"
                 >
-                  {/* Thumbnail */}
-                  <div className="relative h-20 w-32 flex-shrink-0 overflow-hidden bg-[--surface]">
-                    {property.images?.[0] ? (
-                      <Image
-                        src={property.images[0]}
-                        alt={property.title}
-                        fill
-                        className="object-cover"
-                        sizes="128px"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[--muted]">
-                        📷
-                      </div>
-                    )}
-                  </div>
+                  {/* Top row on mobile: Thumbnail + Info */}
+                  <div className="flex gap-4">
+                    {/* Thumbnail */}
+                    <div className="relative h-16 w-24 sm:h-20 sm:w-32 flex-shrink-0 overflow-hidden bg-[--surface]">
+                      {property.images?.[0] ? (
+                        <Image
+                          src={property.images[0]}
+                          alt={property.title}
+                          fill
+                          className="object-cover"
+                          sizes="128px"
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-[--muted]">
+                          📷
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="truncate font-medium text-[--text]">
-                      {property.title}
-                    </h3>
-                    <p className="text-sm text-[--muted]">
-                      {property.city} • {formatPriceEUR(property.priceEUR)}
-                    </p>
-                    <p className="mt-1 text-xs text-[--muted]/60">
-                      Archiviert am {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString("de-DE") : "Unbekannt"}
-                    </p>
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="truncate font-medium text-[--text]">
+                        {property.title}
+                      </h3>
+                      <p className="text-sm text-[--muted]">
+                        {property.city} • {formatPriceEUR(property.priceEUR)}
+                      </p>
+                      <p className="mt-1 text-xs text-[--muted]/60">
+                        Archiviert am {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString("de-DE") : "Unbekannt"}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 sm:flex-shrink-0">
                     <button
                       onClick={() => handleRestore(property.id)}
                       disabled={restoring === property.id}
-                      className="border border-[--primary]/30 bg-[--primary]/10 px-4 py-2 text-sm font-medium text-[--primary] transition-colors hover:bg-[--primary]/20 disabled:opacity-50"
+                      className="flex-1 sm:flex-none border border-[--primary]/30 bg-[--primary]/10 px-3 sm:px-4 py-2 text-sm font-medium text-[--primary] transition-colors hover:bg-[--primary]/20 disabled:opacity-50"
                     >
                       {restoring === property.id ? "..." : "Wiederherstellen"}
                     </button>
                     <button
                       onClick={() => handlePermanentDelete(property.id)}
-                      className="border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
+                      className="flex-1 sm:flex-none border border-red-500/30 bg-red-500/10 px-3 sm:px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
                     >
-                      Endgültig löschen
+                      Löschen
                     </button>
                   </div>
                 </div>
@@ -447,7 +450,7 @@ export default function AdminPage() {
       {activeTab === "cities" && (
         <>
           {/* Add City Form */}
-          <form onSubmit={handleAddCity} className="mb-8 flex gap-3">
+          <form onSubmit={handleAddCity} className="mb-8 flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               value={newCityName}
@@ -694,7 +697,7 @@ export default function AdminPage() {
                   <span className="text-xs text-[--muted]">Bezug auf Objekt</span>
                   <p>
                     <Link
-                      href={`/${selectedInquiry.property.slug}`}
+                      href={`/immobilien/property/${selectedInquiry.property.slug}`}
                       className="text-[--primary] hover:underline"
                       target="_blank"
                     >

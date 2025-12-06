@@ -63,7 +63,7 @@ const WEBP_QUALITY = 85;
 async function uploadHandler(request: AuthenticatedRequest) {
   try {
     // Rate Limiting
-    const rateLimit = checkRateLimit(request, RATE_LIMITS.upload);
+    const rateLimit = await checkRateLimit(request, RATE_LIMITS.upload);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.resetAt);
     }

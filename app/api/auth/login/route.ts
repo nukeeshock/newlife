@@ -14,7 +14,7 @@ import { loginSchema, validate, formatZodErrors } from "@/lib/validations";
 export async function POST(request: NextRequest) {
   try {
     // Rate Limiting prüfen
-    const rateLimit = checkRateLimit(request, RATE_LIMITS.login);
+    const rateLimit = await checkRateLimit(request, RATE_LIMITS.login);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.resetAt);
     }
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     if (!admin.password.startsWith("$2")) {
       // Klartext-Passwort gefunden - Sicherheitsrisiko!
       console.error(
-        `[SECURITY] Admin ${admin.email} hat Klartext-Passwort! ` +
+        `[SECURITY] Admin ${admin.email.replace(/(.{2}).*@/, "$1***@")} hat Klartext-Passwort! ` +
         "Bitte 'pnpm db:seed' ausführen um Passwort zu hashen."
       );
       return NextResponse.json(

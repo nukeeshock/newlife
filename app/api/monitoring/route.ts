@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Sentry Tunnel - leitet Requests über eigenen Server um Ad-Blocker zu umgehen
-const SENTRY_HOST = "o4510467287810048.ingest.de.sentry.io";
-const SENTRY_PROJECT_ID = "4510467289251920";
+const SENTRY_HOST = process.env.SENTRY_HOST || "o4510467287810048.ingest.de.sentry.io";
+const SENTRY_PROJECT_ID = process.env.SENTRY_PROJECT_ID || "4510467289251920";
 
 export async function POST(request: NextRequest) {
   try {

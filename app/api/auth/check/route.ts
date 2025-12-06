@@ -49,6 +49,12 @@ export async function GET(request: NextRequest) {
           return NextResponse.json({ authenticated: false });
         }
 
+        // Alten Token revoken
+        await prisma.refreshToken.update({
+          where: { token: tokenHash },
+          data: { revokedAt: new Date() },
+        });
+
         // Neue Tokens generieren
         const newAccessToken = await createAccessToken({
           id: refreshPayload.sub,
@@ -59,6 +65,17 @@ export async function GET(request: NextRequest) {
           id: refreshPayload.sub,
           email: refreshPayload.email,
           name: refreshPayload.name,
+        });
+
+        // Neuen Refresh Token in DB speichern
+        const newTokenHash = hashToken(newRefreshToken);
+        const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        await prisma.refreshToken.create({
+          data: {
+            token: newTokenHash,
+            adminId: refreshPayload.sub,
+            expiresAt: newExpiresAt,
+          },
         });
 
         const response = NextResponse.json({

@@ -70,6 +70,8 @@ async function getStatsHandler() {
       sessionsWithDuration,
       pageviewsPerDay,
       propertyStats,
+      propertyPageviews,
+      propertyWhatsappClicks,
     ] = await Promise.all([
       // Unique Visitors (distinct sessionId)
       prisma.analyticsPageview.findMany({
@@ -119,6 +121,27 @@ async function getStatsHandler() {
           type: true,
         },
       }),
+
+      // Pageviews pro Property
+      prisma.analyticsPageview.groupBy({
+        by: ["path"],
+        where: {
+          occurredAt: { gte: thirtyDaysAgo },
+          path: { startsWith: "/property/" },
+        },
+        _count: true,
+      }),
+
+      // WhatsApp Clicks pro Property
+      prisma.analyticsEvent.groupBy({
+        by: ["propertyId"],
+        where: {
+          eventType: "whatsapp_click",
+          occurredAt: { gte: thirtyDaysAgo },
+          propertyId: { not: null },
+        },
+        _count: true,
+      }),
     ]);
 
     // Avg Session Duration berechnen (max 2 Stunden, unrealistische Sessions ausfiltern)
@@ -143,27 +166,6 @@ async function getStatsHandler() {
         avgSessionDuration = Math.round(totalDuration / validSessions.length / 1000);
       }
     }
-
-    // Pageviews pro Property zählen
-    const propertyPageviews = await prisma.analyticsPageview.groupBy({
-      by: ["path"],
-      where: {
-        occurredAt: { gte: thirtyDaysAgo },
-        path: { startsWith: "/property/" },
-      },
-      _count: true,
-    });
-
-    // WhatsApp Clicks pro Property
-    const propertyWhatsappClicks = await prisma.analyticsEvent.groupBy({
-      by: ["propertyId"],
-      where: {
-        eventType: "whatsapp_click",
-        occurredAt: { gte: thirtyDaysAgo },
-        propertyId: { not: null },
-      },
-      _count: true,
-    });
 
     // Property Stats zusammenführen
     const propertyStatsWithCounts: PropertyWithStats[] = propertyStats.map(

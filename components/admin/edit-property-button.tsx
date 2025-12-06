@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { buttonClasses } from "@/components/ui/button";
 import { ImageUpload } from "./image-upload";
-import { eurToVnd, vndToEur } from "@/lib/format";
+import { eurToVnd, vndToEur, VND_EUR_RATE } from "@/lib/format";
 import type { Property, PropertyType, PropertyStatus, ListingType } from "@/lib/types";
 
 interface City {
@@ -194,21 +194,23 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between border-b border-[--border] bg-white px-6 py-4">
-          <h2 className="font-serif text-xl font-light text-[--text]">
-            Expose bearbeiten
+        <div className="sticky top-0 flex items-center justify-between border-b border-[--border] bg-white px-4 sm:px-6 py-4 z-10">
+          <h2 className="font-serif text-lg sm:text-xl font-light text-gray-900">
+            Objekt bearbeiten
           </h2>
           <button
             type="button"
             onClick={handleClose}
-            className="text-2xl text-[--muted] transition-colors hover:text-[--text]"
+            className="p-2 text-gray-500 transition-colors hover:text-gray-900 hover:bg-gray-100 rounded-full"
           >
-            x
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6 p-6">
+        <form onSubmit={handleSubmit} className="space-y-5 p-4 sm:p-6">
           {/* Title */}
           <div className="space-y-2">
             <label className={labelClasses}>Titel *</label>
@@ -236,7 +238,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
           </div>
 
           {/* Listing Type & Property Type */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className={labelClasses}>Angebots-Art *</label>
               <div className="relative">
@@ -252,9 +254,9 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
-                  v
-                </div>
+                <svg className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[--muted]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
             <div className="space-y-2">
@@ -272,9 +274,9 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
-                  v
-                </div>
+                <svg className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[--muted]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
           </div>
@@ -282,7 +284,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
           {/* Price EUR & VND */}
           <div className="space-y-2">
             <label className={labelClasses}>{priceLabel} *</label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="relative">
                 <input
                   type="number"
@@ -299,7 +301,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                   type="number"
                   value={formData.priceVND}
                   onChange={(e) => handlePriceVNDChange(e.target.value)}
-                  placeholder="z.B. 79500000"
+                  placeholder="z.B. 92100000"
                   required
                   className={inputClasses}
                 />
@@ -307,12 +309,12 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
               </div>
             </div>
             <p className="text-xs text-[--muted]">
-              Gib einen Wert ein - der andere wird automatisch umgerechnet (Kurs: ~26.500 VND/EUR)
+              Gib einen Wert ein - der andere wird automatisch umgerechnet (Kurs: ~{VND_EUR_RATE.toLocaleString("de-DE")} VND/EUR)
             </p>
           </div>
 
           {/* Status & City */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className={labelClasses}>Status *</label>
               <div className="relative">
@@ -328,9 +330,9 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                     </option>
                   ))}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
-                  v
-                </div>
+                <svg className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[--muted]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
             <div className="space-y-2">
@@ -342,7 +344,7 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                   required
                   className={selectClasses}
                 >
-                  <option value="">Stadt auswaehlen...</option>
+                  <option value="">Stadt auswählen...</option>
                   {cities.map((city) => (
                     <option key={city.id} value={city.name}>
                       {city.name}
@@ -352,15 +354,15 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
                     <option value={formData.city}>{formData.city}</option>
                   )}
                 </select>
-                <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[--muted]">
-                  v
-                </div>
+                <svg className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[--muted]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
             </div>
           </div>
 
           {/* Area, Bedrooms, Bathrooms */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className={labelClasses}>Fläche (m²)</label>
               <input
@@ -429,20 +431,20 @@ export function EditPropertyButton({ property }: EditPropertyButtonProps) {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-4 border-t border-[--border] pt-6">
+          <div className="sticky bottom-0 flex flex-col-reverse sm:flex-row items-center justify-end gap-3 border-t border-[--border] bg-white pt-6 pb-2">
             <button
               type="button"
               onClick={handleClose}
-              className="px-6 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text]"
+              className="w-full sm:w-auto px-6 py-3 text-sm font-medium text-gray-600 border border-gray-300 transition-colors hover:bg-gray-50"
             >
               Abbrechen
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="bg-[--accent] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[--accent-warm] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto bg-emerald-600 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Wird gespeichert..." : "Speichern"}
+              {loading ? "Wird gespeichert..." : "Änderungen speichern"}
             </button>
           </div>
         </form>

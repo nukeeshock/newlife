@@ -8,8 +8,12 @@ interface ImageUploadProps {
   onChange: (images: string[]) => void;
 }
 
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const UPLOAD_TIMEOUT = 30000; // 30 Sekunden
+
 export function ImageUpload({ images, onChange }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -20,16 +24,30 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
     setError("");
 
     const newImages: string[] = [];
+    const errors: string[] = [];
 
     for (const file of Array.from(files)) {
+      // Frontend-Validierung
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        errors.push(`${file.name}: Ungültiger Dateityp (nur JPG, PNG, GIF, WebP)`);
+        continue;
+      }
+
       try {
         const formData = new FormData();
         formData.append("file", file);
 
+        // AbortController mit Timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT);
+
         const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         const data = await response.json();
 
@@ -39,8 +57,16 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
 
         newImages.push(data.url);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Upload fehlgeschlagen");
+        if (err instanceof Error && err.name === "AbortError") {
+          errors.push(`${file.name}: Upload-Timeout (30s) - Bitte erneut versuchen`);
+        } else {
+          errors.push(`${file.name}: ${err instanceof Error ? err.message : "Upload fehlgeschlagen"}`);
+        }
       }
+    }
+
+    if (errors.length > 0) {
+      setError(errors.join("\n"));
     }
 
     if (newImages.length > 0) {
@@ -48,6 +74,25 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
     }
 
     setUploading(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    handleUpload(e.dataTransfer.files);
   };
 
   const removeImage = (index: number) => {
@@ -68,14 +113,19 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
       {/* Upload Area */}
       <div
         onClick={() => inputRef.current?.click()}
-        className={`flex cursor-pointer flex-col items-center justify-center border-2 border-dashed border-[--glass-border] bg-[--surface] p-8 transition-colors hover:border-[--primary]/50 ${
-          uploading ? "opacity-50 pointer-events-none" : ""
-        }`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        className={`flex cursor-pointer flex-col items-center justify-center border-2 border-dashed p-8 transition-colors ${
+          isDragging
+            ? "border-[--primary] bg-[--primary]/5"
+            : "border-[--glass-border] bg-[--surface] hover:border-[--primary]/50"
+        } ${uploading ? "opacity-50 pointer-events-none" : ""}`}
       >
         <input
           ref={inputRef}
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/gif,image/webp"
           multiple
           className="hidden"
           onChange={(e) => handleUpload(e.target.files)}
@@ -86,21 +136,21 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
             {uploading ? "Wird hochgeladen..." : "Klicken oder Dateien hierher ziehen"}
           </p>
           <p className="mt-1 text-xs text-[--muted]/60">
-            JPG, PNG, WebP • Max. 10MB pro Bild
+            JPG, PNG, GIF, WebP - Max. 10MB pro Bild
           </p>
         </div>
       </div>
 
       {/* Error */}
       {error && (
-        <div className="border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-300">
+        <div className="border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-300 whitespace-pre-line">
           {error}
         </div>
       )}
 
       {/* Preview Grid */}
       {images.length > 0 && (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {images.map((url, index) => (
             <div key={`${url}-${index}`} className="group relative aspect-video overflow-hidden border border-[--glass-border] bg-[--card]">
               <Image
@@ -110,7 +160,7 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
                 className="object-cover"
                 sizes="200px"
               />
-              
+
               {/* Overlay mit Aktionen */}
               <div className="absolute inset-0 flex items-center justify-center gap-1 bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
                 {index > 0 && (
@@ -156,4 +206,3 @@ export function ImageUpload({ images, onChange }: ImageUploadProps) {
     </div>
   );
 }
-

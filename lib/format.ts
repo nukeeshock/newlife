@@ -88,18 +88,18 @@ export function formatTypePlural(type: string): string {
 
 /**
  * Konvertiert EUR zu VND (ungefährer Wechselkurs)
- * Aktueller Kurs: ~26,500 VND = 1 EUR
+ * Aktueller Kurs: ~30,700 VND = 1 EUR (Stand: Dezember 2024)
  */
+export const VND_EUR_RATE = 30700;
+
 export function eurToVnd(eur: number): bigint {
-  const rate = 26500;
-  return BigInt(Math.round(eur * rate));
+  return BigInt(Math.round(eur * VND_EUR_RATE));
 }
 
 /**
  * Konvertiert VND zu EUR (ungefährer Wechselkurs)
  */
 export function vndToEur(vnd: number | bigint): number {
-  const rate = 26500;
   const numValue = typeof vnd === "bigint" ? Number(vnd) : vnd;
-  return Math.round(numValue / rate);
+  return Math.round(numValue / VND_EUR_RATE);
 }

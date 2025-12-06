@@ -7,7 +7,7 @@ import { checkRateLimit, RATE_LIMITS, rateLimitExceededResponse } from "@/lib/ra
 // GET: Alle Städte abrufen (öffentlich)
 export async function GET(request: NextRequest) {
   // Rate Limiting
-  const rateLimit = checkRateLimit(request, RATE_LIMITS.api);
+  const rateLimit = await checkRateLimit(request, RATE_LIMITS.api);
   if (!rateLimit.success) {
     return rateLimitExceededResponse(rateLimit.resetAt);
   }

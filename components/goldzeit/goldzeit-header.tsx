@@ -87,7 +87,7 @@ export function GoldzeitHeader() {
           type="button"
           onClick={() => setMobileOpen((prev) => !prev)}
           className="flex h-10 w-10 items-center justify-center text-[--muted] transition-colors hover:text-[--primary] lg:hidden"
-          aria-label={mobileOpen ? "Menu schliessen" : "Menu oeffnen"}
+          aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
         >
           <div className="flex flex-col gap-1.5">
             <span

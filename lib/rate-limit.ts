@@ -1,37 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
 
 // ============================================
-// IN-MEMORY RATE LIMITER
-// ⚠️ WARNUNG: Funktioniert NICHT zuverlässig auf Vercel Serverless!
-// Jede Function-Instance hat eigenen Memory.
-// Für Produktion: Redis/Upstash verwenden!
+// UPSTASH REDIS RATE LIMITER
+// Funktioniert zuverlässig auf Serverless!
 // ============================================
 
-// Warnung beim Start loggen (nur einmal)
-if (process.env.NODE_ENV === "production" && !process.env.REDIS_URL) {
-  console.warn(
-    "⚠️ [RATE-LIMIT] In-Memory Rate Limiting auf Serverless nicht zuverlässig! " +
-    "Für Produktion Redis/Upstash empfohlen."
-  );
-}
+// Redis-Instanz (Upstash REST API)
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
 
 interface RateLimitEntry {
   count: number;
   resetAt: number;
 }
-
-// Globale Map für Rate Limiting (In-Memory)
-const rateLimitMap = new Map<string, RateLimitEntry>();
-
-// Cleanup: Alte Einträge alle 5 Minuten entfernen
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of rateLimitMap.entries()) {
-    if (entry.resetAt < now) {
-      rateLimitMap.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
 
 interface RateLimitConfig {
   /** Maximale Anzahl an Requests */
@@ -49,7 +33,6 @@ interface RateLimitResult {
 }
 
 // Vertrauenswürdige Proxies (Vercel, Cloudflare, etc.)
-// In Produktion: Nur echte Proxy-IPs hier eintragen!
 const TRUSTED_PROXIES = new Set<string>([
   // Vercel Edge Network und Cloudflare IPs können hier hinzugefügt werden
 ]);
@@ -69,7 +52,7 @@ export function getClientIP(request: NextRequest): string {
   // x-forwarded-for: Liste von IPs, Client ist der erste NICHT-vertrauenswürdige
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
-    const ips = forwarded.split(",").map(ip => ip.trim());
+    const ips = forwarded.split(",").map((ip) => ip.trim());
     // Von rechts nach links durchgehen, erste nicht-vertrauenswürdige IP nehmen
     for (let i = ips.length - 1; i >= 0; i--) {
       const ip = sanitizeIP(ips[i]);
@@ -80,7 +63,7 @@ export function getClientIP(request: NextRequest): string {
     // Fallback: Erste IP
     return sanitizeIP(ips[0]);
   }
-  
+
   return "unknown";
 }
 
@@ -101,45 +84,61 @@ function isValidIP(ip: string): boolean {
 }
 
 /**
- * Rate Limit prüfen
+ * Rate Limit prüfen (async mit Vercel KV)
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   request: NextRequest,
   config: RateLimitConfig
-): RateLimitResult {
+): Promise<RateLimitResult> {
   const ip = getClientIP(request);
-  const key = `${config.prefix}:${ip}`;
+  const key = `ratelimit:${config.prefix}:${ip}`;
   const now = Date.now();
 
-  const existing = rateLimitMap.get(key);
+  try {
+    const existing = await redis.get<RateLimitEntry>(key);
 
-  // Kein Eintrag oder abgelaufen -> neuen erstellen
-  if (!existing || existing.resetAt < now) {
-    const resetAt = now + config.windowSeconds * 1000;
-    rateLimitMap.set(key, { count: 1, resetAt });
+    // Kein Eintrag oder abgelaufen -> neuen erstellen
+    if (!existing || existing.resetAt < now) {
+      const resetAt = now + config.windowSeconds * 1000;
+      await redis.set(key, { count: 1, resetAt }, { px: config.windowSeconds * 1000 });
+      return {
+        success: true,
+        remaining: config.limit - 1,
+        resetAt,
+      };
+    }
+
+    // Limit erreicht?
+    if (existing.count >= config.limit) {
+      return {
+        success: false,
+        remaining: 0,
+        resetAt: existing.resetAt,
+      };
+    }
+
+    // Counter erhöhen
+    const ttl = existing.resetAt - now;
+    await redis.set(
+      key,
+      { count: existing.count + 1, resetAt: existing.resetAt },
+      { px: ttl > 0 ? ttl : 1000 }
+    );
+
     return {
       success: true,
-      remaining: config.limit - 1,
-      resetAt,
-    };
-  }
-
-  // Limit erreicht?
-  if (existing.count >= config.limit) {
-    return {
-      success: false,
-      remaining: 0,
+      remaining: config.limit - existing.count - 1,
       resetAt: existing.resetAt,
     };
+  } catch (error) {
+    // Bei Redis-Fehlern: Request durchlassen (fail-open)
+    console.warn("[RATE-LIMIT] Redis error, allowing request:", error);
+    return {
+      success: true,
+      remaining: config.limit,
+      resetAt: now + config.windowSeconds * 1000,
+    };
   }
-
-  // Counter erhöhen
-  existing.count++;
-  return {
-    success: true,
-    remaining: config.limit - existing.count,
-    resetAt: existing.resetAt,
-  };
 }
 
 /**
@@ -147,7 +146,7 @@ export function checkRateLimit(
  */
 export function rateLimitExceededResponse(resetAt: number): NextResponse {
   const retryAfter = Math.ceil((resetAt - Date.now()) / 1000);
-  
+
   return NextResponse.json(
     {
       error: "Zu viele Anfragen. Bitte später erneut versuchen.",
@@ -201,4 +200,3 @@ export const RATE_LIMITS = {
     prefix: "contact",
   },
 } as const;
-

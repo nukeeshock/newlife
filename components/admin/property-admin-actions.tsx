@@ -109,6 +109,7 @@ export function PropertyAdminActions({ property, onUpdate }: PropertyAdminAction
         <option value="available">Verfügbar</option>
         <option value="reserved">Reserviert</option>
         <option value="rented">Vermietet</option>
+        <option value="sold">Verkauft</option>
         <option value="archived">Archiviert</option>
       </select>
 

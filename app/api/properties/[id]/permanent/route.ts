@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 
@@ -33,6 +34,15 @@ async function permanentDeleteHandler(
           code: "NOT_ARCHIVED",
         },
         { status: 400 }
+      );
+    }
+
+    // Bilder aus Vercel Blob löschen
+    if (property.images && property.images.length > 0) {
+      await Promise.all(
+        property.images
+          .filter((url) => url.includes("vercel-storage.com"))
+          .map((url) => del(url).catch(() => {}))
       );
     }
 

@@ -15,6 +15,7 @@
   "dependencies": {
     "@prisma/client": "5.22.0",
     "@sentry/nextjs": "^10.28.0",
+    "@upstash/redis": "^1.35.7",
     "@vercel/blob": "^2.0.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",

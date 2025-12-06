@@ -8,7 +8,7 @@ import { endSessionSchema, validate } from "@/lib/validations";
 export async function POST(request: NextRequest) {
   try {
     // Rate Limiting
-    const rateLimit = checkRateLimit(request, RATE_LIMITS.analytics);
+    const rateLimit = await checkRateLimit(request, RATE_LIMITS.analytics);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.resetAt);
     }

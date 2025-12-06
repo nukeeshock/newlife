@@ -15,7 +15,7 @@ import {
 export async function POST(request: NextRequest) {
   try {
     // Rate Limiting
-    const rateLimit = checkRateLimit(request, RATE_LIMITS.contact);
+    const rateLimit = await checkRateLimit(request, RATE_LIMITS.contact);
     if (!rateLimit.success) {
       return rateLimitExceededResponse(rateLimit.resetAt);
     }

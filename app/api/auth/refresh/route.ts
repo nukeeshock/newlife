@@ -57,6 +57,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Alten Token revoken (Token Rotation für Security)
+    await prisma.refreshToken.update({
+      where: { token: tokenHash },
+      data: { revokedAt: new Date() },
+    });
+
     // Neue Tokens generieren
     const newAccessToken = await createAccessToken({
       id: payload.sub,
@@ -67,6 +73,17 @@ export async function POST(request: NextRequest) {
       id: payload.sub,
       email: payload.email,
       name: payload.name,
+    });
+
+    // Neuen Refresh Token in DB speichern
+    const newTokenHash = hashToken(newRefreshToken);
+    const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    await prisma.refreshToken.create({
+      data: {
+        token: newTokenHash,
+        adminId: payload.sub,
+        expiresAt: newExpiresAt,
+      },
     });
 
     const response = NextResponse.json({
