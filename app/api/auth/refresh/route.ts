@@ -57,11 +57,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Alten Token revoken (Token Rotation für Security)
-    await prisma.refreshToken.update({
-      where: { token: tokenHash },
+    // Alten Token atomar revoken (Race Condition Fix)
+    // Nur revoken wenn noch nicht revoked - verhindert parallele Token-Rotation
+    const revokeResult = await prisma.refreshToken.updateMany({
+      where: {
+        token: tokenHash,
+        revokedAt: null, // Nur wenn noch nicht revoked
+      },
       data: { revokedAt: new Date() },
     });
+
+    // Wenn kein Token revoked wurde, hat ein anderer Request bereits rotiert
+    if (revokeResult.count === 0) {
+      return NextResponse.json(
+        {
+          error: "Token wurde bereits verwendet",
+          code: "TOKEN_ALREADY_USED",
+        },
+        { status: 401 }
+      );
+    }
 
     // Neue Tokens generieren
     const newAccessToken = await createAccessToken({

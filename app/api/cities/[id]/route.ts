@@ -94,9 +94,25 @@ async function updateCityHandler(
       );
     }
 
-    const city = await prisma.city.update({
-      where: { id },
-      data: validation.data,
+    const oldName = existing.name;
+    const newName = validation.data.name;
+
+    // Transaktional: Stadt + Properties atomar aktualisieren
+    const city = await prisma.$transaction(async (tx) => {
+      const updatedCity = await tx.city.update({
+        where: { id },
+        data: validation.data,
+      });
+
+      // Wenn Name geändert wurde, alle Properties aktualisieren
+      if (newName && newName !== oldName) {
+        await tx.property.updateMany({
+          where: { city: oldName },
+          data: { city: newName },
+        });
+      }
+
+      return updatedCity;
     });
 
     return NextResponse.json(city);

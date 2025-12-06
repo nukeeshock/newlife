@@ -55,8 +55,10 @@ async function cleanupOldAnalytics() {
 
 // GET: Analytics-Statistiken für Admin Dashboard (Admin only)
 async function getStatsHandler() {
-  // Cleanup im Hintergrund ausführen (nicht blockierend)
-  cleanupOldAnalytics();
+  // Cleanup im Hintergrund ausführen (nicht blockierend, mit Error Handling)
+  cleanupOldAnalytics().catch((err) => {
+    console.warn("[ANALYTICS_CLEANUP_ERROR]", err);
+  });
 
   try {
     const now = new Date();

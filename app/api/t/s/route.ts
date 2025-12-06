@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const fingerprint = createSessionFingerprint(ipHash, userAgent);
 
     // Prüfen ob Session bereits existiert (innerhalb 30 Min Window)
-    const existingSessionId = getExistingSession(fingerprint);
+    const existingSessionId = await getExistingSession(fingerprint);
     if (existingSessionId) {
       return NextResponse.json({
         sessionId: existingSessionId,
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Im Cache speichern für Deduplication
-    cacheSession(fingerprint, session.id);
+    await cacheSession(fingerprint, session.id);
 
     return NextResponse.json({
       sessionId: session.id,
@@ -114,8 +114,8 @@ export async function PATCH(request: NextRequest) {
 
     const { sessionId } = validation.data;
 
-    // Session beenden
-    await prisma.analyticsSession.update({
+    // Session beenden (updateMany wirft keinen Fehler wenn Session nicht existiert)
+    await prisma.analyticsSession.updateMany({
       where: { id: sessionId },
       data: { endedAt: new Date() },
     });
@@ -125,7 +125,7 @@ export async function PATCH(request: NextRequest) {
     const ip = getClientIP(request);
     const ipHash = hashIP(ip);
     const fingerprint = createSessionFingerprint(ipHash, userAgent);
-    removeSessionFromCache(fingerprint);
+    await removeSessionFromCache(fingerprint);
 
     return NextResponse.json({ success: true });
   } catch (error) {

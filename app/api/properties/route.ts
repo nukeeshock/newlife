@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { createPropertySchema, validate, formatZodErrors } from "@/lib/validations";
 import { serializeBigInt } from "@/lib/serialize";
+import { checkRateLimit, RATE_LIMITS, rateLimitExceededResponse } from "@/lib/rate-limit";
 
 // Property Types (enum values)
 type PropertyType = "private_residence" | "apartment" | "house" | "commercial";
@@ -23,6 +24,12 @@ function isValidPropertyStatus(value: string | null): value is PropertyStatus {
 // GET: Alle Properties abrufen (öffentlich)
 export async function GET(request: NextRequest) {
   try {
+    // Rate Limiting
+    const rateLimit = await checkRateLimit(request, RATE_LIMITS.api);
+    if (!rateLimit.success) {
+      return rateLimitExceededResponse(rateLimit.resetAt);
+    }
+
     const { searchParams } = new URL(request.url);
     const typeParam = searchParams.get("type");
     const recommended = searchParams.get("recommended");
@@ -63,8 +70,17 @@ export async function GET(request: NextRequest) {
 
 // POST: Neue Property erstellen (Admin only)
 async function createPropertyHandler(request: AuthenticatedRequest) {
+  let parsedImages: string[] = [];
+
   try {
     const body = await request.json();
+
+    // Store images for potential cleanup in case of error
+    if (body?.images && Array.isArray(body.images)) {
+      parsedImages = body.images.filter(
+        (url: unknown) => typeof url === "string" && url.includes("vercel-storage.com")
+      );
+    }
 
     // Input validieren
     const validation = validate(createPropertySchema, body);
@@ -164,6 +180,18 @@ async function createPropertyHandler(request: AuthenticatedRequest) {
 
     return NextResponse.json(serializeBigInt(property), { status: 201 });
   } catch (error) {
+    // Clean up uploaded images on failure
+    if (parsedImages.length > 0) {
+      try {
+        const { del } = await import("@vercel/blob");
+        await Promise.all(
+          parsedImages.map((url) => del(url).catch(() => {}))
+        );
+      } catch {
+        // Ignore cleanup errors
+      }
+    }
+
     console.error("[PROPERTIES_POST_ERROR]", error);
     return NextResponse.json(
       { error: "Fehler beim Erstellen der Property", code: "INTERNAL_ERROR" },

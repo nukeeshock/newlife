@@ -86,7 +86,10 @@ async function updatePropertyHandler(
 
     // Bilder-Cleanup wenn images aktualisiert wurden
     if (validation.data.images && existing.images) {
-      cleanupRemovedImages(existing.images, validation.data.images);
+      await cleanupRemovedImages(existing.images, validation.data.images).catch((err) => {
+        console.warn("[PROPERTY_UPDATE_IMAGE_CLEANUP_WARN]", err);
+        // Don't fail the request, just log
+      });
     }
 
     const property = await prisma.property.update({

@@ -169,6 +169,7 @@ export function AnalyticsTracker() {
   const pathname = usePathname();
   const sessionIdRef = useRef<string | null>(null);
   const initializedRef = useRef(false);
+  const lastTrackedPathRef = useRef<string | null>(null);
 
   // Session initialisieren
   useEffect(() => {
@@ -184,8 +185,9 @@ export function AnalyticsTracker() {
       if (!isMounted) return;
       sessionIdRef.current = sessionId;
 
-      // Erste Pageview tracken
-      if (sessionId && pathname) {
+      // Erste Pageview tracken (nur wenn noch nicht getrackt)
+      if (sessionId && pathname && pathname !== lastTrackedPathRef.current) {
+        lastTrackedPathRef.current = pathname;
         const success = await trackPageview(sessionId, pathname);
 
         // Falls Session nicht mehr existiert, neue erstellen
@@ -236,7 +238,9 @@ export function AnalyticsTracker() {
     const timeout = setTimeout(async () => {
       if (!isMounted) return;
 
-      if (sessionIdRef.current && pathname) {
+      // Nur tracken wenn sich der Pfad geändert hat
+      if (sessionIdRef.current && pathname && pathname !== lastTrackedPathRef.current) {
+        lastTrackedPathRef.current = pathname;
         const success = await trackPageview(sessionIdRef.current, pathname);
 
         // Falls Session nicht mehr existiert, neue erstellen

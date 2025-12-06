@@ -120,6 +120,15 @@ async function deleteAdminHandler(
       );
     }
 
+    // Prüfen ob dies der letzte Admin ist
+    const adminCount = await prisma.admin.count();
+    if (adminCount === 1) {
+      return NextResponse.json(
+        { error: "Der letzte Admin kann nicht gelöscht werden", code: "LAST_ADMIN" },
+        { status: 403 }
+      );
+    }
+
     // Admin löschen (Cascade löscht auch RefreshTokens)
     await prisma.admin.delete({
       where: { id },

@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { redis } from "@/lib/rate-limit";
 
 // ============================================
 // ANALYTICS UTILITIES
@@ -10,7 +11,7 @@ import crypto from "crypto";
 const ANALYTICS_SALT = process.env.ANALYTICS_SALT;
 if (!ANALYTICS_SALT && process.env.NODE_ENV === "production") {
   console.error(
-    "❌ FATAL: ANALYTICS_SALT nicht gesetzt!\n" +
+    "FATAL: ANALYTICS_SALT nicht gesetzt!\n" +
     "Füge ANALYTICS_SALT zu deiner .env Datei hinzu (min. 32 Zeichen)."
   );
 }
@@ -52,7 +53,7 @@ const BOT_USER_AGENT_PATTERNS = [
   /duckduckbot/i,
   /baiduspider/i,
   /slurp/i, // Yahoo
-  
+
   // Social Media Crawlers
   /facebookexternalhit/i,
   /twitterbot/i,
@@ -60,7 +61,7 @@ const BOT_USER_AGENT_PATTERNS = [
   /pinterestbot/i,
   /telegrambot/i,
   /whatsapp/i,
-  
+
   // SEO & Monitoring Tools
   /semrushbot/i,
   /ahrefsbot/i,
@@ -70,7 +71,7 @@ const BOT_USER_AGENT_PATTERNS = [
   /uptimerobot/i,
   /pingdom/i,
   /statuscake/i,
-  
+
   // Allgemeine Bot-Muster
   /bot/i,
   /crawler/i,
@@ -81,7 +82,7 @@ const BOT_USER_AGENT_PATTERNS = [
   /selenium/i,
   /puppeteer/i,
   /playwright/i,
-  
+
   // Curl, wget, etc.
   /curl/i,
   /wget/i,
@@ -90,7 +91,7 @@ const BOT_USER_AGENT_PATTERNS = [
   /axios/i,
   /node-fetch/i,
   /go-http-client/i,
-  
+
   // Leere oder verdächtige User-Agents
   /^$/,
   /^-$/,
@@ -103,64 +104,57 @@ const BOT_USER_AGENT_PATTERNS = [
 export function isBot(userAgent: string | null): boolean {
   if (!userAgent) return true;
   if (userAgent.length < 10) return true;
-  
+
   return BOT_USER_AGENT_PATTERNS.some((pattern) => pattern.test(userAgent));
 }
 
 // ============================================
-// SESSION DEDUPLICATION
-// ⚠️ WARNUNG: In-Memory Cache funktioniert NICHT auf Vercel Serverless!
-// Für Produktion: Redis/Upstash verwenden!
+// SESSION DEDUPLICATION (REDIS-BASIERT!)
+// Funktioniert zuverlässig auf Vercel Serverless!
 // ============================================
 
-// Warnung beim Start loggen
-if (process.env.NODE_ENV === "production" && !process.env.REDIS_URL) {
-  console.warn(
-    "⚠️ [ANALYTICS] Session-Deduplication auf Serverless nicht zuverlässig! " +
-    "Für Produktion Redis/Upstash empfohlen."
-  );
-}
-
-// In-Memory Cache für Session-Deduplication
-const sessionCache = new Map<string, { sessionId: string; expiresAt: number }>();
-
 const SESSION_DEDUP_WINDOW = 30 * 60 * 1000; // 30 Minuten
+const SESSION_KEY_PREFIX = "analytics:session:";
 
-// Cleanup alle 5 Minuten
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of sessionCache.entries()) {
-    if (entry.expiresAt < now) {
-      sessionCache.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
-
-/**
- * Prüft ob bereits eine Session für diesen Fingerprint existiert
- */
-export function getExistingSession(fingerprint: string): string | null {
-  const cached = sessionCache.get(fingerprint);
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.sessionId;
-  }
-  return null;
+interface SessionCacheEntry {
+  sessionId: string;
 }
 
 /**
- * Session im Cache speichern
+ * Prüft ob bereits eine Session für diesen Fingerprint existiert (async!)
  */
-export function cacheSession(fingerprint: string, sessionId: string): void {
-  sessionCache.set(fingerprint, {
-    sessionId,
-    expiresAt: Date.now() + SESSION_DEDUP_WINDOW,
-  });
+export async function getExistingSession(fingerprint: string): Promise<string | null> {
+  try {
+    const cached = await redis.get<SessionCacheEntry>(`${SESSION_KEY_PREFIX}${fingerprint}`);
+    return cached?.sessionId || null;
+  } catch (error) {
+    console.warn("[ANALYTICS] Redis get error, assuming no existing session:", error);
+    return null;
+  }
+}
+
+/**
+ * Session im Redis Cache speichern (async!)
+ */
+export async function cacheSession(fingerprint: string, sessionId: string): Promise<void> {
+  try {
+    await redis.set(
+      `${SESSION_KEY_PREFIX}${fingerprint}`,
+      { sessionId } as SessionCacheEntry,
+      { px: SESSION_DEDUP_WINDOW }
+    );
+  } catch (error) {
+    console.warn("[ANALYTICS] Redis set error:", error);
+  }
 }
 
 /**
  * Session aus Cache entfernen (bei Session-Ende)
  */
-export function removeSessionFromCache(fingerprint: string): void {
-  sessionCache.delete(fingerprint);
+export async function removeSessionFromCache(fingerprint: string): Promise<void> {
+  try {
+    await redis.del(`${SESSION_KEY_PREFIX}${fingerprint}`);
+  } catch (error) {
+    console.warn("[ANALYTICS] Redis del error:", error);
+  }
 }
-

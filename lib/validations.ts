@@ -216,8 +216,8 @@ export const updateAdminSchema = z.object({
 // ANALYTICS VALIDATIONS
 // ============================================
 
-// CUID Regex Pattern (Prisma default IDs)
-const cuidRegex = /^c[a-z0-9]{24,}$/i;
+// CUID Regex Pattern (Prisma default IDs) - CUIDs sind immer lowercase
+const cuidRegex = /^c[a-z0-9]{24,}$/;
 
 export const createSessionSchema = z.object({
   referrer: z.string().url().optional().nullable(),

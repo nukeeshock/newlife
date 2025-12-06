@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
 
 // ============================================
-// UPSTASH REDIS RATE LIMITER
-// Funktioniert zuverlässig auf Serverless!
+// UPSTASH REDIS RATE LIMITER (ATOMIC!)
+// Verwendet @upstash/ratelimit SDK für atomare Operationen
 // ============================================
 
 // Redis-Instanz (Upstash REST API)
@@ -12,10 +13,8 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN!,
 });
 
-interface RateLimitEntry {
-  count: number;
-  resetAt: number;
-}
+// Re-export redis for use in other modules (analytics session dedup)
+export { redis };
 
 interface RateLimitConfig {
   /** Maximale Anzahl an Requests */
@@ -30,6 +29,29 @@ interface RateLimitResult {
   success: boolean;
   remaining: number;
   resetAt: number;
+}
+
+// Cache für Ratelimit-Instanzen (eine pro Prefix)
+const ratelimiters = new Map<string, Ratelimit>();
+
+/**
+ * Ratelimit-Instanz für einen Config holen/erstellen
+ */
+function getRatelimiter(config: RateLimitConfig): Ratelimit {
+  const key = `${config.prefix}:${config.limit}:${config.windowSeconds}`;
+
+  let limiter = ratelimiters.get(key);
+  if (!limiter) {
+    limiter = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(config.limit, `${config.windowSeconds} s`),
+      prefix: `ratelimit:${config.prefix}`,
+      analytics: false, // Keine eigenen Analytics
+    });
+    ratelimiters.set(key, limiter);
+  }
+
+  return limiter;
 }
 
 // Vertrauenswürdige Proxies (Vercel, Cloudflare, etc.)
@@ -84,51 +106,23 @@ function isValidIP(ip: string): boolean {
 }
 
 /**
- * Rate Limit prüfen (async mit Vercel KV)
+ * Rate Limit prüfen (atomic mit @upstash/ratelimit SDK)
  */
 export async function checkRateLimit(
   request: NextRequest,
   config: RateLimitConfig
 ): Promise<RateLimitResult> {
   const ip = getClientIP(request);
-  const key = `ratelimit:${config.prefix}:${ip}`;
-  const now = Date.now();
+  const identifier = ip;
 
   try {
-    const existing = await redis.get<RateLimitEntry>(key);
-
-    // Kein Eintrag oder abgelaufen -> neuen erstellen
-    if (!existing || existing.resetAt < now) {
-      const resetAt = now + config.windowSeconds * 1000;
-      await redis.set(key, { count: 1, resetAt }, { px: config.windowSeconds * 1000 });
-      return {
-        success: true,
-        remaining: config.limit - 1,
-        resetAt,
-      };
-    }
-
-    // Limit erreicht?
-    if (existing.count >= config.limit) {
-      return {
-        success: false,
-        remaining: 0,
-        resetAt: existing.resetAt,
-      };
-    }
-
-    // Counter erhöhen
-    const ttl = existing.resetAt - now;
-    await redis.set(
-      key,
-      { count: existing.count + 1, resetAt: existing.resetAt },
-      { px: ttl > 0 ? ttl : 1000 }
-    );
+    const limiter = getRatelimiter(config);
+    const { success, remaining, reset } = await limiter.limit(identifier);
 
     return {
-      success: true,
-      remaining: config.limit - existing.count - 1,
-      resetAt: existing.resetAt,
+      success,
+      remaining,
+      resetAt: reset,
     };
   } catch (error) {
     // Bei Redis-Fehlern: Request durchlassen (fail-open)
@@ -136,7 +130,7 @@ export async function checkRateLimit(
     return {
       success: true,
       remaining: config.limit,
-      resetAt: now + config.windowSeconds * 1000,
+      resetAt: Date.now() + config.windowSeconds * 1000,
     };
   }
 }
@@ -156,7 +150,7 @@ export function rateLimitExceededResponse(resetAt: number): NextResponse {
     {
       status: 429,
       headers: {
-        "Retry-After": String(retryAfter),
+        "Retry-After": String(retryAfter > 0 ? retryAfter : 1),
         "X-RateLimit-Remaining": "0",
         "X-RateLimit-Reset": String(resetAt),
       },

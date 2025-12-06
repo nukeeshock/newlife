@@ -49,11 +49,20 @@ export async function GET(request: NextRequest) {
           return NextResponse.json({ authenticated: false });
         }
 
-        // Alten Token revoken
-        await prisma.refreshToken.update({
-          where: { token: tokenHash },
+        // Alten Token atomar revoken (Race Condition Fix)
+        // Nur revoken wenn noch nicht revoked - verhindert parallele Token-Rotation
+        const revokeResult = await prisma.refreshToken.updateMany({
+          where: {
+            token: tokenHash,
+            revokedAt: null, // Nur wenn noch nicht revoked
+          },
           data: { revokedAt: new Date() },
         });
+
+        // Wenn kein Token revoked wurde, hat ein anderer Request bereits rotiert
+        if (revokeResult.count === 0) {
+          return NextResponse.json({ authenticated: false });
+        }
 
         // Neue Tokens generieren
         const newAccessToken = await createAccessToken({
