@@ -52,7 +52,7 @@ export default withSentryConfig(nextConfig, {
   widenClientFileUpload: true,
 
   // Tunnel Route für Ad-Blocker-Umgehung
-  tunnelRoute: "/monitoring",
+  tunnelRoute: "/api/monitoring",
 
   // Tree-shaking für kleinere Bundles (in Produktion aktivieren)
   disableLogger: process.env.NODE_ENV === "production",
