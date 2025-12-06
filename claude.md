@@ -16,13 +16,14 @@ Eine **Next.js 16** Real Estate Listing-Plattform für Premium-Mietobjekte in Vi
 
 | Technologie | Version | Zweck |
 |-------------|---------|-------|
-| Next.js | 16.0.6 | Framework (Turbopack) |
+| Next.js | 16.0.7 | Framework (Turbopack) |
 | React | 19.2.0 | UI Library |
 | Tailwind CSS | 4 | Styling |
 | TypeScript | 5 | Type Safety |
 | Prisma | 5.22.0 | ORM |
 | PostgreSQL | Neon.tech | Datenbank |
 | Vercel Blob | - | Bild-Storage |
+| **Upstash Redis** | @upstash/redis | **Rate Limiting (Serverless)** |
 | Sentry | @sentry/nextjs 10.x | Error Tracking |
 | jose | 6.1.3 | JWT |
 | bcrypt | 6.0.0 | Passwort-Hashing |
@@ -59,11 +60,21 @@ Eine **Next.js 16** Real Estate Listing-Plattform für Premium-Mietobjekte in Vi
 - Automatisches Token-Renewal über `/api/auth/check` und `/api/auth/refresh`
 - **bcrypt** mit 12 Rounds für Passwort-Hashing
 
-### Rate Limiting (lib/rate-limit.ts, In-Memory)
-- Login: 5 Versuche/Min
-- Upload: 10 Requests/Min
-- Analytics: 100 Requests/Min
-- API allgemein: 60 Requests/Min
+### Token Rotation (Security!)
+Beim Token-Refresh wird der alte Token **revoked** und ein neuer erstellt:
+```typescript
+// In /api/auth/refresh und /api/auth/check:
+// 1. Alten Token revoken
+await prisma.refreshToken.update({
+  where: { token: tokenHash },
+  data: { revokedAt: new Date() },
+});
+// 2. Neuen Token in DB speichern
+await prisma.refreshToken.create({
+  data: { token: newTokenHash, adminId, expiresAt },
+});
+```
+**Warum?** Ohne Rotation könnte ein gestohlenes Token ewig genutzt werden.
 
 ### Admin Middleware (lib/middleware/admin-auth.ts)
 ```typescript
@@ -73,33 +84,127 @@ export const POST = withAdminAuth(handler);
 
 ---
 
+## Rate Limiting (lib/rate-limit.ts)
+
+### Upstash Redis (Serverless-kompatibel!)
+
+**WICHTIG**: Rate Limiting nutzt Upstash Redis, NICHT In-Memory!
+
+```typescript
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
+```
+
+**Warum Redis statt In-Memory?**
+```
+In-Memory auf Vercel (Serverless):
+Request 1 → Server A (count=1)
+Request 2 → Server B (count=1)  ← Neuer Server, weiß nichts!
+→ Rate Limit funktioniert NIE
+
+Mit Redis:
+Request 1 → Server A → Redis (count=1)
+Request 2 → Server B → Redis (count=2)  ← Gleiche DB!
+→ Funktioniert!
+```
+
+### Konfigurierte Limits (RATE_LIMITS)
+| Name | Limit | Zeitfenster | Prefix |
+|------|-------|-------------|--------|
+| `login` | 5 | 60s | `ratelimit:login:` |
+| `upload` | 10 | 60s | `ratelimit:upload:` |
+| `analytics` | 100 | 60s | `ratelimit:analytics:` |
+| `api` | 60 | 60s | `ratelimit:api:` |
+| `contact` | 5 | 3600s (1h) | `ratelimit:contact:` |
+
+### Verwendung in API Routes (ASYNC!)
+```typescript
+import { checkRateLimit, RATE_LIMITS, rateLimitExceededResponse } from "@/lib/rate-limit";
+
+// WICHTIG: await ist erforderlich!
+const rateLimit = await checkRateLimit(request, RATE_LIMITS.login);
+if (!rateLimit.success) {
+  return rateLimitExceededResponse(rateLimit.resetAt);
+}
+```
+
+### IP-Extraktion (getClientIP)
+- Prüft `x-real-ip` (Vercel setzt dies)
+- Fallback auf `x-forwarded-for` (von rechts nach links, erste nicht-vertrauenswürdige IP)
+- IP wird sanitized (nur erlaubte Zeichen)
+
+### Fail-Open Strategie
+Bei Redis-Fehlern werden Requests durchgelassen (nicht blockiert):
+```typescript
+catch (error) {
+  console.warn("[RATE-LIMIT] Redis error, allowing request:", error);
+  return { success: true, ... };
+}
+```
+
+---
+
+## Security Headers (next.config.ts)
+
+Automatisch auf allen Routes:
+```typescript
+async headers() {
+  return [
+    {
+      source: "/:path*",
+      headers: [
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "X-Frame-Options", value: "DENY" },
+        { key: "X-XSS-Protection", value: "1; mode=block" },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+      ],
+    },
+  ];
+},
+```
+
+| Header | Schutz gegen |
+|--------|--------------|
+| `X-Content-Type-Options: nosniff` | MIME-Sniffing Attacks |
+| `X-Frame-Options: DENY` | Clickjacking |
+| `X-XSS-Protection` | Reflected XSS |
+| `Referrer-Policy` | Referrer Leaks |
+| `Permissions-Policy` | Unerlaubte Browser-APIs |
+
+---
+
 ## API Routes
 
 ### Auth
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
-| `/api/auth/login` | POST | - | Login (Rate Limited, Zod Validation) |
+| `/api/auth/login` | POST | - | Login (Rate Limited, Zod, E-Mail maskiert in Logs) |
 | `/api/auth/logout` | POST | - | Logout (Cookies löschen) |
-| `/api/auth/check` | GET | - | Status + Auto Token-Refresh |
-| `/api/auth/refresh` | POST | - | Manuelles Token-Refresh |
+| `/api/auth/check` | GET | - | Status + Auto Token-Refresh + Token Rotation |
+| `/api/auth/refresh` | POST | - | Manuelles Token-Refresh + Token Rotation |
 
 ### Properties
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
 | `/api/properties` | GET | - | Alle aktiven Properties |
-| `/api/properties` | POST | Admin | Property erstellen (Zod) |
+| `/api/properties` | POST | Admin | Property erstellen (Zod, Image Cleanup bei Fehler) |
 | `/api/properties/count` | GET | - | Anzahl aktiver Properties |
 | `/api/properties/archived` | GET | Admin | Archivierte Properties |
 | `/api/properties/[id]` | GET | - | Einzelne Property |
 | `/api/properties/[id]` | PATCH | Admin | Property aktualisieren (Zod) |
 | `/api/properties/[id]` | DELETE | Admin | Soft Delete (→ archived) |
 | `/api/properties/[id]/restore` | POST | Admin | Wiederherstellen |
-| `/api/properties/[id]/permanent` | DELETE | Admin | Endgültig löschen |
+| `/api/properties/[id]/permanent` | DELETE | Admin | Endgültig löschen + **Blob Images löschen** |
 
 ### Cities
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
-| `/api/cities` | GET | - | Alle Städte abrufen |
+| `/api/cities` | GET | - | Alle Städte abrufen (Rate Limited) |
 | `/api/cities` | POST | Admin | Stadt hinzufügen (Zod) |
 | `/api/cities/[id]` | PATCH | Admin | Stadt bearbeiten |
 | `/api/cities/[id]` | DELETE | Admin | Stadt löschen (prüft ob Properties verknüpft) |
@@ -113,7 +218,7 @@ export const POST = withAdminAuth(handler);
 ### Contact
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
-| `/api/contact` | POST | - | Kontaktanfrage senden (Zod, Rate Limited) |
+| `/api/contact` | POST | - | Kontaktanfrage senden (Zod, Rate Limited: 5/Stunde) |
 | `/api/contact/inquiries` | GET | Admin | Alle Anfragen abrufen |
 | `/api/contact/inquiries/[id]` | PATCH | Admin | Als gelesen markieren |
 | `/api/contact/inquiries/[id]` | DELETE | Admin | Anfrage löschen |
@@ -121,11 +226,16 @@ export const POST = withAdminAuth(handler);
 ### Analytics (⚠️ umbenannt wegen Ad-Blocker!)
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
-| `/api/t/s` | POST | - | Session erstellen |
-| `/api/t/s/end` | POST | - | Session beenden (sendBeacon) |
-| `/api/t/pv` | POST | - | Pageview loggen |
-| `/api/t/e` | POST | - | Event loggen |
-| `/api/t/stats` | GET | Admin | Aggregierte Stats |
+| `/api/t/s` | POST | - | Session erstellen (Rate Limited) |
+| `/api/t/s/end` | POST | - | Session beenden (sendBeacon, Rate Limited) |
+| `/api/t/pv` | POST | - | Pageview loggen (Rate Limited) |
+| `/api/t/e` | POST | - | Event loggen (Rate Limited) |
+| `/api/t/stats` | GET | Admin | Aggregierte Stats (Promise.all optimiert) |
+
+### Monitoring (Sentry Tunnel)
+| Route | Method | Auth | Beschreibung |
+|-------|--------|------|--------------|
+| `/api/monitoring` | POST | - | Sentry Tunnel (umgeht Ad-Blocker) |
 
 **WICHTIG**: Analytics API ist `/api/t/*` (NICHT `/api/analytics/*`) wegen Ad-Blocker!
 
@@ -157,13 +267,43 @@ Verfügbare Schemas:
 
 ---
 
-## Bild-Upload
+## Bild-Upload (components/admin/image-upload.tsx)
 
-- **Validierung**: Magic Bytes (JPEG, PNG, GIF, WebP)
+### Features
+- **Drag & Drop**: Bilder per Drag & Drop hochladen
+- **Validierung (Client)**: Nur JPEG, PNG, GIF, WebP erlaubt
+- **Validierung (Server)**: Magic Bytes Check
 - **Resize**: Max 2000px mit `sharp`
 - **Format**: Auto WebP-Konvertierung (Quality 85)
 - **Storage**: Vercel Blob
 - **Rate Limit**: 10 Uploads/Min
+- **Timeout**: 30 Sekunden mit AbortController
+
+### Image Cleanup
+```typescript
+// Bei fehlgeschlagener Property-Erstellung:
+// Bereits hochgeladene Bilder werden aus Blob gelöscht
+const cleanupImages = async (imageUrls: string[]) => {
+  await Promise.all(
+    imageUrls
+      .filter((url) => url.includes("vercel-storage.com"))
+      .map((url) => fetch("/api/upload", { method: "DELETE", body: JSON.stringify({ url }) }))
+  );
+};
+```
+
+### Permanent Delete Cleanup
+Beim endgültigen Löschen einer Property werden auch alle Bilder aus Vercel Blob gelöscht:
+```typescript
+// In /api/properties/[id]/permanent/route.ts
+if (property.images?.length > 0) {
+  await Promise.all(
+    property.images
+      .filter((url) => url.includes("vercel-storage.com"))
+      .map((url) => del(url).catch(() => {}))
+  );
+}
+```
 
 ---
 
@@ -173,6 +313,7 @@ Verfügbare Schemas:
 - **Session-Deduplication**: Gleiche IP + User-Agent innerhalb 30 Min = gleiche Session
 - **Bot-Filtering**: 30+ User-Agent Patterns (Googlebot, curl, etc.)
 - **DSGVO**: IP wird SHA-256 gehashed, kein Tracking ohne Session
+- **N+1 Query Optimierung**: Property-Queries parallelisiert mit Promise.all
 
 ### Client Tracking (`components/analytics/analytics-tracker.tsx`)
 - Session-ID in localStorage (`nlv_session_id`)
@@ -218,9 +359,15 @@ const availableCities = useMemo(() => {
 ## Sentry Integration
 
 ### Konfiguration
-- **DSN**: Hardcoded in `sentry.client.config.ts`
-- **Tunnel**: `/api/monitoring` (umgeht Ad-Blocker) - aktuell auskommentiert
+- **DSN**: Via ENV (`NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN`)
+- **Tunnel**: `/api/monitoring` (umgeht Ad-Blocker, aktiv in next.config.ts)
 - **Init**: Via `instrumentation.ts` (Server/Edge) + `sentry.client.config.ts`
+
+### Tunnel Route (`/api/monitoring/route.ts`)
+```typescript
+const SENTRY_HOST = process.env.SENTRY_HOST || "o4510467287810048.ingest.de.sentry.io";
+const SENTRY_PROJECT_ID = process.env.SENTRY_PROJECT_ID || "4510467289251920";
+```
 
 ### Dateien
 - `sentry.client.config.ts` - Browser
@@ -248,9 +395,11 @@ const availableCities = useMemo(() => {
 - `NOT_FOUND` - Resource nicht gefunden
 - `RATE_LIMIT_EXCEEDED` - Zu viele Requests
 - `INTERNAL_ERROR` - Server-Fehler
+- `ACCOUNT_CONFIG_ERROR` - Passwort nicht gehashed
 
 ### Logging
-Alle API-Fehler werden mit Prefix geloggt: `[ROUTE_NAME_ERROR]`
+- Alle API-Fehler werden mit Prefix geloggt: `[ROUTE_NAME_ERROR]`
+- **E-Mail-Adressen werden maskiert**: `ma***@domain.com`
 
 ---
 
@@ -285,7 +434,7 @@ select option {
 ## Environment Variables (.env)
 
 ```env
-# Datenbank
+# Datenbank (Neon.tech)
 DATABASE_URL="postgresql://..."
 
 # JWT (min. 32 Zeichen!)
@@ -294,6 +443,10 @@ JWT_SECRET="your-super-secret-jwt-key-min-32-chars!"
 # Vercel Blob
 BLOB_READ_WRITE_TOKEN="..."
 
+# Upstash Redis (Rate Limiting)
+KV_REST_API_URL="https://xxx.upstash.io"
+KV_REST_API_TOKEN="AW7cAAI..."
+
 # Analytics
 ANALYTICS_SALT="zufälliger-string"
 
@@ -301,6 +454,8 @@ ANALYTICS_SALT="zufälliger-string"
 NEXT_PUBLIC_SENTRY_DSN="https://..."
 SENTRY_DSN="https://..."
 SENTRY_AUTH_TOKEN="..." # Source Maps Upload
+SENTRY_HOST="o4510467287810048.ingest.de.sentry.io" # Optional
+SENTRY_PROJECT_ID="4510467289251920" # Optional
 
 # Optional
 ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
@@ -312,13 +467,23 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 
 ### Nach Login:
 1. **Admin-Bar** (unten): Logout, /admin, /admin/analytics Links
-2. **Property Actions**: ★ Empfehlen, Status ändern, Soft Delete
+2. **Property Actions**: ★ Empfehlen, Status ändern (inkl. "Verkauft"), Soft Delete
 3. **Admin Dashboard** (`/admin`): Archiv + Städte Tabs
 4. **Analytics** (`/admin/analytics`): Stats & Charts
+
+### Property Status Optionen
+- `available` - Verfügbar
+- `reserved` - Reserviert
+- `rented` - Vermietet
+- `sold` - Verkauft
+- `archived` - Archiviert (Soft Delete)
 
 ### Slug Auto-Numbering
 - "Villa Da Nang" → `villa-da-nang`
 - Duplikat → `villa-da-nang-2`, `villa-da-nang-3` etc.
+
+### Archiv Links
+Property-Links im Archiv zeigen auf `/immobilien/property/[slug]`
 
 ---
 
@@ -382,35 +547,31 @@ clearTimeout(timeoutId);
 
 ## Wichtige Hinweise
 
-### 🔐 Security (KRITISCH!)
+### Security (KRITISCH!)
 1. **JWT_SECRET** MUSS gesetzt sein (min. 32 Zeichen) - App crasht sonst!
-2. **ANALYTICS_SALT** sollte gesetzt sein für DSGVO-Konformität
-3. **Passwörter** MÜSSEN bcrypt-gehashed sein (Klartext wird abgelehnt!)
-4. **Admin-Accounts** nur via `pnpm db:seed` oder Prisma Studio erstellen
+2. **KV_REST_API_URL + KV_REST_API_TOKEN** für Rate Limiting erforderlich
+3. **ANALYTICS_SALT** sollte gesetzt sein für DSGVO-Konformität
+4. **Passwörter** MÜSSEN bcrypt-gehashed sein (Klartext wird abgelehnt!)
+5. **Admin-Accounts** nur via `pnpm db:seed` oder Prisma Studio erstellen
+6. **Refresh Token Rotation** ist aktiv - gestohlene Tokens werden ungültig
 
 ### Architektur
-5. **Login** versteckt unter `/login` (nicht im Menü)
-6. **Soft Delete**: Properties werden archiviert, nicht gelöscht
-7. **priceVND**: Gespeichert in Millionen (500 = 500.000.000 VND)
+7. **Login** versteckt unter `/login` (nicht im Menü)
+8. **Soft Delete**: Properties werden archiviert, nicht gelöscht
+9. **Permanent Delete**: Löscht auch Bilder aus Vercel Blob
+10. **priceVND**: Gespeichert in Millionen (500 = 500.000.000 VND)
 
 ### Troubleshooting
-8. **.next Ordner löschen** bei Turbopack-Problemen: `rm -rf .next`
-9. **Prisma regenerieren** nach Schema-Änderung: `pnpm prisma generate`
+11. **.next Ordner löschen** bei Turbopack-Problemen: `rm -rf .next`
+12. **Prisma regenerieren** nach Schema-Änderung: `pnpm prisma generate`
+13. **Rate Limit testen**: 6+ Requests an `/api/auth/login` → 429 ab Request 6
 
 ---
 
-## 📋 TODO / Später geplant
-
-### Priorität HOCH (bei >1000 Visits/Tag)
-- [ ] **Vercel KV oder Upstash Redis** - Rate Limiting + Session-Cache
-  - Aktuell: In-Memory (funktioniert für kleine Projekte)
-  - Später: Vercel KV (Free Tier: 3.000 Req/Tag) oder Upstash
-  - Betrifft: `lib/rate-limit.ts` + `lib/analytics.ts`
+## TODO / Später geplant
 
 ### Priorität MITTEL
-- [ ] **Sentry Tunnel aktivieren** - `/api/monitoring` Route existiert, muss in next.config.ts aktiviert werden
 - [ ] **Aggregierte Daily-Snapshots** für Analytics (Performance bei vielen Daten)
-- [ ] **Alte Bilder löschen** beim Property-Update (Vercel Blob cleanup)
 
 ### Priorität NIEDRIG
 - [ ] **E-Mail-Benachrichtigungen** bei neuen Kontaktanfragen
@@ -421,6 +582,14 @@ clearTimeout(timeoutId);
 - [ ] **Kartenansicht** mit Google Maps oder Mapbox
 - [ ] **Favoriten** für Besucher (localStorage)
 - [ ] **PDF-Export** für Property-Exposés
+
+### Erledigt
+- [x] **Upstash Redis Rate Limiting** - Serverless-kompatibel
+- [x] **Refresh Token Rotation** - Security Fix
+- [x] **Security Headers** - X-Frame-Options, CSP, etc.
+- [x] **Sentry Tunnel** - Umgeht Ad-Blocker
+- [x] **Image Cleanup** - Bei Delete und Failed Create
+- [x] **Drag & Drop Upload** - Mit Timeout
 
 ---
 
