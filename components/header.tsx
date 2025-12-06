@@ -185,13 +185,16 @@ export function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`overflow-hidden border-t border-[--border] bg-white/98 backdrop-blur-xl transition-all duration-500 lg:hidden ${
+        className={`overflow-hidden border-t border-[--border] bg-white/98 backdrop-blur-xl transition-all duration-500 ease-out lg:hidden ${
           mobileOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <nav className="mx-auto flex w-full max-w-6xl flex-col px-6 py-4 md:px-8">
           {/* Städte Accordion */}
-          <div className="border-b border-[--border]">
+          <div
+            className={`border-b border-[--border] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "50ms" }}
+          >
             <button
               type="button"
               onClick={() => setMobileCitiesOpen(!mobileCitiesOpen)}
@@ -223,11 +226,11 @@ export function Header() {
               </svg>
             </button>
             <div
-              className={`overflow-hidden transition-all duration-300 ${
+              className={`overflow-hidden transition-all duration-300 ease-out ${
                 mobileCitiesOpen ? "max-h-[250px] opacity-100 pb-3" : "max-h-0 opacity-0"
               }`}
             >
-              {cityLinks.map((city) => (
+              {cityLinks.map((city, i) => (
                 <Link
                   key={city.href}
                   href={city.href}
@@ -235,7 +238,8 @@ export function Header() {
                     setMobileOpen(false);
                     setMobileCitiesOpen(false);
                   }}
-                  className="flex items-center gap-3 py-3 pl-8 text-sm font-medium tracking-wide text-[--muted] transition-colors hover:text-[--primary]"
+                  className={`flex items-center gap-3 py-3 pl-8 text-sm font-medium tracking-wide text-[--muted] transition-colors hover:text-[--primary] ${mobileCitiesOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+                  style={{ animationDelay: `${(i + 1) * 50}ms` }}
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-[--primary]/50" />
                   {city.label}
@@ -248,7 +252,8 @@ export function Header() {
           <Link
             href="/immobilien/objekte"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-3 border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
+            className={`flex items-center gap-3 border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary] active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "100ms" }}
           >
             <svg
               aria-hidden="true"
@@ -265,7 +270,8 @@ export function Header() {
           <Link
             href="/immobilien/ueber-uns"
             onClick={() => setMobileOpen(false)}
-            className="border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
+            className={`border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary] active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "150ms" }}
           >
             Wer wir sind
           </Link>
@@ -273,7 +279,8 @@ export function Header() {
           <Link
             href="/immobilien/faq"
             onClick={() => setMobileOpen(false)}
-            className="border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
+            className={`border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary] active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "200ms" }}
           >
             Fragen
           </Link>
@@ -281,7 +288,8 @@ export function Header() {
           <Link
             href="/immobilien/kontakt"
             onClick={() => setMobileOpen(false)}
-            className="border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary]"
+            className={`border-b border-[--border] py-5 text-base font-medium tracking-wide text-[--text] transition-colors hover:text-[--primary] active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "250ms" }}
           >
             Kontakt
           </Link>
@@ -290,7 +298,8 @@ export function Header() {
           <Link
             href="/goldzeit"
             onClick={() => setMobileOpen(false)}
-            className="mt-4 flex items-center justify-center gap-2 border border-orange-500/30 bg-orange-500/10 py-4 text-sm font-medium tracking-wide text-orange-500 transition-colors hover:bg-orange-500 hover:text-white"
+            className={`mt-4 flex items-center justify-center gap-2 border border-orange-500/30 bg-orange-500/10 py-4 text-sm font-medium tracking-wide text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
+            style={{ animationDelay: "300ms" }}
           >
             <svg
               aria-hidden="true"
@@ -311,7 +320,8 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-2 bg-[#25D366] py-4 text-white transition-all hover:scale-105 hover:bg-[#20BD5A] active:scale-95"
+              className={`flex flex-col items-center justify-center gap-2 bg-[#25D366] py-4 text-white transition-all duration-300 hover:scale-105 hover:bg-[#20BD5A] active:scale-95 ${mobileOpen ? "animate-fadeInUp opacity-0-initial" : ""}`}
+              style={{ animationDelay: "350ms" }}
             >
               <WhatsAppIcon className="h-6 w-6" />
               <span className="text-xs font-medium">WhatsApp</span>
@@ -321,7 +331,8 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-2 bg-[#00B900] py-4 text-white transition-all hover:scale-105 hover:bg-[#00A000] active:scale-95"
+              className={`flex flex-col items-center justify-center gap-2 bg-[#00B900] py-4 text-white transition-all duration-300 hover:scale-105 hover:bg-[#00A000] active:scale-95 ${mobileOpen ? "animate-fadeInUp opacity-0-initial" : ""}`}
+              style={{ animationDelay: "400ms" }}
             >
               <LineIcon className="h-6 w-6" />
               <span className="text-xs font-medium">Line</span>
@@ -331,7 +342,8 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-2 bg-[#0068FF] py-4 text-white transition-all hover:scale-105 hover:bg-[#0058DD] active:scale-95"
+              className={`flex flex-col items-center justify-center gap-2 bg-[#0068FF] py-4 text-white transition-all duration-300 hover:scale-105 hover:bg-[#0058DD] active:scale-95 ${mobileOpen ? "animate-fadeInUp opacity-0-initial" : ""}`}
+              style={{ animationDelay: "450ms" }}
             >
               <ZaloIcon className="h-6 w-6" />
               <span className="text-xs font-medium">Zalo</span>

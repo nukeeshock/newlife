@@ -1,12 +1,19 @@
 import Link from "next/link";
 
 export function GoldzeitHero() {
+  const highlights = [
+    "Private Zimmer mit Bad in Pool-Villa",
+    "Halbpension (2 Mahlzeiten täglich)",
+    "8h Haushaltshilfe pro Tag",
+    "Deutschsprachige Betreuung 24/7",
+  ];
+
   return (
     <section className="relative flex min-h-[90vh] items-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <div
-          className="h-full w-full bg-cover bg-center opacity-30 grayscale transition-all duration-[2s] hover:grayscale-0"
+          className="h-full w-full bg-cover bg-center opacity-30 grayscale transition-all duration-[1.2s] hover:grayscale-0"
           style={{ backgroundImage: "url('/goldzeit-hero.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[--bg] via-[--bg]/80 to-transparent" />
@@ -15,7 +22,7 @@ export function GoldzeitHero() {
       <div className="container relative z-10 mx-auto grid gap-12 px-6 md:grid-cols-2 md:items-center md:px-8">
         <div>
           {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 border border-white/10 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-widest text-[--primary] backdrop-blur-md">
+          <div className="animate-fadeInDown opacity-0-initial mb-8 inline-flex items-center gap-2 border border-white/10 bg-white/5 px-4 py-1.5 text-xs uppercase tracking-widest text-[--primary] backdrop-blur-md">
             <svg
               aria-hidden="true"
               className="h-3 w-3"
@@ -29,24 +36,24 @@ export function GoldzeitHero() {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-8 font-serif text-5xl font-light leading-[1.1] text-[--text] md:text-7xl">
+          <h1 className="animate-fadeInUp delay-100 opacity-0-initial mb-8 font-serif text-5xl font-light leading-[1.1] text-[--text] md:text-7xl">
             Gemeinsam wohnen.
             <br />
             <span className="text-[--muted]">Selbstbestimmt leben.</span>
           </h1>
 
           {/* Description */}
-          <p className="mb-10 max-w-xl text-xl font-light leading-relaxed text-[--muted]">
+          <p className="animate-fadeInUp delay-200 opacity-0-initial mb-10 max-w-xl text-xl font-light leading-relaxed text-[--muted]">
             Das exklusive WG-Konzept für Best Ager in Da Nang.
             Entfliehen Sie der Einsamkeit und genießen Sie den Luxus einer Pool-Villa
             mit Full-Service - zu einem Preis, der in Europa unmöglich wäre.
           </p>
 
           {/* CTA */}
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="animate-fadeInUp delay-300 opacity-0-initial flex flex-col gap-4 sm:flex-row">
             <Link
               href="#pricing"
-              className="bg-[--primary] px-8 py-4 text-center font-medium text-white transition-all hover:bg-[--primary-hover]"
+              className="bg-[--primary] px-8 py-4 text-center font-medium text-white transition-all duration-300 hover:bg-[--primary-hover] hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
             >
               Preise &amp; Verfügbarkeit
             </Link>
@@ -60,11 +67,11 @@ export function GoldzeitHero() {
         </div>
 
         {/* Key Facts Card */}
-        <div className="hidden border border-white/5 bg-[--surface]/50 p-8 backdrop-blur-sm md:block">
+        <div className="animate-scaleIn delay-400 opacity-0-initial hidden border border-white/5 bg-[--surface]/50 p-8 backdrop-blur-sm md:block">
           <h3 className="mb-6 flex items-center gap-2 text-lg font-bold text-[--text]">
             <svg
               aria-hidden="true"
-              className="h-5 w-5 text-[--primary]"
+              className="animate-float h-5 w-5 text-[--primary]"
               fill="currentColor"
               viewBox="0 0 24 24"
             >
@@ -73,13 +80,12 @@ export function GoldzeitHero() {
             Alles Inklusive Highlights
           </h3>
           <ul className="space-y-4">
-            {[
-              "Private Zimmer mit Bad in Pool-Villa",
-              "Halbpension (2 Mahlzeiten täglich)",
-              "8h Haushaltshilfe pro Tag",
-              "Deutschsprachige Betreuung 24/7",
-            ].map((item, i) => (
-              <li key={i} className="flex items-center gap-3 text-[--text]">
+            {highlights.map((item, i) => (
+              <li
+                key={i}
+                className="animate-fadeInUp opacity-0-initial flex items-center gap-3 text-[--text]"
+                style={{ animationDelay: `${500 + i * 100}ms` }}
+              >
                 <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-[--surface] text-[--primary]">
                   <svg
                     aria-hidden="true"

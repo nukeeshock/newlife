@@ -1,22 +1,44 @@
 export function GoldzeitPricing() {
+  const basisFeatures = [
+    "Möbliertes Zimmer + Bad",
+    "Halbpension (2 Mahlzeiten)",
+    "8h Haushaltshilfe Service",
+    "Bettwäsche-Service",
+    "Strom, Wasser, WLAN",
+    "24/7 Deutsche Betreuung",
+  ];
+
   return (
     <section id="pricing" className="bg-[--bg] py-24">
       <div className="container mx-auto px-6 md:px-8">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 font-serif text-4xl font-light text-[--text]">
+          <h2 className="animate-fadeInUp opacity-0-initial mb-4 font-serif text-4xl font-light text-[--text]">
             Transparent &amp; Fair
           </h2>
-          <p className="text-[--muted]">Monatliche All-Inclusive Preise. Keine versteckten Kosten.</p>
+          <p className="animate-fadeInUp delay-100 opacity-0-initial text-[--muted]">
+            Monatliche All-Inclusive Preise. Keine versteckten Kosten.
+          </p>
         </div>
 
         <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2">
           {/* Standard Package */}
-          <div className="relative border border-[--glass-border] bg-[--surface] p-8 md:p-12">
-            <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 border border-[--glass-border] bg-[--card] px-4 py-1 text-xs uppercase tracking-widest text-[--text]">
-              Basis Paket
+          <div className="animate-fadeInUp delay-200 opacity-0-initial relative flex flex-col border border-[--glass-border] bg-[--surface] p-8 md:p-12">
+            {/* Badge - Inline statt floating */}
+            <div className="mb-6 flex items-center justify-center">
+              <span className="inline-flex items-center gap-2 border-b-2 border-[--primary] pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-[--text]">
+                <svg
+                  aria-hidden="true"
+                  className="h-4 w-4 text-[--primary]"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Basis Paket
+              </span>
             </div>
 
-            <div className="mb-8 space-y-6 border-b border-white/5 pb-8 text-center">
+            <div className="mb-8 space-y-6 border-b border-[--border] pb-8 text-center">
               <div>
                 <p className="mb-2 text-sm uppercase tracking-wide text-[--muted]">Einzelperson</p>
                 <p className="text-5xl font-bold text-[--text]">
@@ -33,21 +55,14 @@ export function GoldzeitPricing() {
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="flex-1 space-y-3">
               <p className="mb-4 font-bold text-[--text]">Alles Inklusive:</p>
               <div className="grid grid-cols-1 gap-3 text-sm text-[--muted]">
-                {[
-                  "Möbliertes Zimmer + Bad",
-                  "Halbpension (2 Mahlzeiten)",
-                  "8h Haushaltshilfe Service",
-                  "Bettwäsche-Service",
-                  "Strom, Wasser, WLAN",
-                  "24/7 Deutsche Betreuung",
-                ].map((item, i) => (
+                {basisFeatures.map((item, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <svg
                       aria-hidden="true"
-                      className="h-4 w-4 text-[--primary]"
+                      className="h-4 w-4 shrink-0 text-[--primary]"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -59,11 +74,19 @@ export function GoldzeitPricing() {
                 ))}
               </div>
             </div>
+
+            {/* CTA Button */}
+            <a
+              href="/goldzeit/kontakt"
+              className="mt-10 block w-full border-2 border-black bg-transparent py-4 text-center text-sm font-bold uppercase tracking-wider text-black transition-all duration-300 hover:bg-black hover:!text-white hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Angebot Anfragen
+            </a>
           </div>
 
           {/* Premium Upgrade */}
-          <div className="relative overflow-hidden border border-[--primary]/30 bg-gradient-to-b from-[--card] to-[--surface] p-8 md:p-12">
-            <div className="pointer-events-none absolute -mr-10 -mt-10 right-0 top-0 h-32 w-32 rounded-full bg-[--primary]/10 blur-3xl" />
+          <div className="animate-fadeInUp delay-300 opacity-0-initial relative overflow-hidden border border-[--primary]/30 bg-gradient-to-b from-[--card] to-[--surface] p-8 md:p-12">
+            <div className="animate-pulse-subtle pointer-events-none absolute -mr-10 -mt-10 right-0 top-0 h-32 w-32 rounded-full bg-[--primary]/10 blur-3xl" />
 
             <div className="mb-6 flex items-start justify-between">
               <div>
@@ -140,13 +163,12 @@ export function GoldzeitPricing() {
 
             <a
               href="/goldzeit/kontakt"
-              className="mt-10 block w-full bg-white py-4 text-center text-sm font-bold uppercase tracking-wider text-[--bg] transition-colors hover:bg-[--text]"
+              className="mt-10 block w-full border-2 border-black bg-transparent py-4 text-center text-sm font-bold uppercase tracking-wider text-black transition-all duration-300 hover:bg-black hover:!text-white hover:scale-[1.02] active:scale-[0.98]"
             >
               Upgrade Anfragen
             </a>
           </div>
         </div>
-
       </div>
     </section>
   );

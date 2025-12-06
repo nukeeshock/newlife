@@ -228,9 +228,6 @@ const availableCities = useMemo(() => {
 - `sentry.edge.config.ts` - Edge Runtime
 - `instrumentation.ts` - Runtime Registration
 
-### Test-Seite
-`/sentry-test` - Buttons zum Testen der Integration
-
 ---
 
 ## Error Handling

@@ -62,23 +62,23 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
       <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
         {/* Section Header */}
         <div className="mb-16 flex flex-col items-center text-center">
-          <span className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
+          <span className="animate-fadeInDown opacity-0-initial mb-4 text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
             Ausgewählte Objekte
           </span>
-          <h2 className="font-serif text-4xl font-light text-[--text] md:text-5xl">
+          <h2 className="animate-fadeInUp delay-100 opacity-0-initial font-serif text-4xl font-light text-[--text] md:text-5xl">
             Unsere <span className="italic">Empfehlungen</span>
           </h2>
-          <p className="mt-4 max-w-xl text-base text-[--muted]">
+          <p className="animate-fadeInUp delay-200 opacity-0-initial mt-4 max-w-xl text-base text-[--muted]">
             Handverlesen von unserem Team – Objekte, die wir persönlich kennen
             und empfehlen.
           </p>
         </div>
 
         {/* Mobile Carousel */}
-        <div className="md:hidden">
+        <div className="animate-fadeInUp delay-300 opacity-0-initial md:hidden">
           {/* Single Property Display */}
           <div
-            className="relative"
+            className="relative transition-transform duration-300"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
@@ -136,13 +136,13 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
           </div>
 
           {/* Dot Indicators */}
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <div className="animate-fadeInUp delay-300 opacity-0-initial mt-6 flex flex-wrap justify-center gap-2">
             {properties.map((property, i) => (
               <button
                 key={property.id}
                 onClick={() => setActiveIndex(i)}
-                className={`h-2 w-2 transition-colors ${
-                  i === activeIndex ? "bg-[--primary]" : "bg-[--muted]/30"
+                className={`h-2 w-2 transition-all duration-300 ${
+                  i === activeIndex ? "scale-125 bg-[--primary]" : "bg-[--muted]/30 hover:bg-[--muted]/50"
                 }`}
                 aria-label={`Gehe zu Objekt ${i + 1}`}
               />
@@ -150,7 +150,7 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
           </div>
 
           {/* Counter */}
-          <div className="mt-4 text-center text-sm text-[--muted]">
+          <div className="animate-fadeInUp delay-400 opacity-0-initial mt-4 text-center text-sm text-[--muted]">
             {activeIndex + 1} / {properties.length}
           </div>
         </div>
@@ -158,13 +158,18 @@ export function FeaturedProperties({ properties }: FeaturedPropertiesProps) {
         {/* Desktop Grid */}
         <div className="hidden md:block">
           <div className="grid grid-cols-2 gap-8 lg:gap-10">
-            {properties.map((property) => (
-              <PropertyCard
+            {properties.map((property, i) => (
+              <div
                 key={property.id}
-                property={property}
-                showRecommendedFlag={false}
-                variant="featured"
-              />
+                className="animate-fadeInUp opacity-0-initial"
+                style={{ animationDelay: `${300 + i * 100}ms` }}
+              >
+                <PropertyCard
+                  property={property}
+                  showRecommendedFlag={false}
+                  variant="featured"
+                />
+              </div>
             ))}
           </div>
         </div>

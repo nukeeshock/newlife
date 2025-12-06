@@ -27,10 +27,10 @@ export default function ImpressumPage() {
             </h2>
             <div className="space-y-2">
               <p className="font-semibold text-[--text]">NLV Real Estate</p>
-              <p>New Life Vietnam</p>
-              <p>[Straße und Hausnummer]</p>
-              <p>[PLZ] [Stadt]</p>
-              <p>Vietnam</p>
+              <p>Ein Angebot von Palmara Reisekunst LLC</p>
+              <p>1209 Mountain Road PL NE STE N</p>
+              <p>Albuquerque, NM 87110</p>
+              <p>USA</p>
             </div>
           </section>
 
@@ -56,17 +56,18 @@ export default function ImpressumPage() {
             <h2 className="mb-4 font-serif text-2xl font-light text-[--text]">
               Vertreten durch
             </h2>
-            <p>[Name des Vertretungsberechtigten]</p>
+            <p>Taylor Newman</p>
+            <p className="text-sm">(Bevollmächtigte Person im Namen des eingetragenen Vertreters)</p>
           </section>
 
           <section>
             <h2 className="mb-4 font-serif text-2xl font-light text-[--text]">
-              Umsatzsteuer-ID
+              Steuernummer (EIN)
             </h2>
             <p>
-              Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
+              Employer Identification Number (USA):
               <br />
-              [USt-IdNr. falls vorhanden]
+              EIN 35-2916798
             </p>
           </section>
 

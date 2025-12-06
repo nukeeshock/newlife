@@ -59,9 +59,17 @@ export function GoldzeitKontaktForm() {
 
     try {
       // Erstelle spezielle Nachricht für Goldzeit
+      const interestLabels: Record<string, string> = {
+        "single": "Basis Paket - Einzelzimmer (1.399 EUR)",
+        "couple": "Basis Paket - Paar-Zimmer (999 EUR p.P.)",
+        "single-premium": "Premium Upgrade - Einzelzimmer (1.598 EUR)",
+        "couple-premium": "Premium Upgrade - Paar-Zimmer (1.198 EUR p.P.)",
+        "general": "Allgemeine Frage",
+      };
+
       const goldzeitMessage = `[NLV GOLDZEIT LIVING ANFRAGE]
 
-Interesse an: ${formData.interest === "single" ? "Einzelzimmer (1.399 EUR)" : formData.interest === "couple" ? "Paar-Zimmer (999 EUR p.P.)" : "Allgemeine Frage"}
+Interesse an: ${interestLabels[formData.interest] || formData.interest}
 
 Nachricht:
 ${formData.message}`;
@@ -314,8 +322,10 @@ ${formData.message}`;
                   }
                   className="w-full appearance-none border border-[--glass-border] bg-[--surface] px-4 py-3 text-[--text] outline-none transition-colors focus:border-[--primary]"
                 >
-                  <option value="single">Einzelzimmer (1.399 EUR/Monat)</option>
-                  <option value="couple">Paar-Zimmer (999 EUR p.P./Monat)</option>
+                  <option value="single">Basis Paket - Einzelzimmer (1.399 EUR/Monat)</option>
+                  <option value="couple">Basis Paket - Paar-Zimmer (999 EUR p.P./Monat)</option>
+                  <option value="single-premium">Premium Upgrade - Einzelzimmer (1.598 EUR/Monat)</option>
+                  <option value="couple-premium">Premium Upgrade - Paar-Zimmer (1.198 EUR p.P./Monat)</option>
                   <option value="general">Allgemeine Frage</option>
                 </select>
               </div>
@@ -379,7 +389,7 @@ ${formData.message}`;
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="w-full bg-[--primary] py-4 font-bold text-white transition-all hover:bg-[--primary-hover] disabled:opacity-50"
+                className="w-full border-2 border-black bg-transparent py-4 font-bold text-black transition-all duration-300 hover:bg-black hover:text-white hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
               >
                 {status === "submitting" ? "Wird gesendet..." : "Kostenlose Beratung anfordern"}
               </button>

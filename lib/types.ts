@@ -29,27 +29,3 @@ export interface Property {
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
-
-// Property type copy for UI labels
-export const propertyTypeCopy: Record<
-  PropertyType,
-  { label: string; summary: string }
-> = {
-  private_residence: {
-    label: "Private Residenzen",
-    summary: "Exklusive Rückzugsorte mit Privatsphäre, Strandnähe oder tropischem Garten.",
-  },
-  apartment: {
-    label: "Apartments",
-    summary: "Modernes Stadtleben in Da Nang oder Saigon mit Balkon, Concierge und Aussicht.",
-  },
-  house: {
-    label: "Villen",
-    summary: "Großzügige Häuser und Villen für längere Aufenthalte, teils komplett möbliert.",
-  },
-  commercial: {
-    label: "Gewerbeflächen",
-    summary: "Repräsentative Flächen in Top-Lagen für Büro, Showroom oder Gastronomie.",
-  },
-};
-
