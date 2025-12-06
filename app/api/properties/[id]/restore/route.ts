@@ -34,6 +34,20 @@ async function restorePropertyHandler(
       );
     }
 
+    // Stadt wieder ins System holen, falls sie gelöscht wurde
+    const cityExists = await prisma.city.findFirst({
+      where: { name: existing.city },
+    });
+
+    if (!cityExists) {
+      await prisma.city.create({
+        data: {
+          name: existing.city,
+          country: existing.country,
+        },
+      });
+    }
+
     const property = await prisma.property.update({
       where: { id },
       data: { status: "available" },

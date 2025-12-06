@@ -28,15 +28,18 @@ async function deleteCityHandler(
       );
     }
 
-    // Prüfen ob Properties mit dieser Stadt existieren
-    const propertiesWithCity = await prisma.property.count({
-      where: { city: existing.name },
+    // Prüfen ob AKTIVE Properties mit dieser Stadt existieren (archivierte ignorieren)
+    const activePropertiesWithCity = await prisma.property.count({
+      where: {
+        city: existing.name,
+        status: { not: "archived" }
+      },
     });
 
-    if (propertiesWithCity > 0) {
+    if (activePropertiesWithCity > 0) {
       return NextResponse.json(
         {
-          error: `Diese Stadt kann nicht gelöscht werden, da ${propertiesWithCity} Property/Properties damit verknüpft sind.`,
+          error: `Diese Stadt kann nicht gelöscht werden, da ${activePropertiesWithCity} aktive Property/Properties damit verknüpft sind. Archiviere oder lösche diese zuerst.`,
           code: "CITY_IN_USE",
         },
         { status: 409 }

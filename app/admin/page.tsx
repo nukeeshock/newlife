@@ -229,9 +229,13 @@ export default function AdminPage() {
 
       if (res.ok) {
         setArchivedProperties((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Fehler beim endgültigen Löschen");
       }
     } catch (error) {
       console.error("Error deleting:", error);
+      alert("Fehler beim endgültigen Löschen. Bitte versuche es erneut.");
     }
   };
 
@@ -272,9 +276,13 @@ export default function AdminPage() {
 
       if (res.ok) {
         setCities((prev) => prev.filter((c) => c.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Fehler beim Löschen der Stadt");
       }
     } catch (error) {
       console.error("Error deleting city:", error);
+      alert("Fehler beim Löschen der Stadt. Bitte versuche es erneut.");
     }
   };
 
