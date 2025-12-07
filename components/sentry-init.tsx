@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import * as Sentry from "@sentry/nextjs";
 
-const SENTRY_DSN = "https://11d77422bf34323aa0e848da12aca2fb@o4510467287810048.ingest.de.sentry.io/4510467289251920";
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
 let initialized = false;
 
@@ -11,6 +11,11 @@ export function SentryInit() {
   useEffect(() => {
     if (initialized) return;
     initialized = true;
+
+    if (!SENTRY_DSN && process.env.NODE_ENV === "production") {
+      console.error("Sentry DSN not found");
+      return;
+    }
 
     Sentry.init({
       dsn: SENTRY_DSN,

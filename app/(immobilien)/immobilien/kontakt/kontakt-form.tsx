@@ -351,7 +351,7 @@ export function KontaktForm() {
                 type="submit"
                 disabled={status === "submitting"}
                 className={buttonClasses({
-                  variant: "primary",
+                  variant: "soft",
                   fullWidth: true,
                   className: "py-3",
                 })}
