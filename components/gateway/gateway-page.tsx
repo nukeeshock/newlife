@@ -13,11 +13,11 @@ export function GatewayPage() {
           <div className="relative">
             <div className="absolute -inset-4 rounded-full bg-gradient-to-b from-amber-500/30 to-transparent opacity-60 blur-xl transition-opacity duration-700 group-hover:opacity-100" />
             <Image
-              src="/LOGO_NLV.png"
+              src="/NLV_LOGO_BIG_NOBG.png"
               alt="NewLife Vietnam"
-              width={72}
-              height={72}
-              className="relative h-16 w-16 rounded-full shadow-2xl ring-2 ring-white/20 transition-transform duration-500 group-hover:scale-105 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+              width={120}
+              height={120}
+              className="relative h-[120px] w-[120px] drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 sm:h-36 sm:w-36 lg:h-48 lg:w-48"
               priority
             />
           </div>
