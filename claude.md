@@ -618,3 +618,16 @@ clearTimeout(timeoutId);
 - UI: Deutsch
 - Code: Englisch
 - Kommunikation: Deutsch
+- # TECH STACK & CONSTRAINTS
+- **Framework:** Next.js 16 (App Router).
+- **Language:** TypeScript (Strict).
+- **Database:** Prisma with PostgreSQL.
+- **Styling:** Tailwind CSS.
+- **Environment:** Node.js Runtime (mostly), Edge for Proxy.
+- **React:** React 19 (RC).
+
+# CRITICAL NEXT.JS 16 RULES
+1. **Async Params:** In `page.tsx`, `params` and `searchParams` are Promises. ALWAYS use `const { slug } = await params;`. Never access them synchronously.
+2. **Middleware:** We use `proxy.ts` instead of `middleware.ts`. Do not suggest creating `middleware.ts`.
+3. **Caching:** We use `unstable_cache` or `revalidateTag("key", "max")`. NEVER use `export const dynamic = 'force-dynamic'` unless explicitly instructed.
+4. **Image Component:** Always use `next/image`. Never `<img>`.
