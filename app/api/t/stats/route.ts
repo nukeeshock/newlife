@@ -66,7 +66,7 @@ async function getStatsHandler() {
 
     // KPIs parallel abfragen
     const [
-      uniqueVisitors,
+      uniqueVisitorsResult,
       totalPageviews,
       whatsappClicks,
       sessionsWithDuration,
@@ -75,12 +75,14 @@ async function getStatsHandler() {
       propertyPageviews,
       propertyWhatsappClicks,
     ] = await Promise.all([
-      // Unique Visitors (distinct sessionId)
-      prisma.analyticsPageview.findMany({
-        where: { occurredAt: { gte: thirtyDaysAgo } },
-        distinct: ["sessionId"],
-        select: { sessionId: true },
-      }),
+      // Unique Visitors - COUNT(DISTINCT sessionId) statt findMany
+      // WICHTIG: findMany mit distinct lädt ALLE Objekte in den RAM!
+      // Bei tausenden Sessions = Memory Leak / OOM auf Serverless
+      prisma.$queryRaw<[{ count: bigint }]>`
+        SELECT COUNT(DISTINCT "sessionId") as count
+        FROM "AnalyticsPageview"
+        WHERE "occurredAt" >= ${thirtyDaysAgo}
+      `,
 
       // Total Pageviews
       prisma.analyticsPageview.count({
@@ -169,22 +171,28 @@ async function getStatsHandler() {
       }
     }
 
-    // Property Stats zusammenführen
+    // Unique Visitors aus Raw Query extrahieren
+    const uniqueVisitors = Number(uniqueVisitorsResult[0]?.count ?? 0);
+
+    // Maps für O(1) Lookup erstellen (statt O(N*M) mit .find() in Loop)
+    const pageviewsByPath = new Map<string, number>(
+      propertyPageviews.map((pv: PageviewGroup) => [pv.path, pv._count])
+    );
+    const clicksByPropertyId = new Map<string, number>(
+      propertyWhatsappClicks
+        .filter((wc: EventGroup) => wc.propertyId !== null)
+        .map((wc: EventGroup) => [wc.propertyId as string, wc._count])
+    );
+
+    // Property Stats zusammenführen (jetzt O(N) statt O(N*M))
     const propertyStatsWithCounts: PropertyWithStats[] = propertyStats.map(
       (property: PropertyBasic) => {
-        const pageviewEntry = propertyPageviews.find(
-          (pv: PageviewGroup) => pv.path === `/property/${property.slug}`
-        );
-        const clickEntry = propertyWhatsappClicks.find(
-          (wc: EventGroup) => wc.propertyId === property.id
-        );
-
         return {
           id: property.id,
           title: property.title,
           type: property.type,
-          pageviews: pageviewEntry?._count || 0,
-          whatsappClicks: clickEntry?._count || 0,
+          pageviews: pageviewsByPath.get(`/property/${property.slug}`) || 0,
+          whatsappClicks: clicksByPropertyId.get(property.id) || 0,
         };
       }
     );
@@ -211,7 +219,7 @@ async function getStatsHandler() {
 
     return NextResponse.json({
       kpis: {
-        visitors: uniqueVisitors.length,
+        visitors: uniqueVisitors,
         pageviews: totalPageviews,
         whatsappClicks,
         avgSessionDuration,

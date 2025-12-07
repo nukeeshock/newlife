@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { useAdmin } from "@/lib/context/admin-context";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Property } from "@/lib/types";
-import { formatPriceEUR } from "@/lib/format";
+import { AdminArchive } from "@/components/admin/admin-archive";
+import { AdminCities } from "@/components/admin/admin-cities";
+import { AdminInquiries } from "@/components/admin/admin-inquiries";
 
 interface City {
   id: string;
@@ -36,14 +37,19 @@ export default function AdminPage() {
   const { isAdmin, isLoading } = useAdmin();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>("archive");
+
+  // Archive state
   const [archivedProperties, setArchivedProperties] = useState<Property[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [archiveLoading, setArchiveLoading] = useState(true);
   const [restoring, setRestoring] = useState<string | null>(null);
+
+  // Cities state
+  const [cities, setCities] = useState<City[]>([]);
   const [newCityName, setNewCityName] = useState("");
   const [addingCity, setAddingCity] = useState(false);
+
+  // Inquiries state
   const [inquiries, setInquiries] = useState<ContactInquiry[]>([]);
-  const [selectedInquiry, setSelectedInquiry] = useState<ContactInquiry | null>(null);
   const [loadingInquiries, setLoadingInquiries] = useState(false);
   const [inquiriesError, setInquiriesError] = useState<string | null>(null);
 
@@ -60,6 +66,10 @@ export default function AdminPage() {
       fetchInquiries();
     }
   }, [isAdmin]);
+
+  // ============================================
+  // ARCHIVE HANDLERS
+  // ============================================
 
   const fetchArchived = async () => {
     try {
@@ -80,9 +90,57 @@ export default function AdminPage() {
       console.error("Error fetching archived:", error);
       setArchivedProperties([]);
     } finally {
-      setLoading(false);
+      setArchiveLoading(false);
     }
   };
+
+  const handleRestore = async (id: string) => {
+    if (!confirm("Exposé wiederherstellen?")) return;
+
+    setRestoring(id);
+    try {
+      const res = await fetch(`/api/properties/${id}/restore`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        setArchivedProperties((prev) => prev.filter((p) => p.id !== id));
+      }
+    } catch (error) {
+      console.error("Error restoring:", error);
+    } finally {
+      setRestoring(null);
+    }
+  };
+
+  const handlePermanentDelete = async (id: string) => {
+    if (
+      !confirm(
+        "Exposé ENDGÜLTIG löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
+      )
+    )
+      return;
+
+    try {
+      const res = await fetch(`/api/properties/${id}/permanent`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setArchivedProperties((prev) => prev.filter((p) => p.id !== id));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Fehler beim endgültigen Löschen");
+      }
+    } catch (error) {
+      console.error("Error deleting:", error);
+      alert("Fehler beim endgültigen Löschen. Bitte versuche es erneut.");
+    }
+  };
+
+  // ============================================
+  // CITIES HANDLERS
+  // ============================================
 
   const fetchCities = async () => {
     try {
@@ -105,140 +163,6 @@ export default function AdminPage() {
     }
   };
 
-  const fetchInquiries = async () => {
-    setLoadingInquiries(true);
-    setInquiriesError(null);
-    try {
-      const res = await fetch("/api/contact/inquiries");
-      if (!res.ok) {
-        throw new Error("Fehler beim Laden der Anfragen");
-      }
-      const data = await res.json();
-      if (!Array.isArray(data)) {
-        throw new Error("Ungültiges Datenformat");
-      }
-      setInquiries(data);
-    } catch (error) {
-      console.error("Error fetching inquiries:", error);
-      setInquiriesError(error instanceof Error ? error.message : "Unbekannter Fehler");
-      setInquiries([]);
-    } finally {
-      setLoadingInquiries(false);
-    }
-  };
-
-  const handleToggleRead = async (inquiry: ContactInquiry) => {
-    try {
-      const res = await fetch(`/api/contact/inquiries/${inquiry.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ read: !inquiry.read }),
-      });
-
-      if (res.ok) {
-        const updated = await res.json();
-        setInquiries((prev) =>
-          prev.map((i) => (i.id === inquiry.id ? updated : i))
-        );
-        if (selectedInquiry?.id === inquiry.id) {
-          setSelectedInquiry(updated);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating inquiry:", error);
-    }
-  };
-
-  const handleDeleteInquiry = async (id: string) => {
-    if (!confirm("Anfrage wirklich löschen?")) return;
-
-    try {
-      const res = await fetch(`/api/contact/inquiries/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        setInquiries((prev) => prev.filter((i) => i.id !== id));
-        if (selectedInquiry?.id === id) {
-          setSelectedInquiry(null);
-        }
-      }
-    } catch (error) {
-      console.error("Error deleting inquiry:", error);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("de-DE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return "gerade eben";
-    if (diffMins < 60) return `vor ${diffMins} Min`;
-    if (diffHours < 24) return `vor ${diffHours} Std`;
-    if (diffDays < 7) return `vor ${diffDays} Tag${diffDays > 1 ? "en" : ""}`;
-    return formatDate(dateString);
-  };
-
-  // XSS-sichere Encodierung für mailto/tel Links
-  const safeEmail = (email: string) => encodeURIComponent(email);
-  const safePhone = (phone: string) => encodeURIComponent(phone);
-
-  const unreadCount = inquiries.filter((i) => !i.read).length;
-
-  const handleRestore = async (id: string) => {
-    if (!confirm("Exposé wiederherstellen?")) return;
-
-    setRestoring(id);
-    try {
-      const res = await fetch(`/api/properties/${id}/restore`, {
-        method: "POST",
-      });
-
-      if (res.ok) {
-        setArchivedProperties((prev) => prev.filter((p) => p.id !== id));
-      }
-    } catch (error) {
-      console.error("Error restoring:", error);
-    } finally {
-      setRestoring(null);
-    }
-  };
-
-  const handlePermanentDelete = async (id: string) => {
-    if (!confirm("Exposé ENDGÜLTIG löschen? Diese Aktion kann nicht rückgängig gemacht werden!")) return;
-
-    try {
-      const res = await fetch(`/api/properties/${id}/permanent`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        setArchivedProperties((prev) => prev.filter((p) => p.id !== id));
-      } else {
-        const data = await res.json();
-        alert(data.error || "Fehler beim endgültigen Löschen");
-      }
-    } catch (error) {
-      console.error("Error deleting:", error);
-      alert("Fehler beim endgültigen Löschen. Bitte versuche es erneut.");
-    }
-  };
-
   const handleAddCity = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCityName.trim()) return;
@@ -253,7 +177,9 @@ export default function AdminPage() {
 
       if (res.ok) {
         const city = await res.json();
-        setCities((prev) => [...prev, city].sort((a, b) => a.name.localeCompare(b.name)));
+        setCities((prev) =>
+          [...prev, city].sort((a, b) => a.name.localeCompare(b.name))
+        );
         setNewCityName("");
       } else {
         const data = await res.json();
@@ -286,6 +212,73 @@ export default function AdminPage() {
     }
   };
 
+  // ============================================
+  // INQUIRIES HANDLERS
+  // ============================================
+
+  const fetchInquiries = async () => {
+    setLoadingInquiries(true);
+    setInquiriesError(null);
+    try {
+      const res = await fetch("/api/contact/inquiries");
+      if (!res.ok) {
+        throw new Error("Fehler beim Laden der Anfragen");
+      }
+      const data = await res.json();
+      if (!Array.isArray(data)) {
+        throw new Error("Ungültiges Datenformat");
+      }
+      setInquiries(data);
+    } catch (error) {
+      console.error("Error fetching inquiries:", error);
+      setInquiriesError(
+        error instanceof Error ? error.message : "Unbekannter Fehler"
+      );
+      setInquiries([]);
+    } finally {
+      setLoadingInquiries(false);
+    }
+  };
+
+  const handleToggleRead = async (inquiry: ContactInquiry) => {
+    try {
+      const res = await fetch(`/api/contact/inquiries/${inquiry.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read: !inquiry.read }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setInquiries((prev) =>
+          prev.map((i) => (i.id === inquiry.id ? updated : i))
+        );
+      }
+    } catch (error) {
+      console.error("Error updating inquiry:", error);
+    }
+  };
+
+  const handleDeleteInquiry = async (id: string) => {
+    try {
+      const res = await fetch(`/api/contact/inquiries/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setInquiries((prev) => prev.filter((i) => i.id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting inquiry:", error);
+    }
+  };
+
+  // ============================================
+  // RENDER
+  // ============================================
+
+  const unreadCount = inquiries.filter((i) => !i.read).length;
+
   if (isLoading || !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -313,10 +306,10 @@ export default function AdminPage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="mb-8 flex flex-wrap gap-1 sm:gap-4 border-b border-[--glass-border]">
+      <div className="mb-8 flex flex-wrap gap-1 border-b border-[--glass-border] sm:gap-4">
         <button
           onClick={() => setActiveTab("archive")}
-          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
             activeTab === "archive"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -326,7 +319,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("cities")}
-          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
             activeTab === "cities"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -336,7 +329,7 @@ export default function AdminPage() {
         </button>
         <button
           onClick={() => setActiveTab("inquiries")}
-          className={`whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium transition-colors ${
+          className={`whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors sm:px-4 ${
             activeTab === "inquiries"
               ? "border-b-2 border-[--primary] text-[--primary]"
               : "text-[--muted] hover:text-[--text]"
@@ -351,391 +344,44 @@ export default function AdminPage() {
         </button>
         <Link
           href="/admin/analytics"
-          className="whitespace-nowrap px-3 sm:px-4 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text]"
+          className="whitespace-nowrap px-3 py-3 text-sm font-medium text-[--muted] transition-colors hover:text-[--text] sm:px-4"
         >
           Analytics
         </Link>
       </div>
 
-      {/* Archive Tab */}
+      {/* Tab Content */}
       {activeTab === "archive" && (
-        <>
-          {loading ? (
-            <div className="py-12 text-center text-[--muted]">Laden...</div>
-          ) : archivedProperties.length === 0 ? (
-            <div className="border border-[--glass-border] bg-[--card] p-12 text-center">
-              <div className="text-4xl">📦</div>
-              <h3 className="mt-4 font-serif text-xl text-[--text]">
-                Keine archivierten Exposés
-              </h3>
-              <p className="mt-2 text-sm text-[--muted]">
-                Gelöschte Exposés werden hier angezeigt und können wiederhergestellt werden.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {archivedProperties.map((property) => (
-                <div
-                  key={property.id}
-                  className="flex flex-col sm:flex-row sm:items-center gap-4 border border-[--glass-border] bg-[--card] p-4 transition-colors hover:border-[--primary]/20"
-                >
-                  {/* Top row on mobile: Thumbnail + Info */}
-                  <div className="flex gap-4">
-                    {/* Thumbnail */}
-                    <div className="relative h-16 w-24 sm:h-20 sm:w-32 flex-shrink-0 overflow-hidden bg-[--surface]">
-                      {property.images?.[0] ? (
-                        <Image
-                          src={property.images[0]}
-                          alt={property.title}
-                          fill
-                          className="object-cover"
-                          sizes="128px"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-[--muted]">
-                          📷
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <h3 className="truncate font-medium text-[--text]">
-                        {property.title}
-                      </h3>
-                      <p className="text-sm text-[--muted]">
-                        {property.city} • {formatPriceEUR(property.priceEUR)}
-                      </p>
-                      <p className="mt-1 text-xs text-[--muted]/60">
-                        Archiviert am {property.updatedAt ? new Date(property.updatedAt).toLocaleDateString("de-DE") : "Unbekannt"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2 sm:flex-shrink-0">
-                    <button
-                      onClick={() => handleRestore(property.id)}
-                      disabled={restoring === property.id}
-                      className="flex-1 sm:flex-none border border-[--primary]/30 bg-[--primary]/10 px-3 sm:px-4 py-2 text-sm font-medium text-[--primary] transition-colors hover:bg-[--primary]/20 disabled:opacity-50"
-                    >
-                      {restoring === property.id ? "..." : "Wiederherstellen"}
-                    </button>
-                    <button
-                      onClick={() => handlePermanentDelete(property.id)}
-                      className="flex-1 sm:flex-none border border-red-500/30 bg-red-500/10 px-3 sm:px-4 py-2 text-sm font-medium text-red-400 transition-colors hover:bg-red-500/20"
-                    >
-                      Löschen
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Info Box */}
-          <div className="mt-12 border border-[--glass-border] bg-[--surface] p-6">
-            <h3 className="font-medium text-[--text]">ℹ️ Über das Archiv</h3>
-            <ul className="mt-3 space-y-2 text-sm text-[--muted]">
-              <li>• Gelöschte Exposés landen automatisch im Archiv</li>
-              <li>• Archivierte Exposés sind für Besucher nicht sichtbar</li>
-              <li>• Du kannst Exposés jederzeit wiederherstellen</li>
-              <li>• &quot;Endgültig löschen&quot; entfernt das Exposé unwiderruflich</li>
-            </ul>
-          </div>
-        </>
+        <AdminArchive
+          properties={archivedProperties}
+          loading={archiveLoading}
+          restoring={restoring}
+          onRestore={handleRestore}
+          onPermanentDelete={handlePermanentDelete}
+        />
       )}
 
-      {/* Cities Tab */}
       {activeTab === "cities" && (
-        <>
-          {/* Add City Form */}
-          <form onSubmit={handleAddCity} className="mb-8 flex flex-col sm:flex-row gap-3">
-            <input
-              type="text"
-              value={newCityName}
-              onChange={(e) => setNewCityName(e.target.value)}
-              placeholder="Neue Stadt hinzufügen..."
-              className="flex-1 border border-[--glass-border] bg-[--surface] px-4 py-3 text-[--text] placeholder:text-[--muted]/50 focus:border-[--primary]/50 focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={addingCity || !newCityName.trim()}
-              className="border border-[--primary]/30 bg-[--primary]/10 px-6 py-3 text-sm font-medium text-[--primary] transition-colors hover:bg-[--primary]/20 disabled:opacity-50"
-            >
-              {addingCity ? "..." : "+ Hinzufügen"}
-            </button>
-          </form>
-
-          {/* Cities List */}
-          {cities.length === 0 ? (
-            <div className="border border-[--glass-border] bg-[--card] p-12 text-center">
-              <div className="text-4xl">🏙️</div>
-              <h3 className="mt-4 font-serif text-xl text-[--text]">
-                Keine Städte vorhanden
-              </h3>
-              <p className="mt-2 text-sm text-[--muted]">
-                Füge Städte hinzu, die im Standort-Filter und bei der Exposé-Erstellung erscheinen sollen.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {cities.map((city) => (
-                <div
-                  key={city.id}
-                  className="flex items-center justify-between border border-[--glass-border] bg-[--card] px-4 py-3 transition-colors hover:border-[--primary]/20"
-                >
-                  <div>
-                    <span className="font-medium text-[--text]">{city.name}</span>
-                    <span className="ml-2 text-xs text-[--muted]">{city.country}</span>
-                  </div>
-                  <button
-                    onClick={() => handleDeleteCity(city.id, city.name)}
-                    className="text-[--muted] transition-colors hover:text-red-400"
-                    title="Stadt löschen"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Info Box */}
-          <div className="mt-12 border border-[--glass-border] bg-[--surface] p-6">
-            <h3 className="font-medium text-[--text]">ℹ️ Über Städte</h3>
-            <ul className="mt-3 space-y-2 text-sm text-[--muted]">
-              <li>• Städte erscheinen im Standort-Filter auf den Kategorie-Seiten</li>
-              <li>• Beim Erstellen eines Exposés kannst du eine Stadt aus dieser Liste wählen</li>
-              <li>• Lösche Städte nur, wenn keine Exposés mehr damit verknüpft sind</li>
-            </ul>
-          </div>
-        </>
+        <AdminCities
+          cities={cities}
+          newCityName={newCityName}
+          addingCity={addingCity}
+          onNewCityNameChange={setNewCityName}
+          onAddCity={handleAddCity}
+          onDeleteCity={handleDeleteCity}
+        />
       )}
 
-      {/* Inquiries Tab */}
       {activeTab === "inquiries" && (
-        <>
-          {loadingInquiries ? (
-            <div className="py-12 text-center text-[--muted]">Laden...</div>
-          ) : inquiriesError ? (
-            <div className="border border-red-500/30 bg-red-500/10 p-6">
-              <h3 className="font-medium text-red-400">Fehler beim Laden</h3>
-              <p className="mt-2 text-sm text-[--muted]">{inquiriesError}</p>
-              <button
-                onClick={fetchInquiries}
-                className="mt-4 border border-[--primary]/30 bg-[--primary]/10 px-4 py-2 text-sm text-[--primary] hover:bg-[--primary]/20"
-              >
-                Erneut versuchen
-              </button>
-            </div>
-          ) : inquiries.length === 0 ? (
-            <div className="border border-[--glass-border] bg-[--card] p-12 text-center">
-              <div className="text-4xl">📬</div>
-              <h3 className="mt-4 font-serif text-xl text-[--text]">
-                Keine Anfragen vorhanden
-              </h3>
-              <p className="mt-2 text-sm text-[--muted]">
-                Kontaktanfragen von der Website werden hier angezeigt.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {inquiries.map((inquiry) => (
-                <div
-                  key={inquiry.id}
-                  className={`border bg-[--card] p-4 transition-colors hover:border-[--primary]/20 cursor-pointer ${
-                    inquiry.read
-                      ? "border-[--glass-border]"
-                      : "border-[--primary]/30"
-                  }`}
-                  onClick={() => {
-                    setSelectedInquiry(inquiry);
-                    if (!inquiry.read) {
-                      handleToggleRead(inquiry);
-                    }
-                  }}
-                >
-                  <div className="flex items-start gap-3">
-                    {/* Unread Indicator */}
-                    <div className="mt-1.5 flex-shrink-0">
-                      {!inquiry.read ? (
-                        <span className="block h-2.5 w-2.5 rounded-full bg-[--primary]" />
-                      ) : (
-                        <span className="block h-2.5 w-2.5 rounded-full border border-[--muted]/30" />
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-4">
-                        <h3
-                          className={`font-medium truncate ${
-                            inquiry.read ? "text-[--text]" : "text-[--primary]"
-                          }`}
-                        >
-                          {inquiry.name}
-                        </h3>
-                        <span className="flex-shrink-0 text-xs text-[--muted]">
-                          {getRelativeTime(inquiry.createdAt)}
-                        </span>
-                      </div>
-                      <p className="text-sm text-[--muted]">{inquiry.email}</p>
-                      <p className="mt-2 text-sm text-[--muted]/70 line-clamp-2">
-                        &quot;{inquiry.message}&quot;
-                      </p>
-                      {inquiry.property && (
-                        <p className="mt-2 text-xs text-[--primary]">
-                          Objekt: {inquiry.property.title}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Quick Actions */}
-                  <div className="mt-3 flex gap-2 border-t border-[--glass-border] pt-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleRead(inquiry);
-                      }}
-                      className="text-xs text-[--muted] transition-colors hover:text-[--text]"
-                    >
-                      {inquiry.read ? "Als ungelesen markieren" : "Als gelesen markieren"}
-                    </button>
-                    <span className="text-[--glass-border]">|</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDeleteInquiry(inquiry.id);
-                      }}
-                      className="text-xs text-[--muted] transition-colors hover:text-red-400"
-                    >
-                      Löschen
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Info Box */}
-          <div className="mt-12 border border-[--glass-border] bg-[--surface] p-6">
-            <h3 className="font-medium text-[--text]">ℹ️ Über Anfragen</h3>
-            <ul className="mt-3 space-y-2 text-sm text-[--muted]">
-              <li>• Neue Anfragen werden mit einem goldenen Punkt markiert</li>
-              <li>• Klicke auf eine Anfrage um die Details anzuzeigen</li>
-              <li>• Anfragen werden beim Öffnen automatisch als gelesen markiert</li>
-            </ul>
-          </div>
-        </>
-      )}
-
-      {/* Inquiry Detail Modal */}
-      {selectedInquiry && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedInquiry(null)}
-        >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/80" />
-
-          {/* Modal */}
-          <div
-            className="relative w-full max-w-lg border border-[--glass-border] bg-[--card] p-6 max-h-[85vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-serif text-xl text-[--text]">
-                Anfrage von {selectedInquiry.name}
-              </h2>
-              <button
-                onClick={() => setSelectedInquiry(null)}
-                className="text-[--muted] transition-colors hover:text-[--text]"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Details */}
-            <div className="space-y-4">
-              <div>
-                <span className="text-xs text-[--muted]">Name</span>
-                <p className="text-[--text]">{selectedInquiry.name}</p>
-              </div>
-              <div>
-                <span className="text-xs text-[--muted]">E-Mail</span>
-                <p className="text-[--text]">
-                  <a
-                    href={`mailto:${safeEmail(selectedInquiry.email)}`}
-                    className="text-[--primary] hover:underline"
-                  >
-                    {selectedInquiry.email}
-                  </a>
-                </p>
-              </div>
-              {selectedInquiry.phone && (
-                <div>
-                  <span className="text-xs text-[--muted]">Telefon</span>
-                  <p className="text-[--text]">
-                    <a
-                      href={`tel:${safePhone(selectedInquiry.phone)}`}
-                      className="text-[--primary] hover:underline"
-                    >
-                      {selectedInquiry.phone}
-                    </a>
-                  </p>
-                </div>
-              )}
-              <div>
-                <span className="text-xs text-[--muted]">Datum</span>
-                <p className="text-[--text]">{formatDate(selectedInquiry.createdAt)}</p>
-              </div>
-              {selectedInquiry.property && (
-                <div>
-                  <span className="text-xs text-[--muted]">Bezug auf Objekt</span>
-                  <p>
-                    <Link
-                      href={`/immobilien/property/${selectedInquiry.property.slug}`}
-                      className="text-[--primary] hover:underline"
-                      target="_blank"
-                    >
-                      {selectedInquiry.property.title}
-                    </Link>
-                  </p>
-                </div>
-              )}
-
-              <div className="border-t border-[--glass-border] pt-4">
-                <span className="text-xs text-[--muted]">Nachricht</span>
-                <p className="mt-2 whitespace-pre-wrap text-[--text]">
-                  {selectedInquiry.message}
-                </p>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="mt-6 flex gap-3 border-t border-[--glass-border] pt-6">
-              <button
-                onClick={() => handleToggleRead(selectedInquiry)}
-                className="flex-1 border border-[--glass-border] bg-[--surface] px-4 py-2 text-sm text-[--text] transition-colors hover:border-[--primary]/30"
-              >
-                {selectedInquiry.read ? "Als ungelesen" : "Als gelesen"}
-              </button>
-              <button
-                onClick={() => {
-                  handleDeleteInquiry(selectedInquiry.id);
-                }}
-                className="border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-400 transition-colors hover:bg-red-500/20"
-              >
-                Löschen
-              </button>
-            </div>
-          </div>
-        </div>
+        <AdminInquiries
+          inquiries={inquiries}
+          loading={loadingInquiries}
+          error={inquiriesError}
+          onRetry={fetchInquiries}
+          onToggleRead={handleToggleRead}
+          onDelete={handleDeleteInquiry}
+        />
       )}
     </div>
   );
 }
-

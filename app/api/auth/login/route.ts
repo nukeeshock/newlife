@@ -97,15 +97,22 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Alte abgelaufene Tokens aufräumen (async, nicht blockierend)
-    prisma.refreshToken.deleteMany({
-      where: {
-        OR: [
-          { expiresAt: { lt: new Date() } },
-          { revokedAt: { not: null } },
-        ],
-      },
-    }).catch((err) => console.warn("[REFRESH_TOKEN_CLEANUP_ERROR]", err));
+    // Alte abgelaufene Tokens aufräumen
+    // WICHTIG: await ist nötig, damit auf Serverless (Vercel) der Cleanup
+    // nicht abgebrochen wird wenn die Function nach Response einfriert
+    try {
+      await prisma.refreshToken.deleteMany({
+        where: {
+          OR: [
+            { expiresAt: { lt: new Date() } },
+            { revokedAt: { not: null } },
+          ],
+        },
+      });
+    } catch (err) {
+      // Cleanup-Fehler nicht blockierend - Login soll trotzdem funktionieren
+      console.warn("[REFRESH_TOKEN_CLEANUP_ERROR]", err);
+    }
 
     // Response mit Cookies
     const response = NextResponse.json({

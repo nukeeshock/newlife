@@ -98,8 +98,8 @@ async function updatePropertyHandler(
       data: validation.data,
     });
 
-    // Revalidate cached property pages
-    revalidateTag("properties", "default");
+    // Revalidate cached property pages (on-demand ISR)
+    revalidateTag("properties", "max");
 
     return NextResponse.json(serializeBigInt(property));
   } catch (error) {
@@ -140,8 +140,8 @@ async function deletePropertyHandler(
       },
     });
 
-    // Revalidate cached property pages
-    revalidateTag("properties", "default");
+    // Revalidate cached property pages (on-demand ISR)
+    revalidateTag("properties", "max");
 
     return NextResponse.json({ success: true, message: "Property archiviert" });
   } catch (error) {

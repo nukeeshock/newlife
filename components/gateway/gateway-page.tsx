@@ -6,8 +6,8 @@ import Link from "next/link";
 export function GatewayPage() {
   return (
     <div className="relative min-h-screen bg-zinc-950">
-      {/* Floating Logo Header */}
-      <header className="absolute left-0 right-0 top-0 z-30 flex justify-center px-4 pt-6 sm:pt-8 lg:pt-12">
+      {/* Floating Logo - Mobil: oben, Desktop: Mitte */}
+      <div className="pointer-events-none absolute inset-x-0 top-4 z-30 flex justify-center sm:top-6 lg:inset-0 lg:items-center">
         <div className="group flex flex-col items-center">
           {/* Logo with glow effect */}
           <div className="relative">
@@ -17,29 +17,29 @@ export function GatewayPage() {
               alt="NewLife Vietnam"
               width={120}
               height={120}
-              className="relative h-[120px] w-[120px] drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 sm:h-36 sm:w-36 lg:h-48 lg:w-48"
+              className="relative h-16 w-16 drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 sm:h-20 sm:w-20 lg:h-40 lg:w-40"
               priority
             />
           </div>
 
           {/* Brand Text */}
-          <div className="mt-3 flex flex-col items-center sm:mt-4">
-            <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-white/90 drop-shadow-md sm:text-[10px] sm:tracking-[0.4em]">
+          <div className="mt-1.5 flex flex-col items-center sm:mt-2 lg:mt-3">
+            <span className="text-[7px] font-semibold uppercase tracking-[0.25em] text-white/90 drop-shadow-md sm:text-[8px] sm:tracking-[0.3em] lg:text-[9px] lg:tracking-[0.4em]">
               Willkommen bei
             </span>
-            <h1 className="mt-1 font-serif text-xl font-normal tracking-[0.08em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-2xl sm:tracking-[0.1em] lg:text-3xl">
+            <h1 className="mt-0.5 font-serif text-sm font-normal tracking-[0.08em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:text-base sm:tracking-[0.1em] lg:text-2xl">
               <span className="font-semibold">NewLife</span> Vietnam
             </h1>
           </div>
         </div>
-      </header>
+      </div>
 
       {/* Split Screen Container */}
       <div className="relative flex min-h-screen flex-col lg:flex-row">
         {/* Left: Goldzeit Living */}
         <Link
           href="/goldzeit"
-          className="group relative flex min-h-[50vh] flex-1 flex-col items-center justify-end px-4 pb-12 pt-40 sm:pb-16 sm:pt-48 lg:min-h-screen lg:justify-center lg:px-8 lg:pb-0 lg:pt-0"
+          className="group relative flex min-h-[50vh] flex-1 flex-col items-center justify-end px-4 pb-12 pt-24 sm:pb-16 sm:pt-28 lg:min-h-screen lg:justify-center lg:px-8 lg:pb-0 lg:pt-0"
         >
           {/* Background */}
           <div

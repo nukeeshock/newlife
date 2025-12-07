@@ -179,8 +179,10 @@ async function createPropertyHandler(request: AuthenticatedRequest) {
       );
     }
 
-    // Revalidate cached property pages
-    revalidateTag("properties", "default");
+    // Revalidate cached property pages (on-demand ISR)
+    // "max" = Stale-While-Revalidate: Stale Content wird sofort geliefert,
+    // während im Hintergrund frische Daten geholt werden
+    revalidateTag("properties", "max");
 
     return NextResponse.json(serializeBigInt(property), { status: 201 });
   } catch (error) {

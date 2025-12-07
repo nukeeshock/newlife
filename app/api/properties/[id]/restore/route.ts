@@ -54,8 +54,8 @@ async function restorePropertyHandler(
       data: { status: "available" },
     });
 
-    // Revalidate cached property pages
-    revalidateTag("properties", "default");
+    // Revalidate cached property pages (on-demand ISR)
+    revalidateTag("properties", "max");
 
     return NextResponse.json(serializeBigInt(property));
   } catch (error) {
