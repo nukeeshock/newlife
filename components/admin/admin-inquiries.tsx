@@ -218,7 +218,7 @@ export function AdminInquiries({
         </ul>
       </div>
 
-      {/* Inquiry Detail Modal */}
+      {/* Inquiry Detail Modal - Explizite Farben weil CSS-Vars in fixed-Elementen nicht zuverlässig sind */}
       {selectedInquiry && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -229,17 +229,17 @@ export function AdminInquiries({
 
           {/* Modal */}
           <div
-            className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto border border-[--glass-border] bg-[--card] p-6"
+            className="relative max-h-[85vh] w-full max-w-lg overflow-y-auto border border-[#E5E0D8] bg-white p-6"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-serif text-xl text-[--text]">
+              <h2 className="font-serif text-xl text-[#0A2239]">
                 Anfrage von {selectedInquiry.name}
               </h2>
               <button
                 onClick={handleCloseModal}
-                className="text-[--muted] transition-colors hover:text-[--text]"
+                className="text-[#5A6B7A] transition-colors hover:text-[#0A2239]"
               >
                 ✕
               </button>
@@ -248,15 +248,15 @@ export function AdminInquiries({
             {/* Details */}
             <div className="space-y-4">
               <div>
-                <span className="text-xs text-[--muted]">Name</span>
-                <p className="text-[--text]">{selectedInquiry.name}</p>
+                <span className="text-xs text-[#5A6B7A]">Name</span>
+                <p className="text-[#0A2239]">{selectedInquiry.name}</p>
               </div>
               <div>
-                <span className="text-xs text-[--muted]">E-Mail</span>
-                <p className="text-[--text]">
+                <span className="text-xs text-[#5A6B7A]">E-Mail</span>
+                <p className="text-[#0A2239]">
                   <a
                     href={`mailto:${safeEmail(selectedInquiry.email)}`}
-                    className="text-[--primary] hover:underline"
+                    className="text-[#B8860B] hover:underline"
                   >
                     {selectedInquiry.email}
                   </a>
@@ -264,11 +264,11 @@ export function AdminInquiries({
               </div>
               {selectedInquiry.phone && (
                 <div>
-                  <span className="text-xs text-[--muted]">Telefon</span>
-                  <p className="text-[--text]">
+                  <span className="text-xs text-[#5A6B7A]">Telefon</span>
+                  <p className="text-[#0A2239]">
                     <a
                       href={`tel:${safePhone(selectedInquiry.phone)}`}
-                      className="text-[--primary] hover:underline"
+                      className="text-[#B8860B] hover:underline"
                     >
                       {selectedInquiry.phone}
                     </a>
@@ -276,20 +276,20 @@ export function AdminInquiries({
                 </div>
               )}
               <div>
-                <span className="text-xs text-[--muted]">Datum</span>
-                <p className="text-[--text]">
+                <span className="text-xs text-[#5A6B7A]">Datum</span>
+                <p className="text-[#0A2239]">
                   {formatDate(selectedInquiry.createdAt)}
                 </p>
               </div>
               {selectedInquiry.property && (
                 <div>
-                  <span className="text-xs text-[--muted]">
+                  <span className="text-xs text-[#5A6B7A]">
                     Bezug auf Objekt
                   </span>
                   <p>
                     <Link
                       href={`/immobilien/property/${selectedInquiry.property.slug}`}
-                      className="text-[--primary] hover:underline"
+                      className="text-[#B8860B] hover:underline"
                       target="_blank"
                     >
                       {selectedInquiry.property.title}
@@ -298,19 +298,19 @@ export function AdminInquiries({
                 </div>
               )}
 
-              <div className="border-t border-[--glass-border] pt-4">
-                <span className="text-xs text-[--muted]">Nachricht</span>
-                <p className="mt-2 whitespace-pre-wrap text-[--text]">
+              <div className="border-t border-[#E5E0D8] pt-4">
+                <span className="text-xs text-[#5A6B7A]">Nachricht</span>
+                <p className="mt-2 whitespace-pre-wrap text-[#0A2239]">
                   {selectedInquiry.message}
                 </p>
               </div>
             </div>
 
             {/* Actions */}
-            <div className="mt-6 flex gap-3 border-t border-[--glass-border] pt-6">
+            <div className="mt-6 flex gap-3 border-t border-[#E5E0D8] pt-6">
               <button
                 onClick={() => handleToggleRead(selectedInquiry)}
-                className="flex-1 border border-[--glass-border] bg-[--surface] px-4 py-2 text-sm text-[--text] transition-colors hover:border-[--primary]/30"
+                className="flex-1 border border-[#E5E0D8] bg-[#F9F9F7] px-4 py-2 text-sm text-[#0A2239] transition-colors hover:border-[#B8860B]/30"
               >
                 {selectedInquiry.read ? "Als ungelesen" : "Als gelesen"}
               </button>
