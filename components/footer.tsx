@@ -146,7 +146,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 md:flex-row">
-          <p className="text-sm text-white/60">
+          <p className="text-sm text-white/60" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} NLV Real Estate. Alle Rechte vorbehalten.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm">

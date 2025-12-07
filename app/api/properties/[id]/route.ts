@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
@@ -97,6 +98,9 @@ async function updatePropertyHandler(
       data: validation.data,
     });
 
+    // Revalidate cached property pages
+    revalidateTag("properties", "default");
+
     return NextResponse.json(serializeBigInt(property));
   } catch (error) {
     console.error("[PROPERTY_PATCH_ERROR]", error);
@@ -130,11 +134,14 @@ async function deletePropertyHandler(
     // Soft Delete: Status auf "archived" setzen
     await prisma.property.update({
       where: { id },
-      data: { 
+      data: {
         status: "archived",
         recommended: false,
       },
     });
+
+    // Revalidate cached property pages
+    revalidateTag("properties", "default");
 
     return NextResponse.json({ success: true, message: "Property archiviert" });
   } catch (error) {

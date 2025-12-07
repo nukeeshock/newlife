@@ -1,10 +1,25 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/db";
 import { PropertyListingPage } from "@/components/property-listing-page";
 import { serializeBigInt } from "@/lib/serialize";
 import { AddPropertyButton } from "@/components/admin/add-property-button";
 
-export const dynamic = "force-dynamic";
+// ISR: Cache properties for 1 hour, revalidate on-demand via tag
+const getProperties = unstable_cache(
+  async () => {
+    const properties = await prisma.property.findMany({
+      where: {
+        status: { not: "archived" },
+      },
+      orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
+    });
+    return serializeBigInt(properties);
+  },
+  ["properties-list"],
+  { tags: ["properties"], revalidate: 3600 }
+);
 
 export const metadata: Metadata = {
   title: "Alle Immobilien | NLV Real Estate",
@@ -19,12 +34,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ObjektePage() {
-  const properties = await prisma.property.findMany({
-    where: {
-      status: { not: "archived" },
-    },
-    orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
-  });
+  const properties = await getProperties();
 
   return (
     <div className="pt-28 md:pt-32">
@@ -32,7 +42,22 @@ export default async function ObjektePage() {
         {/* Admin: Add Property Button */}
         <AddPropertyButton />
 
-        <PropertyListingPage properties={serializeBigInt(properties)} />
+        <Suspense fallback={<PropertyListingFallback />}>
+          <PropertyListingPage properties={properties} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+function PropertyListingFallback() {
+  return (
+    <div className="space-y-8 animate-pulse">
+      <div className="h-8 w-48 bg-[--glass] rounded" />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div key={i} className="h-80 bg-[--glass] rounded" />
+        ))}
       </div>
     </div>
   );

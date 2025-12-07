@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { serializeBigInt } from "@/lib/serialize";
@@ -52,6 +53,9 @@ async function restorePropertyHandler(
       where: { id },
       data: { status: "available" },
     });
+
+    // Revalidate cached property pages
+    revalidateTag("properties", "default");
 
     return NextResponse.json(serializeBigInt(property));
   } catch (error) {

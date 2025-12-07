@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { Badge } from "@/components/ui/badge";
 import { Gallery } from "@/components/gallery";
 import { PropertyContactCTA } from "@/components/property-contact-cta";
@@ -20,7 +21,28 @@ import { PropertySchema, BreadcrumbSchema } from "@/components/seo/json-ld";
 import { Breadcrumb } from "@/components/breadcrumb";
 import type { Property } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+// ISR: Cache individual property for 1 hour
+const getPropertyBySlug = unstable_cache(
+  async (slug: string) => {
+    return prisma.property.findUnique({
+      where: { slug },
+    });
+  },
+  ["property-detail"],
+  { tags: ["properties"], revalidate: 3600 }
+);
+
+// Cached version for metadata
+const getPropertyMetadata = unstable_cache(
+  async (slug: string) => {
+    return prisma.property.findUnique({
+      where: { slug },
+      select: { title: true, description: true, city: true, images: true, priceEUR: true },
+    });
+  },
+  ["property-metadata"],
+  { tags: ["properties"], revalidate: 3600 }
+);
 
 interface PropertyPageProps {
   params: Promise<{ slug: string }>;
@@ -28,10 +50,7 @@ interface PropertyPageProps {
 
 export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const property = await prisma.property.findUnique({
-    where: { slug },
-    select: { title: true, description: true, city: true, images: true, priceEUR: true },
-  });
+  const property = await getPropertyMetadata(slug);
 
   if (!property) {
     return { title: "Property nicht gefunden" };
@@ -60,10 +79,8 @@ export async function generateMetadata({ params }: PropertyPageProps): Promise<M
 
 export default async function PropertyDetailPage({ params }: PropertyPageProps) {
   const { slug } = await params;
-  
-  const property = await prisma.property.findUnique({
-    where: { slug },
-  });
+
+  const property = await getPropertyBySlug(slug);
 
   if (!property) {
     notFound();
@@ -118,6 +135,7 @@ export default async function PropertyDetailPage({ params }: PropertyPageProps) 
           images: property.images,
           status: property.status,
         }}
+        datePosted={property.createdAt.toISOString()}
       />
       <BreadcrumbSchema
         items={[

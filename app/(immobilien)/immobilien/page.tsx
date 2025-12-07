@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { Hero } from "@/components/hero";
 import { FeaturedProperties } from "@/components/featured-properties";
 import { CtaSection } from "@/components/cta-section";
@@ -6,7 +7,27 @@ import { prisma } from "@/lib/db";
 import { serializeBigInt } from "@/lib/serialize";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
+// ISR: Cache featured properties for 1 hour
+const getFeaturedData = unstable_cache(
+  async () => {
+    const [featured, totalCount] = await Promise.all([
+      prisma.property.findMany({
+        where: {
+          recommended: true,
+          status: { not: "archived" },
+        },
+        orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
+        take: 6,
+      }),
+      prisma.property.count({
+        where: { status: { not: "archived" } },
+      }),
+    ]);
+    return { featured: serializeBigInt(featured), totalCount };
+  },
+  ["featured-properties"],
+  { tags: ["properties"], revalidate: 3600 }
+);
 
 export const metadata: Metadata = {
   title: "NLV Real Estate - Exklusive Immobilien in Vietnam",
@@ -15,19 +36,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ImmobilienPage() {
-  const [featured, totalCount] = await Promise.all([
-    prisma.property.findMany({
-      where: {
-        recommended: true,
-        status: { not: "archived" },
-      },
-      orderBy: [{ popularity: "asc" }, { createdAt: "desc" }],
-      take: 6,
-    }),
-    prisma.property.count({
-      where: { status: { not: "archived" } },
-    }),
-  ]);
+  const { featured, totalCount } = await getFeaturedData();
 
   return (
     <>
@@ -38,7 +47,7 @@ export default async function ImmobilienPage() {
         <div className="divider-gold" />
       </div>
 
-      <FeaturedProperties properties={serializeBigInt(featured)} />
+      <FeaturedProperties properties={featured} />
 
       {/* Divider */}
       <div className="mx-auto w-full max-w-6xl px-6 md:px-8">

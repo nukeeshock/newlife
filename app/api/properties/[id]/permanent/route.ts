@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { del } from "@vercel/blob";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
@@ -50,6 +51,9 @@ async function permanentDeleteHandler(
     await prisma.property.delete({
       where: { id },
     });
+
+    // Revalidate cached property pages
+    revalidateTag("properties", "default");
 
     return NextResponse.json({
       success: true,

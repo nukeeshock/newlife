@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { prisma } from "@/lib/db";
 import { withAdminAuth, AuthenticatedRequest } from "@/lib/middleware/admin-auth";
 import { createPropertySchema, validate, formatZodErrors } from "@/lib/validations";
@@ -177,6 +178,9 @@ async function createPropertyHandler(request: AuthenticatedRequest) {
         { status: 500 }
       );
     }
+
+    // Revalidate cached property pages
+    revalidateTag("properties", "default");
 
     return NextResponse.json(serializeBigInt(property), { status: 201 });
   } catch (error) {

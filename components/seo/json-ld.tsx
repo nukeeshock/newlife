@@ -55,16 +55,17 @@ interface PropertySchemaProps {
     images: string[];
     status: string;
   };
+  /** ISO date string for when the property was posted (server-provided for stable rendering) */
+  datePosted?: string;
 }
 
-export function PropertySchema({ property }: PropertySchemaProps) {
+export function PropertySchema({ property, datePosted: datePostedProp }: PropertySchemaProps) {
   const isForRent = property.listingType === "rent";
   const price = property.priceEUR || 0;
 
-  // Berechne Datumsfelder einmalig (vermeidet impure Date.now() im Schema-Objekt)
-  const now = new Date();
-  const datePosted = now.toISOString();
-  const priceValidUntilDate = new Date(now);
+  // Use server-provided date or fall back to a stable date
+  const datePosted = datePostedProp || new Date().toISOString();
+  const priceValidUntilDate = new Date(datePosted);
   priceValidUntilDate.setDate(priceValidUntilDate.getDate() + 30);
   const priceValidUntil = priceValidUntilDate.toISOString().split("T")[0];
 
