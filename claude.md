@@ -17,19 +17,50 @@ Eine **Next.js 16** Real Estate Listing-Plattform für Premium-Mietobjekte in Vi
 | Technologie | Version | Zweck |
 |-------------|---------|-------|
 | Next.js | 16.0.7 | Framework (Turbopack) |
-| React | 19.2.0 | UI Library |
+| React | 19.2.1 | UI Library |
 | Tailwind CSS | 4 | Styling |
 | TypeScript | 5 | Type Safety |
 | Prisma | 5.22.0 | ORM |
 | PostgreSQL | Neon.tech | Datenbank |
 | Vercel Blob | - | Bild-Storage |
-| **Upstash Redis** | @upstash/redis | **Rate Limiting (Serverless)** |
+| **Upstash Redis** | @upstash/redis, @upstash/ratelimit | **Rate Limiting (Serverless)** |
 | Sentry | @sentry/nextjs 10.x | Error Tracking |
 | jose | 6.1.3 | JWT |
 | bcrypt | 6.0.0 | Passwort-Hashing |
 | zod | 4.1.13 | Validierung |
 | sharp | 0.34.5 | Bildverarbeitung |
 | pnpm | - | Package Manager |
+
+---
+
+## Entwicklung
+
+```bash
+pnpm dev          # Starten (Turbopack)
+pnpm build        # Build
+pnpm lint         # ESLint
+pnpm tsc --noEmit # TypeScript Check (ohne Build)
+pnpm db:push      # Schema pushen
+pnpm db:seed      # Testdaten + Admin (mit bcrypt Hash!)
+pnpm db:studio    # Prisma Studio
+```
+
+---
+
+## App-Struktur (Route Groups)
+
+```
+app/
+├── (goldzeit)/      # Goldzeit Living Theme (Orange-Akzente)
+│   └── goldzeit/    # /goldzeit/* Seiten
+├── (immobilien)/    # NLV Real Estate (Standard Theme)
+│   └── immobilien/  # /immobilien/* Seiten
+├── admin/           # Admin Dashboard
+├── api/             # API Routes
+└── login/           # Versteckter Login
+```
+
+Route Groups `(goldzeit)` und `(immobilien)` ermöglichen unterschiedliche Layouts/Themes ohne URL-Präfix.
 
 ---
 
@@ -232,6 +263,14 @@ async headers() {
 | `/api/t/e` | POST | - | Event loggen (Rate Limited) |
 | `/api/t/stats` | GET | Admin | Aggregierte Stats (Promise.all optimiert) |
 
+### Admin-Benutzer
+| Route | Method | Auth | Beschreibung |
+|-------|--------|------|--------------|
+| `/api/admins` | GET | Admin | Alle Admins abrufen |
+| `/api/admins` | POST | Admin | Neuen Admin erstellen (bcrypt Hash) |
+| `/api/admins/[id]` | PATCH | Admin | Admin bearbeiten (inkl. Passwort ändern) |
+| `/api/admins/[id]` | DELETE | Admin | Admin löschen (Selbstlöschung verhindert) |
+
 ### Monitoring (Sentry Tunnel)
 | Route | Method | Auth | Beschreibung |
 |-------|--------|------|--------------|
@@ -262,6 +301,7 @@ Verfügbare Schemas:
 - `loginSchema` - Email + Passwort
 - `createPropertySchema` / `updatePropertySchema`
 - `createCitySchema` / `updateCitySchema`
+- `createAdminSchema` / `updateAdminSchema` - Admin CRUD (Passwort optional bei Update)
 - `contactFormSchema` - Name, Email, Phone?, Message
 - `createSessionSchema`, `createPageviewSchema`, `createEventSchema`, `endSessionSchema`
 
@@ -403,30 +443,46 @@ const SENTRY_PROJECT_ID = process.env.SENTRY_PROJECT_ID || "4510467289251920";
 
 ---
 
-## Design System "Midnight Champagne"
+## Design System "Warm Light Premium"
 
 ```css
---bg: #08090d;           /* Tiefes Midnight */
---surface: #0d0f14;      /* Oberflächen */
---card: #12141a;         /* Karten */
---text: #f5f3ef;         /* Cremeweiß */
---muted: #a09a90;        /* Warmes Grau */
---primary: #c9a962;      /* Champagner-Gold */
---glass: rgba(245, 243, 239, 0.03);
---glass-border: rgba(245, 243, 239, 0.08);
+/* NLV Real Estate (Standard) */
+--bg: #F9F9F7;           /* Warmes Off-White */
+--surface: #FFFFFF;      /* Reine Oberflächen */
+--card: #FFFFFF;         /* Karten */
+--text: #0A2239;         /* Deep Navy */
+--text-secondary: #1A3A52;
+--muted: #5A6B7A;        /* Warmes Grau */
+--primary: #B8860B;      /* Warm Gold */
+--primary-hover: #DAA520;
+--border: #E5E0D8;       /* Subtle warmth */
+--glass: rgba(10, 34, 57, 0.03);
+--glass-border: rgba(10, 34, 57, 0.08);
 ```
+
+### Goldzeit Living Theme (Orange-Akzente)
+```css
+.goldzeit-theme {
+  --bg: #FDF8F3;
+  --primary: #ea580c;      /* Orange */
+  --primary-hover: #f97316;
+  --accent: #c2410c;
+}
+```
+Aktiviert auf `/goldzeit/*` Seiten via `<html class="goldzeit-theme">`.
 
 - **Headlines**: Cormorant Garamond (Serif)
 - **Body**: Geist Sans
 - **Keine rounded corners** = Premium Look
-- **Hintergrund**: `/da-nang.jpg` mit 35% Opacity
 
-### Native Select Styling
-```css
-select option {
-  background-color: #1a1a1a;
-  color: #f5f3ef;
-}
+### Portal/Modal Styling (WICHTIG!)
+CSS-Variablen funktionieren nicht zuverlässig in `createPortal`-Modals. Für Modals explizite Hex-Farben verwenden:
+```typescript
+// ❌ Nicht in Modals:
+className="bg-[--card] text-[--text]"
+
+// ✅ Stattdessen:
+className="bg-white text-[#0A2239]"
 ```
 
 ---
@@ -466,10 +522,17 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 ## Admin-Funktionen
 
 ### Nach Login:
-1. **Admin-Bar** (unten): Logout, /admin, /admin/analytics Links
+1. **Admin-Bar** (unten): Dashboard, Analytics, Benutzer, Logout
 2. **Property Actions**: ★ Empfehlen, Status ändern (inkl. "Verkauft"), Soft Delete
 3. **Admin Dashboard** (`/admin`): Archiv + Städte Tabs
 4. **Analytics** (`/admin/analytics`): Stats & Charts
+5. **Benutzer** (`/admin/users`): Admin-Accounts verwalten
+
+### Admin-Benutzer-Verwaltung (`/admin/users`)
+- **Admins hinzufügen**: E-Mail, Passwort (min. 8 Zeichen), Name (optional)
+- **Admins bearbeiten**: E-Mail, Name, Passwort ändern (optional)
+- **Admins löschen**: Selbstlöschung verhindert, Sessions werden beendet
+- **Stats**: Gesamt Admins, Mit Namen, Neuester Admin
 
 ### Property Status Optionen
 - `available` - Verfügbar
@@ -484,27 +547,6 @@ ADMIN_PASSWORD="..." # Für Seed (Standard: Passwort123123)
 
 ### Archiv Links
 Property-Links im Archiv zeigen auf `/immobilien/property/[slug]`
-
----
-
-## Entwicklung
-
-```bash
-pnpm dev          # Starten (Turbopack)
-pnpm build        # Build
-pnpm lint         # ESLint
-pnpm tsc --noEmit # TypeScript Check (ohne Build)
-pnpm db:push      # Schema pushen
-pnpm db:seed      # Testdaten + Admin (mit bcrypt Hash!)
-pnpm db:studio    # Prisma Studio
-```
-
-### Turbopack Config (next.config.ts)
-```typescript
-turbopack: {
-  root: process.cwd(),
-},
-```
 
 ---
 
@@ -551,8 +593,8 @@ clearTimeout(timeoutId);
 1. **JWT_SECRET** MUSS gesetzt sein (min. 32 Zeichen) - App crasht sonst!
 2. **KV_REST_API_URL + KV_REST_API_TOKEN** für Rate Limiting erforderlich
 3. **ANALYTICS_SALT** sollte gesetzt sein für DSGVO-Konformität
-4. **Passwörter** MÜSSEN bcrypt-gehashed sein (Klartext wird abgelehnt!)
-5. **Admin-Accounts** nur via `pnpm db:seed` oder Prisma Studio erstellen
+4. **Passwörter** werden automatisch bcrypt-gehashed (12 Rounds)
+5. **Admin-Accounts** via `/admin/users`, `pnpm db:seed` oder Prisma Studio erstellen
 6. **Refresh Token Rotation** ist aktiv - gestohlene Tokens werden ungültig
 
 ### Architektur
@@ -565,31 +607,6 @@ clearTimeout(timeoutId);
 11. **.next Ordner löschen** bei Turbopack-Problemen: `rm -rf .next`
 12. **Prisma regenerieren** nach Schema-Änderung: `pnpm prisma generate`
 13. **Rate Limit testen**: 6+ Requests an `/api/auth/login` → 429 ab Request 6
-
----
-
-## TODO / Später geplant
-
-### Priorität MITTEL
-- [ ] **Aggregierte Daily-Snapshots** für Analytics (Performance bei vielen Daten)
-
-### Priorität NIEDRIG
-- [ ] **E-Mail-Benachrichtigungen** bei neuen Kontaktanfragen
-- [ ] **Multi-Admin Support** mit Rollen
-- [ ] **Property-Änderungshistorie** (Audit Log)
-
-### Nice-to-have
-- [ ] **Kartenansicht** mit Google Maps oder Mapbox
-- [ ] **Favoriten** für Besucher (localStorage)
-- [ ] **PDF-Export** für Property-Exposés
-
-### Erledigt
-- [x] **Upstash Redis Rate Limiting** - Serverless-kompatibel
-- [x] **Refresh Token Rotation** - Security Fix
-- [x] **Security Headers** - X-Frame-Options, CSP, etc.
-- [x] **Sentry Tunnel** - Umgeht Ad-Blocker
-- [x] **Image Cleanup** - Bei Delete und Failed Create
-- [x] **Drag & Drop Upload** - Mit Timeout
 
 ---
 
