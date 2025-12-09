@@ -1,4 +1,4 @@
-export function GoldzeitFeatures() {
+export function BestAgerFeatures() {
   return (
     <section className="relative overflow-hidden bg-[--surface] py-24">
       {/* Decorative BG element */}

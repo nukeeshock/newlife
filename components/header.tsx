@@ -38,11 +38,10 @@ export function Header() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${scrolled
           ? "border-b border-[--border] bg-white/95 shadow-sm backdrop-blur-xl"
           : "bg-white/80 backdrop-blur-sm"
-      }`}
+        }`}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 md:px-8">
         {/* Logo */}
@@ -76,9 +75,8 @@ export function Header() {
           >
             <button
               type="button"
-              className={`flex cursor-pointer items-center gap-1.5 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${
-                citiesOpen ? "text-[--primary]" : "text-[--muted] hover:text-[--primary]"
-              }`}
+              className={`flex cursor-pointer items-center gap-1.5 py-2 text-sm font-medium tracking-wide transition-colors duration-300 ${citiesOpen ? "text-[--primary]" : "text-[--muted] hover:text-[--primary]"
+                }`}
             >
               Städte
               <svg
@@ -94,9 +92,8 @@ export function Header() {
 
             {/* Dropdown Menu - pt-2 creates invisible bridge for hover */}
             <div
-              className={`absolute left-0 top-full min-w-[180px] pt-2 transition-all duration-200 ${
-                citiesOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0 pointer-events-none"
-              }`}
+              className={`absolute left-0 top-full min-w-[180px] pt-2 transition-all duration-200 ${citiesOpen ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0 pointer-events-none"
+                }`}
             >
               <div className="border border-[--border] bg-white shadow-lg">
                 {cityLinks.map((city) => (
@@ -139,10 +136,10 @@ export function Header() {
         {/* Desktop CTA - Right */}
         <div className="hidden items-center gap-6 lg:flex">
           <Link
-            href="/goldzeit"
+            href="/best-ager-residences"
             className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-orange-500 transition-colors duration-300 hover:text-orange-400"
           >
-            NLV Goldzeit Living
+            Best Ager Residences
             <svg
               aria-hidden="true"
               className="h-3.5 w-3.5"
@@ -170,14 +167,12 @@ export function Header() {
         >
           <div className="flex flex-col gap-1.5">
             <span
-              className={`h-px w-5 bg-current transition-all duration-300 ${
-                mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
-              }`}
+              className={`h-px w-5 bg-current transition-all duration-300 ${mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
+                }`}
             />
             <span
-              className={`h-px w-5 bg-current transition-all duration-300 ${
-                mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
-              }`}
+              className={`h-px w-5 bg-current transition-all duration-300 ${mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
+                }`}
             />
           </div>
         </button>
@@ -185,9 +180,8 @@ export function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`overflow-hidden border-t border-[--border] bg-white/98 backdrop-blur-xl transition-all duration-500 ease-out lg:hidden ${
-          mobileOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden border-t border-[--border] bg-white/98 backdrop-blur-xl transition-all duration-500 ease-out lg:hidden ${mobileOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <nav className="mx-auto flex w-full max-w-6xl flex-col px-6 py-4 md:px-8">
           {/* Städte Accordion */}
@@ -198,9 +192,8 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMobileCitiesOpen(!mobileCitiesOpen)}
-              className={`flex w-full items-center justify-between py-5 text-base font-medium tracking-wide transition-colors ${
-                mobileCitiesOpen ? "text-[--primary]" : "text-[--text] hover:text-[--primary]"
-              }`}
+              className={`flex w-full items-center justify-between py-5 text-base font-medium tracking-wide transition-colors ${mobileCitiesOpen ? "text-[--primary]" : "text-[--text] hover:text-[--primary]"
+                }`}
             >
               <span className="flex items-center gap-3">
                 <svg
@@ -226,9 +219,8 @@ export function Header() {
               </svg>
             </button>
             <div
-              className={`overflow-hidden transition-all duration-300 ease-out ${
-                mobileCitiesOpen ? "max-h-[250px] opacity-100 pb-3" : "max-h-0 opacity-0"
-              }`}
+              className={`overflow-hidden transition-all duration-300 ease-out ${mobileCitiesOpen ? "max-h-[250px] opacity-100 pb-3" : "max-h-0 opacity-0"
+                }`}
             >
               {cityLinks.map((city, i) => (
                 <Link
@@ -294,9 +286,9 @@ export function Header() {
             Kontakt
           </Link>
 
-          {/* Link to Goldzeit */}
+          {/* Link to Best Ager Residences */}
           <Link
-            href="/goldzeit"
+            href="/best-ager-residences"
             onClick={() => setMobileOpen(false)}
             className={`mt-4 flex items-center justify-center gap-2 border border-orange-500/30 bg-orange-500/10 py-4 text-sm font-medium tracking-wide text-orange-500 transition-all duration-300 hover:bg-orange-500 hover:text-white active:scale-[0.98] ${mobileOpen ? "animate-slideInLeft opacity-0-initial" : ""}`}
             style={{ animationDelay: "300ms" }}
@@ -310,7 +302,7 @@ export function Header() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            NLV Goldzeit Living
+            Best Ager Residences
           </Link>
 
           {/* Messenger Buttons */}

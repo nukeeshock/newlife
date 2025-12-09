@@ -10,7 +10,7 @@ const contactButtons = [
   { href: CONTACT_LINKS.email, Icon: EmailIcon, label: "E-Mail", bg: "#38BDF8" },
 ];
 
-export function GoldzeitCta() {
+export function BestAgerCta() {
   return (
     <section className="bg-[--bg] py-24">
       <div className="container mx-auto max-w-xl px-6 md:px-8">
@@ -25,7 +25,7 @@ export function GoldzeitCta() {
 
         <div className="space-y-4">
           <Link
-            href="/goldzeit/kontakt"
+            href="/best-ager-residences/kontakt"
             className="animate-fadeInUp delay-200 opacity-0-initial flex w-full items-center justify-center gap-3 bg-[--primary] py-4 font-bold text-white transition-all duration-300 hover:bg-[--primary-hover] hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
           >
             Kostenlose Beratung anfordern

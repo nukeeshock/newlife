@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Projektübersicht
 
-Eine **Next.js 16** Real Estate Listing-Plattform für Premium-Mietobjekte in Vietnam. Die Website präsentiert Villas, Apartments, Private Residences und Commercial-Flächen in Da Nang, Hoi An und Ho Chi Minh City.
+NLV Real Estate für exklusive Immobilien und Best Ager Residences für Co-Living in Da Nang, Hoi An und Ho Chi Minh City.
 
 **Zielgruppe**: Wohlhabende Auswanderer (45+ Software Devs, Rentner), die eine "Private Concierge Service"-Erfahrung erwarten.
 
@@ -51,16 +51,16 @@ pnpm db:studio    # Prisma Studio
 
 ```
 app/
-├── (goldzeit)/      # Goldzeit Living Theme (Orange-Akzente)
-│   └── goldzeit/    # /goldzeit/* Seiten
-├── (immobilien)/    # NLV Real Estate (Standard Theme)
+├── (best-ager)/      # Best Ager Residences Theme (Orange-Akzente)
+│   └── best-ager-residences/    # /best-ager-residences/* Seiten
+├── (immobilien)/    # NLV Real Estate und Best Ager Residences - Ihr Partner in Vietnam.
 │   └── immobilien/  # /immobilien/* Seiten
 ├── admin/           # Admin Dashboard
 ├── api/             # API Routes
 └── login/           # Versteckter Login
 ```
 
-Route Groups `(goldzeit)` und `(immobilien)` ermöglichen unterschiedliche Layouts/Themes ohne URL-Präfix.
+Route Groups `(best-ager)` und `(immobilien)` ermöglichen unterschiedliche Layouts/Themes ohne URL-Präfix.
 
 ---
 
@@ -460,16 +460,16 @@ const SENTRY_PROJECT_ID = process.env.SENTRY_PROJECT_ID || "4510467289251920";
 --glass-border: rgba(10, 34, 57, 0.08);
 ```
 
-### Goldzeit Living Theme (Orange-Akzente)
+### Best Ager Residences Theme (Orange-Akzente)
 ```css
-.goldzeit-theme {
+.best-ager-theme {
   --bg: #FDF8F3;
   --primary: #ea580c;      /* Orange */
   --primary-hover: #f97316;
   --accent: #c2410c;
 }
 ```
-Aktiviert auf `/goldzeit/*` Seiten via `<html class="goldzeit-theme">`.
+Aktiviert auf `/best-ager-residences/*` Seiten via `<html class="best-ager-theme">`.
 
 - **Headlines**: Cormorant Garamond (Serif)
 - **Body**: Geist Sans

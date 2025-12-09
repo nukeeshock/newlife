@@ -1,9 +1,9 @@
-export function GoldzeitTeam() {
+export function BestAgerTeam() {
   return (
     <section className="border-t border-white/5 bg-[--surface] py-24">
       <div className="container mx-auto max-w-3xl px-6 text-center md:px-8">
         <h2 className="mb-8 font-serif text-2xl font-light text-[--text]">
-          NLV Goldzeit Living - Ihre Brücke nach Asien
+          Best Ager Residences - Ihre Brücke nach Asien
         </h2>
         <p className="mb-10 leading-relaxed text-[--muted]">
           Wir sind kein anonymes Portal. Unser Team besteht aus deutschen Ansprechpartnern

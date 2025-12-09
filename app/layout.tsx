@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     template: "%s | NewLife Vietnam",
   },
   description:
-    "NLV Real Estate für exklusive Immobilien und NLV Goldzeit Living für Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
+    "NLV Real Estate für exklusive Immobilien und Best Ager Residences für Co-Living in Da Nang, Hoi An und Ho Chi Minh City.",
   keywords: [
     "Immobilien Vietnam",
     "Co-Living Vietnam",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     siteName: "NewLife Vietnam",
     title: "NewLife Vietnam - Immobilien & Co-Living in Vietnam",
     description:
-      "NLV Real Estate und NLV Goldzeit Living - Ihr Partner in Vietnam.",
+      "NLV Real Estate und Best Ager Residences - Ihr Partner in Vietnam.",
     images: [
       {
         url: "/og-image.png",

@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Datenschutz | NLV Goldzeit Living",
-  description: "Datenschutzerklärung von NLV Goldzeit Living",
+  title: "Datenschutz | Best Ager Residences",
+  description: "Datenschutzerklärung von Best Ager Residences",
 };
 
-export default function GoldzeitDatenschutzPage() {
+export default function BestAgerDatenschutzPage() {
   return (
     <div className="py-16">
       <div className="mx-auto w-full max-w-3xl px-6 md:px-8">
@@ -39,7 +39,7 @@ export default function GoldzeitDatenschutzPage() {
               2. Verantwortliche Stelle
             </h2>
             <div className="space-y-2">
-              <p className="font-semibold text-[--text]">NLV Goldzeit Living</p>
+              <p className="font-semibold text-[--text]">Best Ager Residences</p>
               <p>Ein Angebot von NewLife Vietnam</p>
               <p>[Adresse]</p>
               <p>
@@ -128,7 +128,7 @@ export default function GoldzeitDatenschutzPage() {
           {/* Back Link */}
           <div className="mt-12 border-t border-[--glass-border] pt-8">
             <Link
-              href="/goldzeit"
+              href="/best-ager-residences"
               className="inline-flex items-center gap-2 text-sm text-orange-400 transition-colors hover:text-orange-300"
             >
               <svg
@@ -144,7 +144,7 @@ export default function GoldzeitDatenschutzPage() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Zurück zu Goldzeit Living
+              Zurück zu Best Ager Residences
             </Link>
           </div>
         </div>

@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Impressum | NLV Goldzeit Living",
-  description: "Impressum und rechtliche Informationen zu NLV Goldzeit Living",
+  title: "Impressum | Best Ager Residences",
+  description: "Impressum und rechtliche Informationen zu Best Ager Residences",
 };
 
-export default function GoldzeitImpressumPage() {
+export default function BestAgerImpressumPage() {
   return (
     <div className="py-16">
       <div className="mx-auto w-full max-w-3xl px-6 md:px-8">
@@ -26,7 +26,7 @@ export default function GoldzeitImpressumPage() {
               Angaben gemäß § 5 TMG
             </h2>
             <div className="space-y-2">
-              <p className="font-semibold text-[--text]">NLV Goldzeit Living</p>
+              <p className="font-semibold text-[--text]">Best Ager Residences</p>
               <p>Ein Angebot von Palmara Reisekunst LLC</p>
               <p>1209 Mountain Road PL NE STE N</p>
               <p>Albuquerque, NM 87110</p>
@@ -131,7 +131,7 @@ export default function GoldzeitImpressumPage() {
           {/* Back Link */}
           <div className="mt-12 border-t border-[--glass-border] pt-8">
             <Link
-              href="/goldzeit"
+              href="/best-ager-residences"
               className="inline-flex items-center gap-2 text-sm text-orange-400 transition-colors hover:text-orange-300"
             >
               <svg
@@ -147,7 +147,7 @@ export default function GoldzeitImpressumPage() {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-              Zurück zu Goldzeit Living
+              Zurück zu Best Ager Residences
             </Link>
           </div>
         </div>

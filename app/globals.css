@@ -39,9 +39,9 @@
 }
 
 /* ============================================
-   NLV Goldzeit Living Theme - Orange Accents
+   Best Ager Residences Theme - Orange Accents
    ============================================ */
-.goldzeit-theme {
+.best-ager-theme {
   --bg: #FDF8F3;
   --surface: #FFFFFF;
   --card: #FFFFFF;
@@ -63,13 +63,13 @@
   --shadow-glow: 0 0 40px rgba(234, 88, 12, 0.1);
 }
 
-/* Goldzeit Selection */
-.goldzeit-theme ::selection {
+/* Best Ager Selection */
+.best-ager-theme ::selection {
   background: rgba(234, 88, 12, 0.2);
 }
 
-/* Goldzeit Divider */
-.goldzeit-theme .divider-gold {
+/* Best Ager Divider */
+.best-ager-theme .divider-gold {
   background: linear-gradient(90deg, transparent, var(--primary), transparent);
 }
 

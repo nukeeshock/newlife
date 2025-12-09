@@ -14,22 +14,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // NLV Goldzeit Living Seiten
-  const goldzeitPages: MetadataRoute.Sitemap = [
+  // Best Ager Residences Seiten
+  const bestAgerPages: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}/goldzeit`,
+      url: `${baseUrl}/best-ager-residences`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.95,
     },
     {
-      url: `${baseUrl}/goldzeit/konzept`,
+      url: `${baseUrl}/best-ager-residences/konzept`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/goldzeit/kontakt`,
+      url: `${baseUrl}/best-ager-residences/kontakt`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
@@ -114,7 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...gatewayPage,
-    ...goldzeitPages,
+    ...bestAgerPages,
     ...immobilienStaticPages,
     ...typePages,
     ...cityPages,

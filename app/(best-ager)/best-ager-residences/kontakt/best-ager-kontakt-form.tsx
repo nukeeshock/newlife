@@ -14,7 +14,7 @@ interface FormErrors {
   general?: string;
 }
 
-export function GoldzeitKontaktForm() {
+export function BestAgerKontaktForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -58,7 +58,7 @@ export function GoldzeitKontaktForm() {
     setStatus("submitting");
 
     try {
-      // Erstelle spezielle Nachricht für Goldzeit
+      // Erstelle spezielle Nachricht für Best Ager Residences
       const interestLabels: Record<string, string> = {
         "single": "Basis Paket - Einzelzimmer (1.399 EUR)",
         "couple": "Basis Paket - Paar-Zimmer (999 EUR p.P.)",
@@ -67,7 +67,7 @@ export function GoldzeitKontaktForm() {
         "general": "Allgemeine Frage",
       };
 
-      const goldzeitMessage = `[NLV GOLDZEIT LIVING ANFRAGE]
+      const bestAgerMessage = `[BEST AGER RESIDENCES ANFRAGE]
 
 Interesse an: ${interestLabels[formData.interest] || formData.interest}
 
@@ -79,7 +79,7 @@ ${formData.message}`;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
-          message: goldzeitMessage,
+          message: bestAgerMessage,
         }),
       });
 
@@ -152,7 +152,7 @@ ${formData.message}`;
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <a
-              href={`${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Hallo, ich interessiere mich für das Goldzeit Living Konzept.")}`}
+              href={`${CONTACT_LINKS.whatsapp}?text=${encodeURIComponent("Hallo, ich interessiere mich für das Best Ager Residences Konzept.")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-3 bg-[#25D366] py-6 text-white shadow-lg transition-all duration-300 hover:scale-[1.03] hover:shadow-xl active:scale-[0.97]"
@@ -254,11 +254,10 @@ ${formData.message}`;
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className={`w-full border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${
-                    errors.name
-                      ? "border-red-500"
-                      : "border-[--glass-border]"
-                  }`}
+                  className={`w-full border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${errors.name
+                    ? "border-red-500"
+                    : "border-[--glass-border]"
+                    }`}
                   placeholder="Ihr vollständiger Name"
                 />
                 {errors.name && (
@@ -281,11 +280,10 @@ ${formData.message}`;
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className={`w-full border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${
-                    errors.email
-                      ? "border-red-500"
-                      : "border-[--glass-border]"
-                  }`}
+                  className={`w-full border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${errors.email
+                    ? "border-red-500"
+                    : "border-[--glass-border]"
+                    }`}
                   placeholder="ihre@email.de"
                 />
                 {errors.email && (
@@ -352,11 +350,10 @@ ${formData.message}`;
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
                   }
-                  className={`w-full resize-none border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${
-                    errors.message
-                      ? "border-red-500"
-                      : "border-[--glass-border]"
-                  }`}
+                  className={`w-full resize-none border bg-[--surface] px-4 py-3 text-[--text] placeholder-[--muted]/50 outline-none transition-colors focus:border-[--primary] ${errors.message
+                    ? "border-red-500"
+                    : "border-[--glass-border]"
+                    }`}
                   placeholder="Erzählen Sie uns von Ihren Wünschen und stellen Sie Ihre Fragen..."
                 />
                 {errors.message && (

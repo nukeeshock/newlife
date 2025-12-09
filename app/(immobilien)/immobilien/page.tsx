@@ -54,14 +54,14 @@ export default async function ImmobilienPage() {
         <div className="divider-gold" />
       </div>
 
-      {/* Goldzeit Teaser Section */}
+      {/* Best Ager Residences Teaser Section */}
       <section className="py-20">
         <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
           <div className="border border-[--border] bg-white p-8 shadow-sm md:p-12">
             <div className="flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
               <div className="flex-1">
                 <span className="text-xs font-semibold uppercase tracking-[0.3em] text-orange-600">
-                  NLV Goldzeit Living
+                  Best Ager Residences
                 </span>
                 <h2 className="mt-2 font-serif text-2xl font-light text-[--accent] md:text-3xl">
                   Gemeinsam leben in Vietnam
@@ -72,7 +72,7 @@ export default async function ImmobilienPage() {
                 </p>
               </div>
               <Link
-                href="/goldzeit"
+                href="/best-ager-residences"
                 className="flex items-center gap-2 border border-orange-600 bg-orange-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-700"
               >
                 Mehr erfahren

@@ -1,4 +1,4 @@
-export function GoldzeitConcept() {
+export function BestAgerConcept() {
   return (
     <section className="border-t border-white/5 bg-[--bg] py-24">
       <div className="container mx-auto px-6 md:px-8">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export function GoldzeitHero() {
+export function BestAgerHero() {
   const highlights = [
     "Private Zimmer mit Bad in Pool-Villa",
     "Halbpension (2 Mahlzeiten täglich)",
@@ -14,7 +14,7 @@ export function GoldzeitHero() {
       <div className="absolute inset-0 z-0">
         <div
           className="h-full w-full bg-cover bg-center opacity-30 grayscale transition-all duration-[1.2s] hover:grayscale-0"
-          style={{ backgroundImage: "url('/goldzeit-hero.jpg')" }}
+          style={{ backgroundImage: "url('/best-ager-hero.jpg')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[--bg] via-[--bg]/80 to-transparent" />
       </div>

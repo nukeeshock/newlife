@@ -24,10 +24,10 @@ export function Footer() {
               die mehr vom Leben erwarten.
             </p>
             <Link
-              href="/goldzeit"
+              href="/best-ager-residences"
               className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-orange-400 transition-colors hover:text-orange-300"
             >
-              NLV Goldzeit Living
+              Best Ager Residences
               <svg
                 aria-hidden="true"
                 className="h-3 w-3"

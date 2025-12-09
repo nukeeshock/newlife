@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navLinks = [
-  { href: "/goldzeit", label: "Start" },
-  { href: "/goldzeit/konzept", label: "Das Konzept" },
-  { href: "/goldzeit/kontakt", label: "Kontakt" },
+  { href: "/best-ager-residences", label: "Start" },
+  { href: "/best-ager-residences/konzept", label: "Das Konzept" },
+  { href: "/best-ager-residences/kontakt", label: "Kontakt" },
 ];
 
-export function GoldzeitHeader() {
+export function BestAgerHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -23,15 +23,14 @@ export function GoldzeitHeader() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${scrolled
           ? "border-b border-[--glass-border] bg-[--bg]/90 backdrop-blur-xl"
           : "bg-transparent"
-      }`}
+        }`}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 md:px-8">
         {/* Logo */}
-        <Link href="/goldzeit" className="group flex items-center gap-3">
+        <Link href="/best-ager-residences" className="group flex items-center gap-3">
           <Image
             src="/LOGO_NLV.png"
             alt="NLV Logo"
@@ -45,7 +44,7 @@ export function GoldzeitHeader() {
               NLV
             </span>
             <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[--muted]">
-              Goldzeit Living
+              Best Ager Residences
             </span>
           </div>
         </Link>
@@ -91,14 +90,12 @@ export function GoldzeitHeader() {
         >
           <div className="flex flex-col gap-1.5">
             <span
-              className={`h-px w-5 bg-current transition-all duration-300 ${
-                mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
-              }`}
+              className={`h-px w-5 bg-current transition-all duration-300 ${mobileOpen ? "translate-y-[3.5px] rotate-45" : ""
+                }`}
             />
             <span
-              className={`h-px w-5 bg-current transition-all duration-300 ${
-                mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
-              }`}
+              className={`h-px w-5 bg-current transition-all duration-300 ${mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""
+                }`}
             />
           </div>
         </button>
@@ -106,9 +103,8 @@ export function GoldzeitHeader() {
 
       {/* Mobile Menu */}
       <div
-        className={`overflow-hidden border-t border-[--glass-border] bg-[--bg]/98 backdrop-blur-xl transition-all duration-500 ease-out lg:hidden ${
-          mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-        }`}
+        className={`overflow-hidden border-t border-[--glass-border] bg-[--bg]/98 backdrop-blur-xl transition-all duration-500 ease-out lg:hidden ${mobileOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          }`}
       >
         <nav className="mx-auto flex w-full max-w-6xl flex-col px-6 py-4 md:px-8">
           {navLinks.map((link, i) => (

@@ -36,15 +36,15 @@ export function GatewayPage() {
 
       {/* Split Screen Container */}
       <div className="relative flex min-h-screen flex-col lg:flex-row">
-        {/* Left: Goldzeit Living */}
+        {/* Left: Best Ager Residences */}
         <Link
-          href="/goldzeit"
+          href="/best-ager-residences"
           className="group relative flex min-h-[50vh] flex-1 flex-col items-center justify-end px-4 pb-12 pt-24 sm:pb-16 sm:pt-28 lg:min-h-screen lg:justify-center lg:px-8 lg:pb-0 lg:pt-0"
         >
           {/* Background */}
           <div
             className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-105"
-            style={{ backgroundImage: "url(/gateway-goldzeit.jpg)" }}
+            style={{ backgroundImage: "url(/gateway-best-ager.jpg)" }}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-zinc-950/40 to-zinc-950/20 transition-all duration-500 group-hover:via-zinc-950/30" />
           </div>
@@ -65,7 +65,7 @@ export function GatewayPage() {
 
             {/* Title */}
             <h2 className="mt-2 font-serif text-2xl font-normal text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] sm:mt-3 sm:text-3xl lg:text-4xl">
-              Goldzeit Living
+              Best Ager Residences
             </h2>
 
             {/* Description */}

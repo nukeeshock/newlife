@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { CONTACT_LINKS, WhatsAppIcon, LineIcon, ZaloIcon, EmailIcon } from "@/components/contact-buttons";
 
-export function GoldzeitFooter() {
+export function BestAgerFooter() {
   return (
     <footer className="bg-[#0A2239] text-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-16 md:px-8 md:py-20">
@@ -13,10 +13,10 @@ export function GoldzeitFooter() {
           <div className="space-y-5 lg:col-span-1">
             <div className="flex flex-col leading-tight">
               <span className="text-xs font-medium uppercase tracking-[0.35em] text-orange-400">
-                NLV Goldzeit
+                Best Ager
               </span>
               <span className="font-serif text-2xl font-light tracking-wide text-white">
-                Living
+                Residences
               </span>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-white/70">
@@ -47,19 +47,19 @@ export function GoldzeitFooter() {
             </h4>
             <div className="flex flex-col gap-3 text-sm">
               <Link
-                href="/goldzeit"
+                href="/best-ager-residences"
                 className="text-white/80 transition-colors hover:text-orange-400"
               >
                 Start
               </Link>
               <Link
-                href="/goldzeit/konzept"
+                href="/best-ager-residences/konzept"
                 className="text-white/80 transition-colors hover:text-orange-400"
               >
                 Das Konzept
               </Link>
               <Link
-                href="/goldzeit/kontakt"
+                href="/best-ager-residences/kontakt"
                 className="text-white/80 transition-colors hover:text-orange-400"
               >
                 Kontakt
@@ -144,17 +144,17 @@ export function GoldzeitFooter() {
         {/* Bottom Bar */}
         <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-white/10 pt-8 md:flex-row">
           <p className="text-sm text-white/60">
-            &copy; {new Date().getFullYear()} NLV Goldzeit Living. Alle Rechte vorbehalten.
+            &copy; {new Date().getFullYear()} Best Ager Residences. Alle Rechte vorbehalten.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
             <Link
-              href="/goldzeit/impressum"
+              href="/best-ager-residences/impressum"
               className="text-white/60 transition-colors hover:text-orange-400"
             >
               Impressum
             </Link>
             <Link
-              href="/goldzeit/datenschutz"
+              href="/best-ager-residences/datenschutz"
               className="text-white/60 transition-colors hover:text-orange-400"
             >
               Datenschutz

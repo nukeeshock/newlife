@@ -1,4 +1,4 @@
-export function GoldzeitPricing() {
+export function BestAgerPricing() {
   const basisFeatures = [
     "Möbliertes Zimmer + Bad",
     "Halbpension (2 Mahlzeiten)",
@@ -77,7 +77,7 @@ export function GoldzeitPricing() {
 
             {/* CTA Button */}
             <a
-              href="/goldzeit/kontakt"
+              href="/best-ager-residences/kontakt"
               className="mt-10 block w-full border-2 border-black bg-transparent py-4 text-center text-sm font-bold uppercase tracking-wider text-black transition-all duration-300 hover:bg-black hover:!text-white hover:scale-[1.02] active:scale-[0.98]"
             >
               Angebot Anfragen
@@ -162,7 +162,7 @@ export function GoldzeitPricing() {
             </div>
 
             <a
-              href="/goldzeit/kontakt"
+              href="/best-ager-residences/kontakt"
               className="mt-10 block w-full border-2 border-black bg-transparent py-4 text-center text-sm font-bold uppercase tracking-wider text-black transition-all duration-300 hover:bg-black hover:!text-white hover:scale-[1.02] active:scale-[0.98]"
             >
               Upgrade Anfragen

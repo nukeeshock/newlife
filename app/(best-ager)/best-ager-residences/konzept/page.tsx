@@ -2,18 +2,18 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Das Konzept - NLV Goldzeit Living",
+  title: "Das Konzept - Best Ager Residences",
   description:
     "Erfahren Sie alles über unser Shared Living Konzept in Vietnam. Pool-Villen, Gemeinschaft, Vollpension und deutschsprachige Betreuung für Best Ager.",
   openGraph: {
-    title: "Das Goldzeit Living Konzept",
+    title: "Das Best Ager Residences Konzept",
     description:
       "Gemeinsam leben in Vietnam - das innovative Co-Living Konzept für Menschen ab 50+.",
     type: "website",
   },
 };
 
-export default function GoldzeitKonzeptPage() {
+export default function BestAgerKonzeptPage() {
   return (
     <div className="py-16">
       <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
@@ -63,7 +63,7 @@ export default function GoldzeitKonzeptPage() {
               Unsere Lösung: Shared Living in Vietnam
             </h2>
             <p className="mb-6 leading-relaxed text-[--muted]">
-              NLV Goldzeit Living bietet Ihnen das Beste aus beiden Welten: Die Privatsphäre
+              Best Ager Residences bietet Ihnen das Beste aus beiden Welten: Die Privatsphäre
               eines eigenen Zimmers mit Bad, kombiniert mit der Gemeinschaft einer
               Wohngruppe in einer luxuriösen Pool-Villa.
             </p>
@@ -246,7 +246,7 @@ export default function GoldzeitKonzeptPage() {
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link
-              href="/goldzeit/kontakt"
+              href="/best-ager-residences/kontakt"
               className="bg-[--primary] px-8 py-4 text-center font-bold text-white transition-all hover:bg-[--primary-hover]"
             >
               Kostenlose Beratung
