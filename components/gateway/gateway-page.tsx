@@ -6,8 +6,8 @@ import Link from "next/link";
 export function GatewayPage() {
   return (
     <div className="relative min-h-screen bg-zinc-950">
-      {/* Floating Logo - Mobil: oben, Desktop: Mitte */}
-      <div className="pointer-events-none absolute inset-x-0 top-4 z-30 flex justify-center sm:top-6 lg:inset-0 lg:items-center">
+      {/* Floating Logo - Zentriert auf allen Bildschirmgrößen */}
+      <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
         <div className="group flex flex-col items-center">
           {/* Logo with glow effect */}
           <div className="relative">
@@ -70,7 +70,7 @@ export function GatewayPage() {
 
             {/* Description */}
             <p className="mx-auto mt-3 max-w-[280px] text-sm font-medium leading-relaxed text-white/90 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:mt-4 sm:max-w-xs sm:text-base">
-              Pool-Villen, Gemeinschaft, Vollpension - Das Co-Living Konzept für Best Ager
+              Sicherheit, selbstbestimmtes Leben und gesunde Ernährung in wunderschönen Immobilien
             </p>
 
             {/* CTA */}

@@ -114,9 +114,32 @@ export function BestAgerPricing() {
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-[--text]">Wellness &amp; Beauty</h4>
-                  <p className="mt-1 text-xs text-[--muted]">
-                    1x Massage/Woche, 1x Yoga/Woche, 1x Maniküre/Pediküre &amp; Haarschnitt pro Monat.
-                  </p>
+                  <ul className="mt-2 space-y-1.5">
+                    <li className="flex items-center gap-2 text-sm text-[--muted]">
+                      <svg aria-hidden="true" className="h-4 w-4 shrink-0 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="font-medium text-[--text]">1x Massage</span> pro Woche
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-[--muted]">
+                      <svg aria-hidden="true" className="h-4 w-4 shrink-0 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="font-medium text-[--text]">1x Yoga</span> pro Woche
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-[--muted]">
+                      <svg aria-hidden="true" className="h-4 w-4 shrink-0 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="font-medium text-[--text]">1x Maniküre/Pediküre</span> pro Monat
+                    </li>
+                    <li className="flex items-center gap-2 text-sm text-[--muted]">
+                      <svg aria-hidden="true" className="h-4 w-4 shrink-0 text-[--primary]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="font-medium text-[--text]">1x Haarschnitt</span> pro Monat
+                    </li>
+                  </ul>
                 </div>
               </div>
 
