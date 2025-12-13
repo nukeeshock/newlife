@@ -46,7 +46,7 @@ async function cleanupOldAnalytics() {
     });
 
     if (deleted.count > 0) {
-      // console.log(`[ANALYTICS_CLEANUP] ${deleted.count} alte Sessions gelöscht`);
+      // Cleanup erfolgreich, keine Ausgabe nötig
     }
   } catch {
     // Cleanup-Fehler ignorieren, nicht blockierend

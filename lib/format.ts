@@ -79,7 +79,6 @@ export function formatType(type: string): string {
 /**
  * Konvertiert EUR zu VND (ungefährer Wechselkurs)
  * Aktueller Kurs: ~30,700 VND = 1 EUR (Stand: Dezember 2024)
- * TODO: Move this to an environment variable or fetch dynamically
  */
 export const VND_EUR_RATE = 30700;
 
