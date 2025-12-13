@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -15,22 +16,38 @@ export const metadata: Metadata = {
 
 export default function BestAgerKonzeptPage() {
   return (
-    <div className="py-16">
-      <div className="mx-auto w-full max-w-6xl px-6 md:px-8">
-        {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative flex min-h-[60vh] items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/bg-konzept.png"
+            alt="Best Ager Residences Konzept - Villa mit Pool"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-zinc-950/70" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
           <span className="text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
             Das Konzept
           </span>
-          <h1 className="mt-4 font-serif text-4xl font-light text-[--text] md:text-5xl">
+          <h1 className="mt-4 font-serif text-4xl font-light text-white md:text-5xl lg:text-6xl">
             Gemeinsam leben. <span className="italic text-[--primary]">Selbstbestimmt.</span>
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-[--muted]">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-zinc-200">
             Stellen Sie sich vor: Sie wachen auf in einer luxuriösen Pool-Villa,
             umgeben von Gleichgesinnten, mit allem was Sie brauchen - und das zu einem
             Bruchteil dessen, was es in Europa kosten würde.
           </p>
         </div>
+      </section>
+
+      <div className="mx-auto w-full max-w-6xl px-6 py-16 md:px-8">
+
 
         {/* Divider */}
         <div className="mx-auto my-16 max-w-xs">
@@ -265,6 +282,6 @@ export default function BestAgerKonzeptPage() {
           </div>
         </section>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -11,16 +12,28 @@ export default function UeberUnsPage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-20">
+      <section className="relative flex min-h-[70vh] items-center justify-center px-6 pt-32 pb-20 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/bg-ueber-uns.png"
+            alt="NewLife Vietnam - Wer wir sind"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-zinc-950/80" />
+        </div>
+
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <p className="mb-6 text-xs font-medium uppercase tracking-[0.3em] text-[--primary]">
             Neue Chancen. Neues Zuhause.
           </p>
-          <h1 className="font-serif text-5xl font-light leading-tight text-[--text] md:text-7xl">
+          <h1 className="font-serif text-5xl font-light leading-tight text-white md:text-7xl">
             NewLife{" "}
             <span className="italic text-[--primary]">Vietnam</span>
           </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-[--muted] md:text-xl">
+          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-zinc-300 md:text-xl">
             Ihr Neustart beginnt hier. Wir sind eine deutschsprachige
             Immobilien- und Beratungsagentur, die Menschen aus Deutschland und
             Europa auf ihrem Weg nach Vietnam begleitet.

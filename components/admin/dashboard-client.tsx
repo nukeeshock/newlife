@@ -47,7 +47,7 @@ export function DashboardClient({
   // Archive state
   const [archivedProperties, setArchivedProperties] =
     useState<Property[]>(initialArchive);
-  const [archiveLoading, setArchiveLoading] = useState(false);
+  const [archiveLoading] = useState(false);
   const [restoring, setRestoring] = useState<string | null>(null);
 
   // Cities state

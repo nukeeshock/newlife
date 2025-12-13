@@ -5,10 +5,8 @@ import { Metadata } from "next";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { BreadcrumbSchema } from "@/components/seo/json-ld";
 import {
-  CITY_DATA,
   getCitySlugs,
   getCityBySlug,
-  type CityData,
   type CityInvestment,
 } from "@/lib/data/cities";
 
