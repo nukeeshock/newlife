@@ -108,8 +108,8 @@ export default async function CityPage({
             <h1 className="font-serif text-5xl font-light leading-none tracking-tight drop-shadow-2xl md:text-8xl lg:text-9xl">
               {city.heroTitle}
             </h1>
-            <div className="mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-[--gateway-gold] to-transparent md:mt-8" />
-            <p className="mt-6 font-serif text-xl italic text-white/95 drop-shadow-lg md:mt-8 md:text-3xl">
+            <div className="mx-auto mt-8 h-px w-24 bg-gradient-to-r from-transparent via-[--gateway-gold] to-transparent md:mt-12" />
+            <p className="mx-auto mt-8 max-w-3xl text-lg font-light leading-relaxed text-white/95 drop-shadow-lg md:text-2xl">
               {city.heroSubtitle}
             </p>
           </div>
@@ -207,7 +207,7 @@ export default async function CityPage({
                     }`}
                 >
                   <SmartImage
-                    src={index === 0 ? city.images.grid3 : city.images.hero}
+                    src={index === 0 ? city.images.grid3 : city.images.realEstate}
                   />
                 </div>
               </div>

@@ -7,6 +7,7 @@
 
 export interface CityHighlight {
   title: string;
+  subtitle: string;
   description: string;
   icon: string;
 }
@@ -26,13 +27,25 @@ export interface CityImages {
   grid1: string;
   grid2: string;
   grid3: string;
+  realEstate: string;
 }
 
 export interface InvestmentPoint {
   title: string;
   highlight: string;
   content: string;
-  icon: "tax" | "port" | "trend" | "users";
+  icon:
+  | "tax"
+  | "port"
+  | "trend"
+  | "users"
+  | "building"
+  | "globe"
+  | "shield"
+  | "utensils"
+  | "landmark"
+  | "plane"
+  | "umbrella-beach";
 }
 
 export interface CityInvestment {
@@ -57,34 +70,39 @@ export interface CityData {
 export const CITY_DATA: Record<string, CityData> = {
   "da-nang": {
     name: "Da Nang",
-    heroTitle: "Da Nang",
-    heroSubtitle: "Vietnams Tor zur Zentralküste",
+    heroTitle: "Da Nang: Der Sweetspot für Investoren",
+    heroSubtitle:
+      "Die lebenswerteste Stadt Vietnams bietet die perfekte Balance aus Rendite und Lebensqualität. Mit aggressiven Steueranreizen, einer brandneuen Freihandelszone und Traumstränden vor der Bürotür ist Da Nang die smarteste Wahl für zukunftsorientierte Unternehmen und Expats.",
     intro:
       "Da Nang ist eine Stadt, die man sofort ins Herz schließt – modern, sauber und mit einer Lebensqualität, die in Südostasien ihresgleichen sucht. Kilometerlange weiße Sandstrände, kristallklares Meer und ein angenehm mildes Klima machen die Stadt zu einem der begehrtesten Lebens- und Investmentstandorte der Region.",
     highlights: [
       {
-        title: "Erschwinglich",
+        title: "SMART MONEY",
+        subtitle: "STEUER-PARADIES",
         description:
-          "Lebenshaltungskosten, Restaurants und hochwertige Wohnungen sind deutlich günstiger als in Europa – bei exzellenter Qualität.",
-        icon: "wallet",
+          "Maximieren Sie Ihren Gewinn durch die besten Incentives des Landes. Im High-Tech-Sektor und der neuen FTZ winken jahrelange Steuerbefreiungen (bis zu 0% für 4 Jahre). Wer clever kalkuliert, startet hier mit einem massiven Liquiditätsvorteil.",
+        icon: "wallet", // Interpreted as tax/money
       },
       {
-        title: "Sicher & Entspannt",
+        title: "GLOBAL GATEWAY",
+        subtitle: "FREIHANDELSZONE (FTZ)",
         description:
-          "Extrem niedrige Kriminalitätsrate, keine Bettler und eine freundliche, entspannte Atmosphäre für alle Altersgruppen.",
-        icon: "shield",
+          "Nutzen Sie den 'First Mover'-Vorteil in Vietnams erster echter städtischer Freihandelszone. Mit direkter Anbindung an den Tiefseehafen und Flughafen ist Da Nang Ihr ultraschnelles Tor zu den Weltmärkten – effizient, modern und zollbegünstigt.",
+        icon: "globe",
       },
       {
-        title: "Perfekte Infrastruktur",
+        title: "SINGAPORE VIBES",
+        subtitle: "EFFIZIENZ & KLIMA",
         description:
-          "Internationaler Flughafen nur Minuten vom Zentrum und den Stränden entfernt. Hoi An und Son Tra direkt vor der Haustür.",
-        icon: "plane",
+          "Da Nang gilt als das 'Singapur Vietnams'. Freuen Sie sich auf transparente Behörden, digitale Prozesse und eine Business-Kultur, die Lösungen sucht statt Probleme. Weniger Bürokratie bedeutet für Sie: Mehr Zeit für Ihr Kerngeschäft.",
+        icon: "shield", // Interpreted as efficiency/safety
       },
       {
-        title: "Kulinarisches Paradies",
+        title: "MAGNET FOR TALENT",
+        subtitle: "LEBENSQUALITÄT",
         description:
-          "Authentische vietnamesische Küche, fantastische Seafood-Restaurants und eine wachsende internationale Gastro-Szene.",
-        icon: "utensils",
+          "Kein Smog, kein Stau, dafür Strand und Berge in 15 Minuten. Diese Lebensqualität macht es Ihnen leicht, Top-Management und Fachkräfte zu gewinnen und langfristig zu halten. Ein Standort, an dem Ihr Team nicht nur arbeitet, sondern gerne lebt.",
+        icon: "building", // Interpreted as lifestyle/place
       },
     ],
     sections: [
@@ -135,8 +153,9 @@ export const CITY_DATA: Record<string, CityData> = {
     images: {
       hero: "/danang_hero_luxury_1765620939544.png",
       grid1: "/danang_dragon_bridge_night_1765621738383.png",
-      grid2: "/danang_lifestyle_luxury_1765620989756.png",
-      grid3: "/danang_marble_mountains_1765621752595.png",
+      grid2: "/danang_grid2_rooftop_dining.png",
+      grid3: "/danang_grid3_beachwalk.png",
+      realEstate: "/danang_realestate_condo.png",
     },
     investment: {
       title: "Standortvorteil Da Nang: Der Sweetspot für Investoren",
@@ -176,34 +195,39 @@ export const CITY_DATA: Record<string, CityData> = {
   },
   "hoi-an": {
     name: "Hoi An",
-    heroTitle: "Hoi An",
-    heroSubtitle: "Die Stadt der Laternen",
+    heroTitle: "Hoi An: Zeitlose Eleganz & Lifestyle",
+    heroSubtitle:
+      "Entfliehen Sie der Hektik und tauchen Sie ein in eine Welt aus Kultur und Ästhetik. Hoi An ist weit mehr als ein Touristenziel – es ist ein Rückzugsort für Genießer, Kreative und Ruhesuchende. Immobilien hier sind rare Sammlerstücke, die ihren Wert durch Einzigartigkeit erhalten.",
     intro:
       "Hoi An verzaubert mit seinem UNESCO-geschützten Altstadtkern, romantischen Laternenstraßen und einer einzigartigen Mischung aus Geschichte und Moderne. Die kleine Küstenstadt ist ein Juwel der vietnamesischen Kultur und zieht Reisende aus aller Welt in ihren Bann.",
     highlights: [
       {
-        title: "UNESCO Welterbe",
+        title: "LIFESTYLE HAVEN",
+        subtitle: "LEBENSQUALITÄT",
         description:
-          "Die historische Altstadt ist eines der am besten erhaltenen Handelszentren Südostasiens aus dem 15.-19. Jahrhundert.",
-        icon: "landmark",
+          "Der Gegenpol zur Hektik. Hoi An bietet eine weltweit einzigartige Mischung aus UNESCO-Weltkulturerbe, Reisfeldern und Traumstränden. Ideal für alle, die Ruhe, saubere Luft und eine ästhetische Umgebung für ihren (Un-)Ruhestand suchen.",
+        icon: "utensils", // Keeping existing icons where possible or swapping. Using utensils for lifestyle/food part.
       },
       {
-        title: "Kulinarik-Hauptstadt",
+        title: "BOUTIQUE BUSINESS",
+        subtitle: "KREATIVWIRTSCHAFT",
         description:
-          "Berühmt für Cao Lau, Banh Mi und White Rose – Hoi An gilt als kulinarisches Herz Vietnams.",
-        icon: "utensils",
+          "Der perfekte Standort für individuelle Konzepte: Boutique-Hotels, gehobene Gastronomie oder Kunsthandwerk. Sie erreichen hier kaufkräftige Touristen aus aller Welt, die das Besondere suchen, keine Massenware.",
+        icon: "scissors", // Fits boutique/craft
       },
       {
-        title: "Maßschneider-Paradies",
+        title: "HERITAGE & BEACH",
+        subtitle: "BEST OF BOTH WORLDS",
         description:
-          "Über 400 Schneider-Ateliers fertigen innerhalb von 24 Stunden maßgeschneiderte Kleidung zu günstigen Preisen.",
-        icon: "scissors",
-      },
-      {
-        title: "An Bang Beach",
-        description:
-          "Nur wenige Kilometer entfernt liegt einer der ruhigsten und schönsten Strände der Region.",
+          "Morgens Kaffee in der historischen Altstadt, nachmittags Baden am An Bang Beach. Diese seltene Kombination macht Immobilien hier extrem begehrt für die lukrative Ferienvermietung und als privater Zweitwohnsitz.",
         icon: "umbrella-beach",
+      },
+      {
+        title: "SCARCITY VALUE",
+        subtitle: "KNAPPHEIT",
+        description:
+          "Durch den UNESCO-Schutz und strikte Bauvorschriften ist das Angebot in Bestlagen natürlich begrenzt. Das schützt Ihr Investment vor Überbauung und sorgt für langfristige Wertsteigerung bei Villen und Boutique-Objekten.",
+        icon: "landmark", // Fits heritage/scarcity
       },
     ],
     sections: [
@@ -244,40 +268,47 @@ export const CITY_DATA: Record<string, CityData> = {
     images: {
       hero: "/hoian_hero_river_clean_1765622183752.png",
       grid1: "/hoian_japanese_bridge_1765621769977.png",
-      grid2: "/hoian_hero_lanterns_1765621004745.png",
-      grid3: "/hoian_an_bang_beach_1765621798731.png",
+      grid2: "/hoian_grid2_beach_lounge.png",
+      grid3: "/hoian_grid3_street.png",
+      realEstate: "/hoian_realestate_villa.png",
     },
+
   },
   "ho-chi-minh": {
     name: "Ho Chi Minh City",
-    heroTitle: "Ho Chi Minh City",
-    heroSubtitle: "Die pulsierende Metropole des Südens",
+    heroTitle: "Ho Chi Minh City: The Pulse of Vietnam",
+    heroSubtitle:
+      "HCMC ist der Ort, an dem Ambition auf Lebensfreude trifft. Als wirtschaftlicher Motor des Landes bietet die Metropole unvergleichliche Karrierechancen, ein pulsierendes Nachtleben und Immobilien mit höchstem Wertsteigerungspotenzial. Hier investieren Sie in die Zukunft Asiens.",
     intro:
       "Ho Chi Minh City – von Einheimischen liebevoll Saigon genannt – ist das wirtschaftliche Herz Vietnams. Eine Stadt, die niemals schläft, mit endlosen Möglichkeiten, einer pulsierenden Startup-Szene und einem Lifestyle, der Tradition und Moderne meisterhaft vereint.",
     highlights: [
       {
-        title: "Wirtschaftszentrum",
+        title: "THE POWERHOUSE",
+        subtitle: "WIRTSCHAFTSMOTOR",
         description:
-          "Das finanzielle Zentrum Vietnams mit internationalem Flair, globalen Unternehmen und unbegrenzten Geschäftsmöglichkeiten.",
+          "Hier schlägt das Herz der vietnamesischen Wirtschaft. HCMC ist der Ort für Karriere, Networking und Big Business. Wer hier investiert, zielt auf maximale Wertschöpfung in einem der dynamischsten Märkte Asiens. Ideal für HQs und High-End-Services.",
         icon: "building",
       },
       {
-        title: "Nachtleben & Kultur",
+        title: "COSMOPOLITAN LIVING",
+        subtitle: "LUXUS & LIFESTYLE",
         description:
-          "Von Rooftop-Bars über Kunstgalerien bis hin zu historischen Tempeln – für jeden Geschmack ist etwas dabei.",
-        icon: "moon",
+          "Das 'New York' Vietnams: Rooftop-Bars, internationale Schulen, erstklassige Krankenhäuser und Shopping-Malls auf Weltniveau. In Vierteln wie Thao Dien leben Sie in einer internationalen 'Bubble' mit höchstem westlichen Komfort.",
+        icon: "moon", // Nightlife/Lifestyle
       },
       {
-        title: "Internationale Community",
+        title: "PRIME REAL ESTATE",
+        subtitle: "WERTSTABILITÄT",
         description:
-          "Eine der größten Expat-Communities Asiens mit deutschen Stammtischen, internationalen Schulen und mehr.",
-        icon: "globe",
+          "Immobilien in Distrikt 1 oder 2 sind das 'Betongold' Vietnams. Zwar ist der Einstiegspreis höher, dafür profitieren Sie von exzellenter Vermietbarkeit an Expats und Manager sowie einer historisch starken Wertsteigerung.",
+        icon: "shield", // Stability/Value
       },
       {
-        title: "Medizinische Exzellenz",
+        title: "URBAN INNOVATION",
+        subtitle: "TECH-HUB",
         description:
-          "Erstklassige internationale Krankenhäuser und Kliniken mit westlichem Standard und deutschsprachigem Personal.",
-        icon: "hospital",
+          "HCMC zieht die besten Talente des Landes an. Mit Zonen wie der Thu Duc City entsteht ein gigantisches Innovationszentrum. Perfekt für Investoren, die Zugang zu hochqualifizierten IT-Fachkräften und einem kreativen Ökosystem suchen.",
+        icon: "globe", // Global/Innovation
       },
     ],
     sections: [
@@ -318,9 +349,11 @@ export const CITY_DATA: Record<string, CityData> = {
     images: {
       hero: "/hcmc_hero_skyline_realistic_1765622166570.png",
       grid1: "/hcmc_ben_thanh_market_1765621815224.png",
-      grid2: "/hcmc_lifestyle_luxury_1765621044893.png",
-      grid3: "/hcmc_notre_dame_1765621829407.png",
+      grid2: "/hcmc_grid2_landmark81.png",
+      grid3: "/hcmc_grid3_business.png",
+      realEstate: "/hcmc_realestate_penthouse.png",
     },
+
   },
 };
 
