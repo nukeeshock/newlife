@@ -26,7 +26,7 @@ export function GatewayPage() {
         <div className="flex flex-col items-center">
           {/* Mobile: Text only */}
           <div className="flex flex-col items-center lg:hidden">
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/80 drop-shadow-lg">
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/90 drop-shadow-lg">
               Willkommen bei
             </span>
             <p className="mt-1.5 font-serif text-2xl font-light tracking-[0.15em] text-white drop-shadow-xl">
@@ -48,7 +48,7 @@ export function GatewayPage() {
               />
             </div>
             <div className="mt-4 flex flex-col items-center">
-              <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white/60">
+              <span className="text-[9px] font-bold uppercase tracking-[0.5em] text-white/70">
                 Willkommen bei
               </span>
               <h1 className="mt-1 font-serif text-2xl font-light tracking-[0.12em] text-white drop-shadow-lg">
@@ -80,14 +80,16 @@ export function GatewayPage() {
             {/* Mobile: Section Logo - Larger */}
             <div className="relative mb-5 lg:hidden">
               <div className="absolute -inset-4 rounded-full bg-orange-500/25 blur-xl" />
-              <div className="relative rounded-full border border-orange-400/40 bg-zinc-950/60 p-3.5 backdrop-blur-sm">
-                <Image
-                  src="/NLV_LOGO_BIG_NOBG.png"
-                  alt="NewLife Vietnam"
-                  width={64}
-                  height={64}
-                  className="h-14 w-14 drop-shadow-lg sm:h-16 sm:w-16"
-                />
+              <div className="relative rounded-full border border-orange-400/40 bg-zinc-950/60 p-4 backdrop-blur-sm">
+                <div className="relative h-[120px] w-[120px]">
+                  <Image
+                    src="/NLV_LOGO_BIG_NOBG.png"
+                    alt="NewLife Vietnam"
+                    fill
+                    sizes="120px"
+                    className="object-contain drop-shadow-lg"
+                  />
+                </div>
               </div>
             </div>
 
@@ -105,7 +107,7 @@ export function GatewayPage() {
             <div className="my-4 h-px w-16 bg-gradient-to-r from-transparent via-orange-400/60 to-transparent sm:my-5" />
 
             {/* Description */}
-            <p className="max-w-xs text-sm font-light leading-relaxed text-white/80 sm:text-base">
+            <p className="max-w-xs text-sm font-light leading-relaxed text-white/90 sm:text-base">
               Sicherheit, selbstbestimmtes Leben und gesunde Ernährung in wunderschönen Immobilien
             </p>
 
@@ -154,14 +156,16 @@ export function GatewayPage() {
             {/* Mobile: Section Logo - Larger */}
             <div className="relative mb-5 lg:hidden">
               <div className="absolute -inset-4 rounded-full bg-amber-500/25 blur-xl" />
-              <div className="relative rounded-full border border-amber-400/40 bg-zinc-950/60 p-3.5 backdrop-blur-sm">
-                <Image
-                  src="/NLV_LOGO_BIG_NOBG.png"
-                  alt="NewLife Vietnam"
-                  width={64}
-                  height={64}
-                  className="h-14 w-14 drop-shadow-lg sm:h-16 sm:w-16"
-                />
+              <div className="relative rounded-full border border-amber-400/40 bg-zinc-950/60 p-4 backdrop-blur-sm">
+                <div className="relative h-[120px] w-[120px]">
+                  <Image
+                    src="/NLV_LOGO_BIG_NOBG.png"
+                    alt="NewLife Vietnam"
+                    fill
+                    sizes="120px"
+                    className="object-contain drop-shadow-lg"
+                  />
+                </div>
               </div>
             </div>
 
@@ -179,7 +183,7 @@ export function GatewayPage() {
             <div className="my-4 h-px w-16 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent sm:my-5" />
 
             {/* Description */}
-            <p className="max-w-xs text-sm font-light leading-relaxed text-white/80 sm:text-base">
+            <p className="max-w-xs text-sm font-light leading-relaxed text-white/90 sm:text-base">
               Exklusive Villen, Apartments & Residenzen – Ihre Traumimmobilie in Vietnam
             </p>
 

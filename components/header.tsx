@@ -46,14 +46,16 @@ export function Header() {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 md:px-8">
         {/* Logo */}
         <Link href="/immobilien" className="group flex items-center gap-3">
-          <Image
-            src="/LOGO_NLV.png"
-            alt="NLV Logo"
-            width={44}
-            height={44}
-            className="rounded-full"
-            priority
-          />
+          <div className="relative h-14 w-14 lg:h-11 lg:w-11">
+            <Image
+              src="/LOGO_NLV.png"
+              alt="NLV Logo"
+              fill
+              sizes="(min-width: 1024px) 44px, 56px"
+              className="rounded-full object-contain"
+              priority
+            />
+          </div>
           <div className="flex flex-col items-start leading-none">
             <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[--primary]">
               NLV
